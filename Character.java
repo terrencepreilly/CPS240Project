@@ -8,8 +8,15 @@ abstract class Character {
 	public abstract BufferedImage getImage( /*Index for animation?*/ );
 
 	public Vector2f getLocation() {
-		return Vector2f;
+		return location;
 	}
 
-	// public void updateLocation(float x, float y); ???
+	public void updateX(float x) {
+		location.x = x;
+	}
+	
+	public void updateY(float y) {
+		location.y = y;
+	}
+	
 }
