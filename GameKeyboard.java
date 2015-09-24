@@ -1,7 +1,10 @@
-package javagames.render;
+package manipulation.util;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import actors.util.Character;
+
 
 /*
  * Created by Tyler Beachnau
@@ -21,13 +24,13 @@ import java.awt.event.KeyListener;
 public class GameKeyboard implements KeyListener{
 
 	//Delta will be implemented to multiply the time by the walk speed, this will control the walk speed every frame!
-	private double delta = 0.0;
-	private drawCharacter character; //hold reference for main player
+	//private double delta = 0.0;
+	private Character character; //hold reference for main player
 	
 	private boolean[] keyPressed = new boolean[256];
 		
 	//constructor
-	public GameKeyboard(drawCharacter character) {
+	public GameKeyboard(Character character) {
 		this.character = character;
 	}
 	
@@ -50,19 +53,21 @@ public class GameKeyboard implements KeyListener{
 	public void processInput(){
 		//take the array, it will tell us if a key is still pressed down
 		//basically if it is still pressed, do something
+		
 		if(keyPressed[KeyEvent.VK_LEFT]){
 			//set the location of the character
-			character.setLocation(character.getVLocation().getX() - 2.0f, character.getVLocation().getY());
+			character.setLocation(new Vector(character.getLocation().x - 5.0f, character.getLocation().y));
 		}
 		if(keyPressed[KeyEvent.VK_RIGHT]){
-			character.setLocation(character.getVLocation().getX() + 2.0f, character.getVLocation().getY());
+			character.setLocation(new Vector(character.getLocation().x + 5.0f, character.getLocation().y));
 		}
 		if(keyPressed[KeyEvent.VK_UP]){
-			character.setLocation(character.getVLocation().getX(), character.getVLocation().getY() - 2.0f);
+			character.setLocation(new Vector(character.getLocation().x, character.getLocation().y - 5.0f));
 		}
 		if(keyPressed[KeyEvent.VK_DOWN]){
-			character.setLocation(character.getVLocation().getX(), character.getVLocation().getY() + 2.0f);
+			character.setLocation(new Vector(character.getLocation().x, character.getLocation().y + 5.0f));
 		}
+		
 	}
 	
 	//this will return a bool value for the key in question as to whether or not it is being pressed
