@@ -158,7 +158,9 @@ public class FullScreenRenderingExample extends JFrame implements Runnable{
 			//Basically find a picture on your pc, right click it, select properties, copy past the "location"
 			//into the argument for the new File() object
 			ourBackground = ImageIO.read(new File("C:\\Users\\Tyler_2\\Pictures\\Ty'sPics\\flowerbed_1920x1080.jpg"));
-		} catch (IOException e) {}; //need to catch IOException
+		} catch (IOException e) {
+			shutDown();
+		}; //need to catch IOException
 		
 		//use Graphics.drawImage to place the image. the two 0's represent the co-ordinates
 		g.drawImage(ourBackground, 0, 0, null);
