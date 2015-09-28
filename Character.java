@@ -13,7 +13,7 @@ abstract class Character {
 	//first Vector2f will represent the top 2 coordinates of the box, the second
 	//Vector2f will represent the bottom 2 coordinates.
 	//then when deteced take appropriate action (move away, take damage, etc)
-	private Vector2f [] boxcollider;
+	private Vector2f [] boxCollider;
 	
 	public abstract BufferedImage getImage( /*Index for animation?*/ );
 	
