@@ -39,7 +39,7 @@ public class FullScreenRenderingExample extends JFrame implements Runnable{
 
 	private FrameRate frameRate; //framerate object to utilize frameRate values
 	private BufferStrategy bs; //our buffer strategy
-	private volatile boolean running; 
+	// private volatile boolean running; 
 	private Thread gameThread; //our gameThread thread, not much more to be said
 	private GraphicsDevice graphicsDevice; //in java.awt, basically the GPU/hardware
 	private DisplayMode currentDisplayMode; //pulled from GraphicsDevice, basically the ACTUAL monitor/screen being used
@@ -103,10 +103,11 @@ public class FullScreenRenderingExample extends JFrame implements Runnable{
 	//this is a method inherited from the Runnable interface
 	public void run(){
 		//basically, set this thread to run
-		running = true;
+		// running = true;
 		frameRate.initialize(); //start frameRate object sets values to 0
 		//while the thread is running, perform the gameLoop over and over
-		while(running) {
+		// while(running) {
+		while (gameThread != null) {
 			gameLoop();
 		}
 	}
@@ -175,9 +176,9 @@ public class FullScreenRenderingExample extends JFrame implements Runnable{
 			graphicsDevice.setDisplayMode(currentDisplayMode); //reset display mode
 			graphicsDevice.setFullScreenWindow(null); //no longer utilize fullscreen mode
 			System.out.println("Display Restored...");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		} //catch (InterruptedException e) {
+		//	e.printStackTrace();
+		//}
 		System.exit(0); //end program for sure
 	}
 
