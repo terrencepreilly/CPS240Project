@@ -169,14 +169,15 @@ public class FullScreenRenderingExample extends JFrame implements Runnable{
 
 	//this is to safely shutdown the program
 	protected void shutDown() {
-		try{
-			running = false; //stop the thread, set boolean running to false
-			gameThread.join(); //wait for the gameThread to die
+		//try{
+			//running = false; //stop the thread, set boolean running to false
+		//	gameThread.join(); //wait for the gameThread to die
+			gameThread = null;
 			System.out.println("Game loop stopped!!!"); //prints to console
 			graphicsDevice.setDisplayMode(currentDisplayMode); //reset display mode
 			graphicsDevice.setFullScreenWindow(null); //no longer utilize fullscreen mode
 			System.out.println("Display Restored...");
-		} //catch (InterruptedException e) {
+		//} //catch (InterruptedException e) {
 		//	e.printStackTrace();
 		//}
 		System.exit(0); //end program for sure
