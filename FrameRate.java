@@ -1,4 +1,3 @@
-package javagames.util;
 
 public class FrameRate {
 	
