@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.LinkedHashSet;
 
 /**
@@ -118,15 +119,15 @@ class AStar {
 	 * Point it contains. (It uses .equals, not .compareTo).
 	 * @param a The ending point.
 	 * @param allPaths The HashMap of paths from one node to another.
-	 * @return A LinkedHashSet starting at start and leading to goal.
+	 * @return A LinkedList starting at start and leading to goal.
 	 */
-	private LinkedHashSet<Point> constructPath(Point a, HashMap<Point, Point> allPaths) {
-		LinkedHashSet<Point> ret = new LinkedHashSet<Point>();
-		ret.add(a);
+	private LinkedList<Point> constructPath(Point a, HashMap<Point, Point> allPaths) {
+		LinkedList<Point> ret = new LinkedList<Point>();
+		ret.addLast(a);
 		Point current = a;
 		while (allPaths.containsKey(current)) {
 			current = allPaths.get(current);
-			ret.add(current);
+			ret.addLast(current);
 		}
 		return ret;
 	}
@@ -136,7 +137,7 @@ class AStar {
 	 * Return the path from start to goal as a LinkedHashSet (no nodes repeat.)
 	 * @return The path from start to goal.
 	 */
-	public LinkedHashSet<Point> AStar() {
+	public LinkedList<Point> AStar() {
 		HashMap<Point, Point> allPaths = new HashMap<Point, Point>();
 		openset.add( start );
 		gscores.remove( start );
