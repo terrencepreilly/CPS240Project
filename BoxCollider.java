@@ -33,6 +33,10 @@ public class BoxCollider extends Rectangle2D.Float {
 		this.setRect(location.x, location.y, (float) this.getWidth(), (float) this.getHeight());
 	}
 
+	public Vector getLocation() {
+		return new Vector((float) this.getX(), (float) this.getY()); 
+	}
+
 	public String toString(){
 		String ret = String.format(
 			"BoxCollider: (%f, %f), %f X %f", 
