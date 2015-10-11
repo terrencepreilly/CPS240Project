@@ -14,7 +14,7 @@ public class Vector {
 		this.y = y;
 	}
 	public String toString(){
-		return "X: " + x + " Y: " + y;
+		return "(" + x + ", " + y + ")";
 	}
 
 	public float magnetude() {
