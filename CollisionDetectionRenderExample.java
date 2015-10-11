@@ -92,7 +92,14 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	}
 
 	private void simpleMoveEnemy() {
-		dangerous.buildPath(mainC.getLocation());
+		dangerous.buildPath(
+			mainC.getLocation(),
+			displayMode.getWidth(),
+			displayMode.getHeight(),
+			allActors,
+			allObjects,
+			mainC.getBoxCollider()
+		);
 		dangerous.step();
 	}
 
