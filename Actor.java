@@ -1,5 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 /*
  * The actor is an abstract class meant to be extended by
@@ -23,7 +24,7 @@ public abstract class Actor {
 		this.image = image;
 		this.location = location;
 		this.path = null;
-		this.simpleStep = true;
+		this.simpleStep = false; // TODO fix this
 		this.stepSize = 1.5f;
 	}
 	//accessors
@@ -44,10 +45,30 @@ public abstract class Actor {
 	protected abstract void setBoxCollider(BufferedImage image);
 	public abstract BoxCollider getBoxCollider();
 
-	public void buildPath(Vector goal) {
+	public void buildPath(Vector goal, int dmW, int dmH, ArrayList<Character> allActors, ArrayList<Scenic> allObjects, BoxCollider mcBC) {
 		if (simpleStep) {
 			path = new LinkedList<Vector>();
 			path.add( goal.subtract(location) );
+		}
+		else if (path == null) {
+			ArrayList<Point> spaces = AStarUtility.getSpaces(
+				dmW,
+				dmH,
+				this.getBoxCollider(),
+				allActors,
+				allObjects
+			);
+
+			LinkedList<Point> pointPath = AStarUtility.getPath(
+				spaces,
+				this.getBoxCollider(),
+				mcBC
+			);
+			this.path = AStarUtility.getVectorPath(
+				pointPath,
+				this.getBoxCollider()
+			);
+			System.out.println(path);
 		}
 	}
 
@@ -62,6 +83,22 @@ public abstract class Actor {
 				float divisor = p.magnetude() / stepSize;
 				Vector step = p.divide(divisor);
 				setLocation(location.add(step));
+			}
+		}
+		else if (path != null && path.size() > 0) {
+			Vector p = path.peek();
+			if (location.distance(location.add(p)) < stepSize) { 
+				setLocation(location.add(p));
+				path.pop();
+				if (path.size() == 0)
+					path = null;
+			}
+			else {
+				float divisor = p.magnetude() / stepSize;
+				Vector step = p.divide(divisor);
+				setLocation(location.add(step));
+				Vector newp = path.pop().subtract(step);
+				path.addFirst(newp);
 			}
 		}
 	}
