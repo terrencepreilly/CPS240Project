@@ -14,10 +14,10 @@ import java.util.ArrayList;
 public abstract class Actor {
 	protected BufferedImage image;
 	protected Vector location;
-	LinkedList<Vector> path;		// The path of this actor to take
-	boolean simpleStep;		// Whether to use simpleStep algorithm
+	private LinkedList<Vector> path;		// The path of this actor to take
+	private boolean simpleStep;		// Whether to use simpleStep algorithm
 					// or AStar
-	float stepSize;
+	private float stepSize;
 	
 	//constructor
 	public Actor(BufferedImage image, Vector location){
