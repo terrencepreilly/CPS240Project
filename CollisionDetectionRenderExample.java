@@ -132,14 +132,6 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		g.setColor(Color.GREEN);
 		g.drawString("HEALTH: " + mainC.getHealth(), 20, 20);
 		
-		//draw special info
-		g.drawString("Characters CURRENT LOCATION:" + mainC.getLocation(), 20, 35);
-		g.drawString("Characters LAST GOOD LOCATION: " + mainC.getLastGoodLocation() , 20, 50);
-		g.drawString("Characters boxCOLLIDER coordinates: " + mainC.getBoxCollider(), 20, 65);
-		
-		g.drawString("Ob1 boxCOLLIDER coordinates: " + allObjects.get(0).getBoxCollider(), 20, 80);
-		g.drawString("Ob2 boxCOLLIDER coordinates: " + allObjects.get(1).getBoxCollider(), 20, 95);
-		
 		//draw characters and obstacles
 		for (Actor act : allActors) {
 			g.drawImage(
@@ -157,7 +149,19 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 				null 
 			);
 		}
+
+		drawTestingInfo(g);
 	}
+
+	private void drawTestingInfo(Graphics g) {
+		g.drawString("Characters CURRENT LOCATION:" + mainC.getLocation(), 20, 35);
+		g.drawString("Characters LAST GOOD LOCATION: " + mainC.getLastGoodLocation() , 20, 50);
+		g.drawString("Characters boxCOLLIDER coordinates: " + mainC.getBoxCollider(), 20, 65);
+		
+		g.drawString("Ob1 boxCOLLIDER coordinates: " + allObjects.get(0).getBoxCollider(), 20, 80);
+		g.drawString("Ob2 boxCOLLIDER coordinates: " + allObjects.get(1).getBoxCollider(), 20, 95);
+	}
+
 	private void initialize(){
 		//need to create our character
 		BufferedImage mainPlayerImage = null;
