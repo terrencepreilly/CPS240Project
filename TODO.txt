@@ -1,0 +1,9 @@
+Here is a list of features we have yet to implement:
+	* Main Menu
+	* Bot flagging option
+	* Animations
+	* Character actions
+		- Killing opponents
+		- Losing health
+	* Sound
+	* Networking
