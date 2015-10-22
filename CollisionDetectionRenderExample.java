@@ -18,7 +18,7 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	private Canvas canvas;
 	
 	private ArrayList<Character> allActors = new ArrayList<Character>(); //this is all the actors, which will have all their box colliders
-	private ArrayList<Scenic> allObjects = new ArrayList<Scenic>();
+	private ArrayList<Scenic> allObjects = new ArrayList<Scenic>(); 
 	
 	private Scenic mainObstacle;
 	private Scenic ob1;
@@ -31,13 +31,8 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	private Character mainC; //test of our drawCharacter class
 	private GameKeyboard gameKeyboard;
 
-//	private boolean resetPaths; // recalculate the paths from Enemy to mainC
 	private boolean mainCMoved; // if mainCMoved, move Enemy
-/*	private float enemyStepSize;
 
-	private LinkedHashSet<Vector> enemySteps;
-	private LinkedHashSet<Point> enemyPath;
-*/
 	protected void createGUI(){
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		gd = ge.getDefaultScreenDevice();
@@ -60,18 +55,10 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		canvas.requestFocus();
 
 		mainCMoved = false;
-/*
-		resetPaths = true;
-		mainCMoved = true;
-		enemyPath = null;
-		enemySteps = null;
-		enemyStepSize = 0.25f;
-*/
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
 	private void processInput(){
-		//gameKeyboard.processInput();
 		if(gameKeyboard.processInput(KeyEvent.VK_LEFT)){
 			//set the location of the character
 			mainC.setLocation(new Vector(mainC.getLocation().x - 5.0f, mainC.getLocation().y));
@@ -158,14 +145,22 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		g.drawString("Ob2 boxCOLLIDER coordinates: " + ob2.getBoxCollider(), 20, 95);
 		
 		//draw characters and obstacles
-		g.drawImage(dangerous.getImage(), (int) dangerous.getLocation().x, (int)dangerous.getLocation().y, null);
-		g.drawImage(mainC.getImage(), (int) mainC.getLocation().x, (int)mainC.getLocation().y, null);
-		g.drawImage(mainObstacle.getImage(), (int)mainObstacle.getLocation().x, (int)mainObstacle.getLocation().y, null);
-		g.drawImage(ob1.getImage(), (int)ob1.getLocation().x, (int)ob1.getLocation().y, null);
-		g.drawImage(ob2.getImage(), (int)ob2.getLocation().x, (int)ob2.getLocation().y, null);
-		g.drawImage(ob3.getImage(), (int)ob3.getLocation().x, (int)ob3.getLocation().y, null);
-		g.drawImage(ob4.getImage(), (int)ob4.getLocation().x, (int)ob4.getLocation().y, null);
-
+		for (Actor act : allActors) {
+			g.drawImage(
+				act.getImage(),
+				(int) act.getLocation().x,
+				(int) act.getLocation().y,
+				null
+			);
+		}
+		for (Scenic obj : allObjects) {
+			g.drawImage( 
+				obj.getImage(), 
+				(int) obj.getLocation().x, 
+				(int) obj.getLocation().y, 
+				null 
+			);
+		}
 	}
 	private void initialize(){
 		//need to create our character
@@ -182,27 +177,30 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		//set image and location of our drawCharacter class
 		mainC = new Character(mainPlayerImage, new Vector(600, 400));
 		//create an obstacle
-		mainObstacle = new Scenic(mainObstacleImage, new Vector(300, 300));
+//		mainObstacle = new Scenic(mainObstacleImage, new Vector(300, 300));
 		
 		//assign 4 random cube obstacles
+/*
 		ob1 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
 		ob2 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
 		ob3 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
 		ob4 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
-
+*/
+		ob1 = new Scenic(mainObstacleImage, new Vector( 100.0f, 100.0f));
+		ob2 = new Scenic(mainObstacleImage, new Vector( 300.0f, 300.0f));
 		
 		//add characters to the actor arraylist
 		allActors.add(mainC);
 		allActors.add(dangerous);
 		
 		//add all objects to the arraylist
-		allObjects.add(mainObstacle);
+//		allObjects.add(mainObstacle);
 		
 		allObjects.add(ob1);
 		allObjects.add(ob2);
-		allObjects.add(ob3);
+/*		allObjects.add(ob3);
 		allObjects.add(ob4);
-		
+*/	
 		//add new keyboard listener GameKeyboard
 		gameKeyboard = new GameKeyboard(mainC);
 		canvas.addKeyListener(gameKeyboard);
