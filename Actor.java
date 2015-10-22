@@ -68,7 +68,6 @@ public abstract class Actor {
 				pointPath,
 				this.getBoxCollider()
 			);
-			System.out.println(path);
 		}
 	}
 
