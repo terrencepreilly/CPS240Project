@@ -21,10 +21,6 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	private ArrayList<Scenic> allObjects = new ArrayList<Scenic>(); 
 	
 	private Scenic mainObstacle;
-	private Scenic ob1;
-	private Scenic ob2;
-	private Scenic ob3;
-	private Scenic ob4;
 	
 	//dangerous will be a test character that moves around, for collision detecting on TWO characters
 	private Character dangerous;
@@ -141,8 +137,8 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		g.drawString("Characters LAST GOOD LOCATION: " + mainC.getLastGoodLocation() , 20, 50);
 		g.drawString("Characters boxCOLLIDER coordinates: " + mainC.getBoxCollider(), 20, 65);
 		
-		g.drawString("Ob1 boxCOLLIDER coordinates: " + ob1.getBoxCollider(), 20, 80);
-		g.drawString("Ob2 boxCOLLIDER coordinates: " + ob2.getBoxCollider(), 20, 95);
+		g.drawString("Ob1 boxCOLLIDER coordinates: " + allObjects.get(0).getBoxCollider(), 20, 80);
+		g.drawString("Ob2 boxCOLLIDER coordinates: " + allObjects.get(1).getBoxCollider(), 20, 95);
 		
 		//draw characters and obstacles
 		for (Actor act : allActors) {
@@ -176,31 +172,18 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		dangerous = new Character(mainPlayerImage, new Vector(800, 200));
 		//set image and location of our drawCharacter class
 		mainC = new Character(mainPlayerImage, new Vector(600, 400));
-		//create an obstacle
-//		mainObstacle = new Scenic(mainObstacleImage, new Vector(300, 300));
 		
-		//assign 4 random cube obstacles
-/*
-		ob1 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
-		ob2 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
-		ob3 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
-		ob4 = new Scenic(mainObstacleImage, new Vector((float)(Math.random() * 800), (float)(Math.random() * 700)));
-*/
-		ob1 = new Scenic(mainObstacleImage, new Vector( 100.0f, 100.0f));
-		ob2 = new Scenic(mainObstacleImage, new Vector( 300.0f, 300.0f));
+
+		Scenic ob1 = new Scenic(mainObstacleImage, new Vector( 100.0f, 100.0f));
+		Scenic ob2 = new Scenic(mainObstacleImage, new Vector( 300.0f, 300.0f));
 		
 		//add characters to the actor arraylist
 		allActors.add(mainC);
 		allActors.add(dangerous);
 		
-		//add all objects to the arraylist
-//		allObjects.add(mainObstacle);
-		
 		allObjects.add(ob1);
 		allObjects.add(ob2);
-/*		allObjects.add(ob3);
-		allObjects.add(ob4);
-*/	
+
 		//add new keyboard listener GameKeyboard
 		gameKeyboard = new GameKeyboard(mainC);
 		canvas.addKeyListener(gameKeyboard);
