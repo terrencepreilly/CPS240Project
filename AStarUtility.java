@@ -27,6 +27,7 @@ class AStarUtility {
 		float height = (float) moveCharBC.getHeight();
 		int dWidth  = displayWidth  / (int) width; 
 		int dHeight = displayHeight / (int) height;
+
 		// create a box collider at 0, 0 of size moveCharBC
 		Ghost g = new Ghost();
 		g.setBoxCollider(new BoxCollider(0f, 0f, width, height));
@@ -49,6 +50,7 @@ class AStarUtility {
 					ret.add( new Point(x, y) );
 			}
 		}
+
 		return ret;
 	}
 
