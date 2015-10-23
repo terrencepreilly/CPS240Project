@@ -182,13 +182,10 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		g.drawString("Characters CURRENT LOCATION:" + mainC.getLocation(), 20, 35);
 		g.drawString("Characters LAST GOOD LOCATION: " + mainC.getLastGoodLocation() , 20, 50);
 		g.drawString("Characters boxCOLLIDER coordinates: " + mainC.getBoxCollider(), 20, 65);
-		
-		g.drawString("Ob1 boxCOLLIDER coordinates: " + allObjects.get(0).getBoxCollider(), 20, 80);
-		g.drawString("Ob2 boxCOLLIDER coordinates: " + allObjects.get(1).getBoxCollider(), 20, 95);
 	}
 
 	/**
-	 * Initialize global variables, load images.
+	 * Initialize global variables, load images, set obstacles.
 	 */
 	private void initialize(){
 		//need to create our character
@@ -206,15 +203,13 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		mainC = new Character(mainPlayerImage, new Vector(600, 400));
 		
 
-		Scenic ob1 = new Scenic(mainObstacleImage, new Vector( 100.0f, 100.0f));
-		Scenic ob2 = new Scenic(mainObstacleImage, new Vector( 300.0f, 300.0f));
+		for (Vector v : TEMPobsplace.getObstacles()) {
+			allObjects.add( new Scenic(mainObstacleImage, v ));
+		}
 		
 		//add characters to the actor arraylist
 		allActors.add(mainC);
 		allActors.add(dangerous);
-		
-		allObjects.add(ob1);
-		allObjects.add(ob2);
 
 		//add new keyboard listener GameKeyboard
 		gameKeyboard = new GameKeyboard(mainC);
