@@ -3,7 +3,7 @@
  * A 2D Integer point class to be used with AStar.
  * @author Terrence Reilly
  */
-public class Point implements Comparable {
+class Point implements Comparable {
 	public int x;
 	public int y;
 

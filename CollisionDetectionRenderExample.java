@@ -6,9 +6,11 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-
+/**
+ * The main game class.  Used for debugging and testing items until networking 
+ * is resolved. 
+ */
 public class CollisionDetectionRenderExample extends JFrame implements Runnable {
-
 	private volatile boolean running;
 	private Thread gameThread;
 	private BufferStrategy bs;
@@ -27,8 +29,11 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	private Character mainC; //test of our drawCharacter class
 	private GameKeyboard gameKeyboard;
 
-	private boolean mainCMoved; // if mainCMoved, move Enemy
+	private boolean mainCMoved; // if mainCMoved, move Enemy //TODO reset
 
+	/**
+	 * Create the GUI, add elements, start the game thread.
+	 */
 	protected void createGUI(){
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		gd = ge.getDefaultScreenDevice();
@@ -54,6 +59,10 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
+
+	/**
+	 * Process user input.
+	 */
 	private void processInput(){
 		if(gameKeyboard.processInput(KeyEvent.VK_LEFT)){
 			//set the location of the character
@@ -74,6 +83,9 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		}
 	}
 
+	/**
+	 * Move the enemy.  Enemy determines whether to use simpleStep or AStar.
+	 */
 	private void simpleMoveEnemy() {
 		dangerous.buildPath(
 			mainC.getLocation(),
@@ -86,6 +98,9 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		dangerous.step();
 	}
 
+	/**
+	 * Detect collisions and restore characters to last good location.
+	 */
 	private void detectCollisions(){
 		boolean needToReset = false;
 		for(Character c: allActors){
@@ -109,6 +124,9 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		}		
 	}
 	
+	/**
+	 * Render the frame. ???
+	 */
 	private void renderFrame() {
 		do{
 			do{
@@ -127,8 +145,11 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		} while(bs.contentsLost());
 	}
 	
+	/**
+	 * Draw characters to the screen.
+	 * @param g The graphics context.
+	 */
 	private void render(Graphics g) {
-		
 		g.setColor(Color.GREEN);
 		g.drawString("HEALTH: " + mainC.getHealth(), 20, 20);
 		
@@ -152,7 +173,11 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 
 		drawTestingInfo(g);
 	}
-
+	
+	/**
+	 * Write testing information to the screen.
+	 * @param g The graphic context.
+	 */
 	private void drawTestingInfo(Graphics g) {
 		g.drawString("Characters CURRENT LOCATION:" + mainC.getLocation(), 20, 35);
 		g.drawString("Characters LAST GOOD LOCATION: " + mainC.getLastGoodLocation() , 20, 50);
@@ -162,6 +187,9 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		g.drawString("Ob2 boxCOLLIDER coordinates: " + allObjects.get(1).getBoxCollider(), 20, 95);
 	}
 
+	/**
+	 * Initialize global variables, load images.
+	 */
 	private void initialize(){
 		//need to create our character
 		BufferedImage mainPlayerImage = null;
@@ -193,23 +221,34 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		canvas.addKeyListener(gameKeyboard);
 	}
 	
+
+	/**
+	 * The main game loop.  Processes input, detects and resets any
+	 * collisions, renders the images, and moves the enemy players.
+	 * Also, pauses the thread for 10 milliseconds.
+	 */
 	private void gameLoop(){
 		processInput();
 		detectCollisions();
 		renderFrame();
-		if (mainCMoved)
+		if (mainCMoved) 
 			simpleMoveEnemy();
-/*		buildEnemyPaths(); // Move this!
-		if (! resetPaths)
-			moveEnemy();
-*/		sleep(10L);
+		sleep(10L);
 	}
-	
+
+	/**
+	 * Pause the game for sleep milliseconds.
+	 * @param sleep The length of time to pause the thread.
+	 */	
 	private void sleep(long sleep){
 		try{
 			Thread.sleep(sleep);
 		} catch (InterruptedException ex) {}
 	}
+
+	/**
+	 * Call the game loop while "running" global variable is true.
+	 */
 	public void run(){
 		running = true;
 		initialize();
@@ -218,6 +257,9 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		}
 	}
 	
+	/**
+	 * Set "running" to false and joins the gameThread to stop the game.
+	 */
 	public void onWindowClosing(){
 		try{
 			running = false;

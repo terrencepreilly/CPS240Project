@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
  * An actor used in detecting free spaces by AStarUtility. Has no image.
  * @author Terrence Reilly
  */
-public class Ghost extends Actor {
+class Ghost extends Actor {
 	private BoxCollider bc;
 
 	/**
@@ -56,11 +56,5 @@ public class Ghost extends Actor {
 	public void setLocation(Vector location) {
 		this.location = location;
 		this.bc.setLocation(location);
-	}
-
-	public String toString() {
-		String ghost = String.format("Ghost: %f, %f", location.x, location.y );
-		String boxCol = this.bc.toString();
-		return ghost + "\n\t" + boxCol;
 	}
 }
