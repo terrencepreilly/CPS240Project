@@ -203,9 +203,8 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		mainC = new Character(mainPlayerImage, new Vector(600, 400));
 		
 
-		for (Vector v : TEMPobsplace.getObstacles()) {
+		for (Vector v : TEMPobsplace.getObstacles()) 
 			allObjects.add( new Scenic(mainObstacleImage, v ));
-		}
 		
 		//add characters to the actor arraylist
 		allActors.add(mainC);

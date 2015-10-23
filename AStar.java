@@ -5,6 +5,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.LinkedHashSet;
 
+/*
+Points are being removed from openset, but they are still contained in openset.
+It's a hashset. How is that possible?
+HashSet adds points with same coordinates because it uses Object.equals, not 
+Point.equals.  How do we resolve this problem?
+*/
+
 /**
  * A class which implements the A* Pathfinding Algorithm.
  */
@@ -133,6 +140,8 @@ class AStar {
 	}
 
 	// TODO Refactor this method to make smaller, more readable.
+	// PROBLEM: openset gains over 30,000 points, but spaces has
+	// 	only 1500.  How?
 	/**
 	 * Return the path from start to goal as a LinkedHashSet (no nodes repeat.)
 	 * @return The path from start to goal.
@@ -147,7 +156,9 @@ class AStar {
 		Point current = null;
 
 		while (openset.size() > 0) {
+			System.out.println(openset.size());
 			current = lowestFInOpen();
+			System.out.println("\t" + current);
 
 			if (current.equals(goal))
 				return constructPath(current, allPaths);
