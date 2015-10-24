@@ -1,4 +1,6 @@
 
+import java.awt.geom.Point2D;
+
 /**
  * A vector represents a point in 2d space it has an x coordinate 
  * and a y coordinate they are public and can be accessed by 
@@ -95,5 +97,14 @@ class Vector {
 	 */
 	public Vector divide(Vector denominator) {
 		return new Vector( x = denominator.x, y / denominator.y);
+	}
+
+
+	/**
+	 * Convert this Vector to a Point2D.Float.
+	 * @return A Point2D.Float corresponding to this Vector.
+	 */
+	public Point2D.Float toPoint2DFloat() {
+		return new Point2D.Float(x, y);
 	}
 }

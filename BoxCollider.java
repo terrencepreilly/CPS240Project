@@ -1,5 +1,6 @@
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * The BoxCollider class will hold a BufferedImage of the representing character/scenic object
@@ -69,5 +70,26 @@ class BoxCollider extends Rectangle2D.Float {
 			this.getHeight()
 		);
 		return ret;
+	}
+
+	/**
+	 * Return an ArrayList of the vertices of this BoxCollider.
+	 * @return An ArrayList of the vertices of this BoxCollider.
+	 */
+	public ArrayList<Point2D.Float> getVertices() {
+		float w = (float) this.getWidth();
+		float h = (float) this.getHeight();
+		ArrayList<Point2D.Float> chaVert = new ArrayList<>();
+                chaVert.add( this.getLocation().toPoint2DFloat() ); 
+                chaVert.add( this.getLocation().add( 
+			new Vector(w, 0f) ).toPoint2DFloat() 
+		); 
+                chaVert.add( this.getLocation().add( 
+			new Vector(0f, h) ).toPoint2DFloat() 
+		); 
+                chaVert.add( this.getLocation().add( 
+			new Vector(w, h)).toPoint2DFloat() 
+		);
+		return chaVert;
 	}
 }

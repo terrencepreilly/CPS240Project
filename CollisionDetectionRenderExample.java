@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.geom.Point2D;
 
 /**
  * The main game class.  Used for debugging and testing items until networking 
@@ -98,6 +99,43 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		dangerous.step();
 	}
 
+	// This function is FUGLY.  
+	// Check the intersects function -- it may not want you to have things
+	// right on the edge.
+	private Vector getAGoodLocation(BoxCollider obsBC, BoxCollider chaBC) {
+		// Find an overlapping vertex.
+		Point2D.Float overlaps = null;
+		for (Point2D.Float pf : chaBC.getVertices()) {
+			if (obsBC.contains( pf ))
+				overlaps = pf;
+		} 
+
+		// find closest edge 
+		Point2D.Float top = new Point2D.Float(0f, obsBC.getLocation().y);
+		Point2D.Float left = new Point2D.Float(obsBC.getLocation().x, 0f);
+		Point2D.Float right = new Point2D.Float(obsBC.getLocation().x + (float) obsBC.getWidth(), 0f);
+		Point2D.Float bottom = new Point2D.Float(0f, obsBC.getLocation().y + (float) obsBC.getHeight());
+
+		Point2D.Float closest = null;
+		for (Point2D.Float pf : Arrays.asList( new Point2D.Float[] { top, left, right, bottom } ) ) {
+			if (closest == null || overlaps.distance(closest) > overlaps.distance(pf))
+				closest = pf;
+		}
+
+		// Update one coordinate to push outside.
+		Vector addVec = new Vector(0f, 0f);
+		if (closest.equals(top)) 
+			addVec.y = -1*(overlaps.y - closest.y) - 0.1f;  
+		else if (closest.equals(left))
+			addVec.x = -1*(overlaps.x - closest.x) - 0.1f;
+		else if (closest.equals(right))
+			addVec.x = closest.x - overlaps.x + 0.1f; 
+		else if (closest.equals(bottom))
+			addVec.y = closest.y - overlaps.y + 0.1f; 
+		
+		return chaBC.getLocation().add(addVec);
+	}
+
 	/**
 	 * Detect collisions and restore characters to last good location.
 	 */
@@ -107,7 +145,7 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 			for(Scenic a: allObjects){
 				if(a.getBoxCollider().intersects(c.getBoxCollider())){
 					needToReset = true;
-					c.setLocation(c.getLastGoodLocation());
+					c.setLocation( getAGoodLocation(a.getBoxCollider(), c.getBoxCollider()) );
 				}
 			}
 			for(Character d: allActors){
