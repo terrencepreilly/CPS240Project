@@ -22,7 +22,8 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	
 	private ArrayList<Character> allActors = new ArrayList<Character>(); //this is all the actors, which will have all their box colliders
 	private ArrayList<Scenic> allObjects = new ArrayList<Scenic>(); 
-	
+	private GameServer server;
+	private GameClient client;
 	private Scenic mainObstacle;
 	
 	//dangerous will be a test character that moves around, for collision detecting on TWO characters
@@ -59,12 +60,14 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		mainCMoved = false;
 		gameThread = new Thread(this);
 		gameThread.start();
+		
+		
 	}
 
 	/**
 	 * Process user input.
 	 */
-	private void processInput(){
+	protected void processInput(){
 		if(gameKeyboard.processInput(KeyEvent.VK_LEFT)){
 			//set the location of the character
 			mainC.setLocation(new Vector(mainC.getLocation().x - 5.0f, mainC.getLocation().y));
@@ -193,13 +196,14 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		
 		//draw characters and obstacles
 		for (Actor act : allActors) {
-			g.drawImage(
-				act.getImage(),
-				(int) act.getLocation().x,
-				(int) act.getLocation().y,
-				null
-			);
-		}
+				g.drawImage(
+						act.getImage(),
+						(int) act.getLocation().x,
+						(int) act.getLocation().y,
+						null
+						);
+			}
+		
 		for (Scenic obj : allObjects) {
 			g.drawImage( 
 				obj.getImage(), 
@@ -226,17 +230,28 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	 * Initialize global variables, load images, set obstacles.
 	 */
 	private void initialize(){
+		try{
+			if(JOptionPane.showConfirmDialog(this, "Do you want to run the server? ")==0);
+				server = new GameServer(this);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		//need to create our character
 		BufferedImage mainPlayerImage = null;
 		BufferedImage mainObstacleImage = null;
 		try {
+			
 			mainPlayerImage = ImageIO.read(new File("character.png"));
 			mainObstacleImage = ImageIO.read(new File("obstacle.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		dangerous = new Character(mainPlayerImage, new Vector(800, 200));
+		dangerous = new Character(mainPlayerImage,  new Vector(800, 200));
+		
+			
 		//set image and location of our drawCharacter class
 		mainC = new Character(mainPlayerImage, new Vector(600, 400));
 		
@@ -247,11 +262,14 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		//add characters to the actor arraylist
 		allActors.add(mainC);
 		allActors.add(dangerous);
-
+		
 		//add new keyboard listener GameKeyboard
 		gameKeyboard = new GameKeyboard(mainC);
 		canvas.addKeyListener(gameKeyboard);
-	}
+		client = new GameClient(this);
+			
+		}
+
 	
 
 	/**
@@ -309,6 +327,7 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		});		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run(){
+				
 				app.createGUI();
 			}
 		});
