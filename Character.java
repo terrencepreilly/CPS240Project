@@ -1,6 +1,8 @@
 
 import java.awt.image.BufferedImage;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * The character is an image, and a location, it will create it's own boxcollider
@@ -9,12 +11,28 @@ import java.awt.image.BufferedImage;
  * last good location anytime a collision is NOT detected. Consequently there is a method
  * to set the location, this will in turn set the boxCollider to a new location
  */
-class Character extends Actor{
+class Character extends Actor implements Runnable{
 	
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
 	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
-	
+	int playerID;
+	DataOutputStream out;
+	DataInputStream in;
+	Character[] user = new Character[10];
+	//Create a new character and send information to server
+	public Character(BufferedImage image,Vector location, DataOutputStream out, DataInputStream in, Character[] user, int pID){
+		//character is an image, location, and a boxCollider, health set to 10 until changed
+		super(image, location);
+		this.out = out;
+		this.in = in;
+		this.user = user;
+		this.playerID = pID;
+		lastGoodLocation = location;
+		setBoxCollider(image);
+		boxCollider.setLocation(location);
+		health = 10;
+	}
 	/**
 	 * Create a new Character.
 	 * @param image The image of this Character.
@@ -99,4 +117,33 @@ class Character extends Actor{
 	public String toString(){
 		return "This characters location: " + this.getLocation() + "and health: " + health + ".";
 	}
+	//collect information for character/player and send to server
+	public void run() {
+		try{
+			out.writeInt(playerID);
+		}catch(IOException ioe){
+			System.out.println("Failed to send PlayerID");
+		}
+		while(true){
+			try{
+				//read information collected by DataInputStream from the game and assign to variables
+				int playerIDin = in.readInt();//player ID
+				float xin = in.readFloat();//x coordinate
+				float yin = in.readFloat();//y coordinate
+				for(int i = 0; i<5; i++){
+					//as long as user is not equal to null send information collected by server to client class
+					if(user[i] != null){
+						user[i].out.writeInt(playerIDin);//player ID
+						user[i].out.writeFloat(xin);//x coordinate
+						user[i].out.writeFloat(yin);//y coordinate
+					}
+				}
+			}
+		catch(IOException e){
+			user[playerID] = null;
+		}
+		}
+		
+	}
+}
 }
