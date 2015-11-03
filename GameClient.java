@@ -26,10 +26,10 @@ public class GameClient extends Thread{
 			in = new DataInputStream(socket.getInputStream());
 			playerID = in.readInt();
 			out = new DataOutputStream(socket.getOutputStream());
-			Input input = new Input(in, this);
-			Thread thread = new Thread(input);
+			Input input = new Input(in, this);//collect information for client connected
+			Thread thread = new Thread(input);//create thread for client connected
 			thread.start();
-			Thread thread2 = new Thread(this);
+			Thread thread2 = new Thread(this);//create thread for GameClient
 			thread2.start();
 			
 		}catch(Exception e){
@@ -41,9 +41,10 @@ public class GameClient extends Thread{
 	public void updateCoordinates(int pID, float x2, float y2){
 		this.x[pID] = (int) x2;
 		this.y[pID] = (int) y2;
-		System.out.println("("+pID+"): "+ x2 +", "+ y2);
+		System.out.println("("+pID+"): "+ x2 +", "+ y2);//print out coordinates of player to show that client/server are communicating w/ game
 	}
 }
+//Input class collects information on player connected
 class Input implements Runnable{
 	DataInputStream in;
 	GameClient client;
@@ -51,7 +52,8 @@ class Input implements Runnable{
 		this.in = in;
 		this.client = c;
 	}
-	
+	//while player is connected, continuously collect playerid(to make sure they are connected) and players x and y coordinates to 
+	//continuously update as player moves.
 	public void run() {
 		while(true){
 			try{
