@@ -25,7 +25,7 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	private GameServer server;
 	private GameClient client;
 	private Scenic mainObstacle;
-	
+	private DataInputStream in;
 	//dangerous will be a test character that moves around, for collision detecting on TWO characters
 	private Character dangerous;
 	private Character mainC; //test of our drawCharacter class
@@ -84,6 +84,16 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		if(gameKeyboard.processInput(KeyEvent.VK_DOWN)){
 			mainC.setLocation(new Vector(mainC.getLocation().x, mainC.getLocation().y + 5.0f));
 			mainCMoved = true;
+		}
+		if(gameKeyboard.processInput(KeyEvent.VK_LEFT) || gameKeyboard.processInput(KeyEvent.VK_RIGHT) || gameKeyboard.processInput(KeyEvent.VK_UP) || gameKeyboard.processInput(KeyEvent.VK_DOWN)){
+			try{
+				GameClient.out.writeInt(client.playerID);
+				GameClient.out.writeFloat(mainC.location.x);
+				GameClient.out.writeFloat(mainC.location.y);
+
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -231,7 +241,9 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	 */
 	private void initialize(){
 		try{
+			//ask if player would like to connect to server
 			if(JOptionPane.showConfirmDialog(this, "Do you want to run the server? ")==0);
+				//connect player to server
 				server = new GameServer(this);
 			
 		}catch(Exception e){
@@ -266,6 +278,7 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		//add new keyboard listener GameKeyboard
 		gameKeyboard = new GameKeyboard(mainC);
 		canvas.addKeyListener(gameKeyboard);
+		//add new client
 		client = new GameClient(this);
 			
 		}
