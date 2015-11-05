@@ -146,4 +146,3 @@ class Character extends Actor implements Runnable{
 		
 	}
 }
-}
