@@ -5,7 +5,6 @@ public class TestGameState {
 		c.setType(GameConstants.PLAYER);
 		gs.add(c);
 
-		for (Integer uid : gs.players.keySet())
-			System.out.println(gs.players.get(uid));
+		System.out.println(gs);
 	}
 }

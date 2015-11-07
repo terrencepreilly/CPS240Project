@@ -93,7 +93,6 @@ public class GameState implements GameConstants {
 			enemies.put(c.getUniqueID(), c);
 		else
 			players.put(c.getUniqueID(), c);
-		System.out.println(players.size() + enemies.size());
 	}
 
 	/**
@@ -123,5 +122,19 @@ public class GameState implements GameConstants {
                 c.setUniqueID(aUniqueID);
 
 		return c;
+	}
+
+
+	public String toString() {
+		String ret = "";
+		ret += "Players\n";
+		for (Integer uid : players.keySet())
+			ret += "\t" + players.get(uid) + "\n";
+
+		System.out.println("\nEnemies\n");
+		for (Integer uid : enemies.keySet())
+			ret += "\t" + enemies.get(uid) + "\n";
+
+		return ret;
 	}
 }

@@ -1,7 +1,7 @@
 /**
  * Represents a snapshot of a character at a given time.
  */
-class GameDelta {
+class GameDelta implements java.io.Serializable {
 	Integer uniqueID;
 	Vector coords;
 	int health;
