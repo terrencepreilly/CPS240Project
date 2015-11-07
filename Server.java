@@ -6,7 +6,18 @@ import java.io.ObjectOutputStream;
 
 import java.io.IOException;
 
-public class Server {
+
+/**
+ * A simple server for our game which holds a GameState object to 
+ * handle incoming GameDeltas. The server holds enemies, objects,
+ * and assigns unique ids to all Characters in the server and in 
+ * each Client.
+ */
+//TODO Handle unique IDs somehow.  Andle different types of requests.
+// (I.e. when a client wants to create a new character and needs a 
+// unique id.  Use an Integer in the DataInputStream, and define constants
+// in GameConstants)
+public class Server implements GameConstants {
 	ServerSocket serverSocket;
 	Socket socket;
 	ObjectInputStream in;
@@ -15,6 +26,12 @@ public class Server {
 	Character enemy;
 	GameState gamestate;
 
+	/**
+	 * Initialize the server at the given port.
+	 * @param port The port at which to open this Server.
+	 * @return A new Server.
+	 */
+	//TODO Connect multiple Clients
 	public Server(int port) {
 		try {
 			serverSocket = new ServerSocket(port);
@@ -28,11 +45,18 @@ public class Server {
 		gamestate.add(enemy);
 	}
 
+	/**
+	 * Close the Server.
+	 */
 	public void close() {
 		try { in.close(); socket.close(); serverSocket.close(); }
 		catch (IOException ioe) {}
 	}
 
+	/**
+	 * Send a GameDelta of the enemy to the connected Client.
+	 */
+	//TODO Send a GameDelta for each enemy, to each client.
 	public void writeGameDelta() {
 		try { 
 			GameDelta gd = gamestate.createGameDelta( enemy );
@@ -42,6 +66,10 @@ public class Server {
 		catch (IOException ioe) {}
 	}
 
+	/**
+	 * Read the next GameDelta from the connection.
+	 * @return The GameDelta that was read.
+	 */
 	public GameDelta readGameDelta() {
                 try { return (GameDelta) in.readObject(); }
                 catch (IOException ioe) { System.out.println(ioe);}
