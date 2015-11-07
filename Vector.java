@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
  * and a y coordinate they are public and can be accessed by 
  * Vector.x/Vector.y
  */
-class Vector {
+class Vector implements java.io.Serializable {
 	public float x;
 	public float y;
 	
