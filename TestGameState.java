@@ -5,6 +5,8 @@ public class TestGameState {
 		c.setType(GameConstants.PLAYER);
 		gs.add(c);
 
+		System.out.println(gs.createGameDelta( c ));
+
 		System.out.println(gs);
 	}
 }

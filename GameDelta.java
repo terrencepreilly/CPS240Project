@@ -22,4 +22,9 @@ class GameDelta implements java.io.Serializable {
 		this.health = health;
 		this.type = type;
 	}
+
+
+	public String toString() {
+		return String.format("#%d %s Health: %d Type: %d", uniqueID, coords.toString(), health, type);
+	}
 }
