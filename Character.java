@@ -9,11 +9,13 @@ import java.awt.image.BufferedImage;
  * last good location anytime a collision is NOT detected. Consequently there is a method
  * to set the location, this will in turn set the boxCollider to a new location
  */
-class Character extends Actor{
+class Character extends Actor implements GameConstants {
 	
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
 	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
+	private Integer uniqueID;
+	private Integer type;
 	
 	/**
 	 * Create a new Character.
@@ -28,7 +30,36 @@ class Character extends Actor{
 		setBoxCollider(image);
 		boxCollider.setLocation(location);
 		health = 10;
+		uniqueID = -1;
+		type = ENEMY;
 	}
+
+	/**
+	 * Set the type of Character. (Either PLAYER or ENEMY).
+	 * @param type From GameConstants.
+	 */
+	public void setType(int type) { this.type = type; }
+
+	/**
+	 * Get the type of Character.
+	 * @return The type of Character, either ENEMY (default) or PLAYER.
+	 */
+	public Integer getType() { return type; }
+
+	/**
+	 * Set the unique id for this Character. Can only be called once.
+	 * @param i The new unique id.
+	 */
+	public void setUniqueID(int i) {
+		if (uniqueID == -1 && i >= 0)
+			uniqueID = i;
+	}
+
+	/**
+	 * Get this Character's unique id.
+	 * @return This Character's unique id.
+	 */
+	public Integer getUniqueID() { return uniqueID; }
 
 	/**
 	 * Get the health of this character.

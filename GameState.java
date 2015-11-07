@@ -6,12 +6,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-public class GameState {
+public class GameState implements GameConstants {
 	// The key is a unique identifier assigned to each Client and enemy by the 
 	// Server.  it is simply a counter maintained by the server
-	Integer ENEMY = 0;
-	Integer PLAYER = 1;
-
 	HashMap<Integer, Character> players;
 	HashMap<Integer, Character> enemies;
 	List<Scenic> obstacles;
@@ -37,16 +34,45 @@ public class GameState {
 	 */
 	public void applyGameDelta(GameDelta gd) {
 		Character c = null;
-		if (players.containsKey( gd.uniqueID ))
+		if (players.containsKey( gd.uniqueID )) {
 			c = players.get( gd.uniqueID );
-		else if (enemies.containsKey( gd.uniqueID ))
+			c.setLocation( gd.coords );
+                        c.setHealth( gd.health );
+		}
+		else if (enemies.containsKey( gd.uniqueID )) {
 			c = enemies.get( gd.uniqueID );
+			c.setLocation( gd.coords );
+                        c.setHealth( gd.health );
+		}
 		else {
 			addCharacter(gd);
 		}
-			
-			c.setLocation( gd.coords );
-			c.setHealth( gd.health );
+	}
+
+	/**
+	 * Create a GameDelta from a Character in this GameState.
+	 * @param uid The unique ID for this Character.
+	 * @return A new GameDelta signifying the changes.
+	 */
+	public GameDelta createGameDelta(Integer uid) {
+		if (! (players.containsKey(uid) || enemies.containsKey(uid)))
+			return null;
+
+		Character c = players.containsKey(uid) ? players.get(uid) : enemies.get(uid);
+		int type = players.containsKey(uid) ? PLAYER : ENEMY;
+
+		GameDelta gd = new GameDelta( uid, c.getBoxCollider().getLocation(), c.getHealth(), type ); 
+		return gd;
+	}
+
+	/**
+	 * Call createGameDelta, passing the unique ID of the given Character.
+	 * @param c The Character whose unique ID will be used and who will
+	 * 	be used to create the GameDelta.
+	 * @return The GameDelta representing the new stats of this Character.
+	 */
+	public GameDelta createGameDelta(Character c) {
+		return createGameDelta( c.getUniqueID() );
 	}
 
 	/**
@@ -54,21 +80,48 @@ public class GameState {
 	 * @param gd The GameDelta describing a non-extant Character.
 	 */
 	private void addCharacter(GameDelta gd) {
+		Character c = createCharacter(gd);
+		add(c);
+	}
+
+	/**
+	 * Add a Character to players or enemies, depending on the type.
+	 * @param c The Character to be addded.
+	 */
+	public void add(Character c) {
+		if (c.getType() == ENEMY)
+			enemies.put(c.getUniqueID(), c);
+		else
+			players.put(c.getUniqueID(), c);
+		System.out.println(players.size() + enemies.size());
+	}
+
+	/**
+	 * Make a new Character from the given GameDelta.  If the given GameDelta
+	 * is null, create a blank Character.
+	 * @param gd The GameDelta.  If blank, use defaults.
+	 * @return A new Character.
+	 */
+	public Character createCharacter(GameDelta gd) {
 		Character c = null;
-		BufferedImage playerImage = null;
-		try {
-			//TODO differentiate image by gd.type
-			playerImage = ImageIO.read( new File("character.png") );
+                BufferedImage playerImage = null;
+                try {
+                        //TODO differentiate image by gd.type
+                        playerImage = ImageIO.read( new File("character.png") );
+                }
+                catch (IOException ioe) { System.out.println(ioe); }
+
+		if (gd != null) {
+                	c = new Character(playerImage, gd.coords);
+			c.setHealth( gd.health );
 		}
-		catch (IOException ioe) { System.out.println(ioe); }
-		c = new Character(playerImage, gd.coords);
+		else 
+			c = new Character(playerImage, new Vector(0f, 0f));
 
-		Integer aUniqueID = prevId + 1;
-		prevId++;
+                Integer aUniqueID = prevId + 1;
+                prevId++;
+                c.setUniqueID(aUniqueID);
 
-		if (gd.type == ENEMY)
-			enemies.put(aUniqueID, c);
-		else if (gd.type == PLAYER)
-			players.put(aUniqueID, c);
+		return c;
 	}
 }
