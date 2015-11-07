@@ -1,19 +1,74 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+
 public class GameState {
-	ArrayList<Character> players;
-	ArrayList<Character> enemies;
-	ArrayList<Scenic> obstacles;
+	// The key is a unique identifier assigned to each Client and enemy by the 
+	// Server.  it is simply a counter maintained by the server
+	Integer ENEMY = 0;
+	Integer PLAYER = 1;
 
-	ArrayList<Character> updated; 	// Any time a player is updated, add player
-					// or enemy to this
+	HashMap<Integer, Character> players;
+	HashMap<Integer, Character> enemies;
+	List<Scenic> obstacles;
 
-	HashMap<Character, Vector> prevCoords;
-	HashMap<Character, Integer> prevHealths;
+	HashMap<Integer, Vector> prevCoords; // Key: unique identifier for client
+	HashMap<Integer, Integer> prevHealths;
 
-	class GameDelta {
-		// Store updated coordinates by hash values of characters
-		// store updated healths by hash values of characters
-		void update(Character c);
+	int prevId;
+
+	public GameState() {
+		prevId = -1;
+		players = new HashMap<>();
+		enemies = new HashMap<>();
+		obstacles = new ArrayList<>();
+		prevCoords = new HashMap<>();
+		prevHealths = new HashMap<>();
 	}
 
-	public void applyGameDelta(GameDelta gd);
+	/**
+	 * Apply the given GameDelta.  Updates coordinates and health of a
+	 * given Character.
+	 * @param gd The GameDelta to apply.
+	 */
+	public void applyGameDelta(GameDelta gd) {
+		Character c = null;
+		if (players.containsKey( gd.uniqueID ))
+			c = players.get( gd.uniqueID );
+		else if (enemies.containsKey( gd.uniqueID ))
+			c = enemies.get( gd.uniqueID );
+		else {
+			addCharacter(gd);
+		}
+			
+			c.setLocation( gd.coords );
+			c.setHealth( gd.health );
+	}
+
+	/**
+	 * Add a Character to players or enemies, depending on the type.
+	 * @param gd The GameDelta describing a non-extant Character.
+	 */
+	private void addCharacter(GameDelta gd) {
+		Character c = null;
+		BufferedImage playerImage = null;
+		try {
+			//TODO differentiate image by gd.type
+			playerImage = ImageIO.read( new File("character.png") );
+		}
+		catch (IOException ioe) { System.out.println(ioe); }
+		c = new Character(playerImage, gd.coords);
+
+		Integer aUniqueID = prevId + 1;
+		prevId++;
+
+		if (gd.type == ENEMY)
+			enemies.put(aUniqueID, c);
+		else if (gd.type == PLAYER)
+			players.put(aUniqueID, c);
+	}
 }
