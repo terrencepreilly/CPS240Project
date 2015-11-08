@@ -25,6 +25,6 @@ class GameDelta implements java.io.Serializable {
 
 
 	public String toString() {
-		return String.format("#%d %s Health: %d Type: %d", uniqueID, coords.toString(), health, type);
+		return String.format("delta: %s HP: %d ID: %d Type: %d", coords.toString(), health, uniqueID, type);
 	}
 }

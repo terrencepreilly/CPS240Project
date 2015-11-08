@@ -128,6 +128,6 @@ class Character extends Actor implements GameConstants {
 	 * @return A String representation of this Character.
 	 */
 	public String toString(){
-		return "This characters location: " + this.getLocation() + "and health: " + health + ".";
+		return this.getLocation() + " HP: " + health + " ID: " + uniqueID;
 	}
 }

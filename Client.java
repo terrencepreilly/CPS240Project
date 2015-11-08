@@ -38,6 +38,11 @@ public class Client implements GameConstants {
 		player = gamestate.createCharacter(null);
 		player.setType(GameConstants.PLAYER);
 		gamestate.add(player);
+
+		writeGameDelta();
+		GameDelta initDelta = readGameDelta();
+		if (initDelta != null) 
+			player.setUniqueID(initDelta.uniqueID);
 	}
 
 	/**
@@ -46,13 +51,17 @@ public class Client implements GameConstants {
 	// TODO Call this for every movement of player, and for each
 	// enemy killed
         public void writeGameDelta() {
+		GameDelta gd = gamestate.createGameDelta( player );
+		writeGameDelta(gd);
+        }
+
+	public void writeGameDelta(GameDelta gd) {
                 try {
-                        GameDelta gd = gamestate.createGameDelta( player );
                         out.writeObject(gd);
                         out.flush();
                 }
                 catch (IOException ioe) {}
-        }
+	}
 
 	/**
          * Read the next GameDelta from the connection.
@@ -74,10 +83,8 @@ public class Client implements GameConstants {
 	}
 	
 	public static void main(String[] args) {
-		String message = "Hello world!";
 		Client c = new Client("localhost", 8000);
-		c.writeGameDelta();
-		System.out.println(c.readGameDelta());
+		System.out.println(c.player);
 		c.close();
 	}
 }

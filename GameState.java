@@ -16,10 +16,7 @@ public class GameState implements GameConstants {
 	HashMap<Integer, Vector> prevCoords; // Key: unique identifier for client
 	HashMap<Integer, Integer> prevHealths;
 
-	int prevId;
-
 	public GameState() {
-		prevId = -1;
 		players = new HashMap<>();
 		enemies = new HashMap<>();
 		obstacles = new ArrayList<>();
@@ -113,13 +110,10 @@ public class GameState implements GameConstants {
 		if (gd != null) {
                 	c = new Character(playerImage, gd.coords);
 			c.setHealth( gd.health );
+			c.setUniqueID( gd.uniqueID );
 		}
 		else 
 			c = new Character(playerImage, new Vector(0f, 0f));
-
-                Integer aUniqueID = prevId + 1;
-                prevId++;
-                c.setUniqueID(aUniqueID);
 
 		return c;
 	}
