@@ -26,6 +26,8 @@ public class Server implements GameConstants {
 	Character enemy;
 	GameState gamestate;
 
+	private int prevID;
+
 	/**
 	 * Initialize the server at the given port.
 	 * @param port The port at which to open this Server.
@@ -43,6 +45,7 @@ public class Server implements GameConstants {
 		gamestate = new GameState();
 		enemy = gamestate.createCharacter(null);
 		gamestate.add(enemy);
+		prevID = -1;
 	}
 
 	/**
@@ -58,13 +61,21 @@ public class Server implements GameConstants {
 	 */
 	//TODO Send a GameDelta for each enemy, to each client.
 	public void writeGameDelta() {
-		try { 
-			GameDelta gd = gamestate.createGameDelta( enemy );
-			out.writeObject(gd); 
-			out.flush(); 
-		} 
-		catch (IOException ioe) {}
+		GameDelta gd = gamestate.createGameDelta( enemy );
+		writeGameDelta(gd);
 	}
+
+	/**
+	 * Send the given GameDelta.
+	 * @param gd The GameDelta to send to the socket.
+	 */
+	public void writeGameDelta(GameDelta gd) {
+                try {
+                        out.writeObject(gd);
+                        out.flush();
+                }
+                catch (IOException ioe) {}
+        }
 
 	/**
 	 * Read the next GameDelta from the connection.
@@ -77,10 +88,28 @@ public class Server implements GameConstants {
                 return null;
         }
 
+	/**
+	 * Read the next GameDelta from the connection, and apply it.  If the
+	 * uniqueID of the GameDelta is -1, redefine as prevID+1, apply, and 
+	 * return the updated GameDelta.
+	 */
+	public void readAndApply() {
+		GameDelta gd = readGameDelta();
+		if (gd == null)
+			return;
+		if (gd.uniqueID == -1) {
+			prevID++;
+			gd.uniqueID = prevID;
+			writeGameDelta(gd);
+			gamestate.applyGameDelta(gd);
+		}
+		else
+			gamestate.applyGameDelta(gd);
+	}
+
 	public static void main(String[] args) {
 		Server s = new Server(8000);
-		s.writeGameDelta();
-		System.out.println(s.readGameDelta());
+		s.readAndApply();
 		s.close();
 	}
 
