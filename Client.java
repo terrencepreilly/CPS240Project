@@ -36,7 +36,7 @@ public class Client implements GameConstants {
 
 		gamestate = new GameState();
 		player = gamestate.createCharacter(null);
-		player.setType(GameConstants.PLAYER);
+		player.setType(PLAYER);
 		gamestate.add(player);
 
 		writeGameDelta();

@@ -31,7 +31,7 @@ class Character extends Actor implements GameConstants {
 		boxCollider.setLocation(location);
 		health = 10;
 		uniqueID = -1;
-		type = ENEMY;
+		type = 0;
 	}
 
 	/**
@@ -128,6 +128,6 @@ class Character extends Actor implements GameConstants {
 	 * @return A String representation of this Character.
 	 */
 	public String toString(){
-		return this.getLocation() + " HP: " + health + " ID: " + uniqueID;
+		return this.getLocation() + " HP: " + health + " ID: " + uniqueID + " (" + (type == ENEMY ? "enemy" : "player") +  " " + type + ")";
 	}
 }

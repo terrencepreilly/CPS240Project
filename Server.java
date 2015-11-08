@@ -44,8 +44,10 @@ public class Server implements GameConstants {
 
 		gamestate = new GameState();
 		enemy = gamestate.createCharacter(null);
+		enemy.setType(ENEMY);
 		gamestate.add(enemy);
-		prevID = -1;
+		enemy.setUniqueID(0);
+		prevID = 0;
 	}
 
 	/**
@@ -110,6 +112,7 @@ public class Server implements GameConstants {
 	public static void main(String[] args) {
 		Server s = new Server(8000);
 		s.readAndApply();
+		System.out.println(s.gamestate);
 		s.close();
 	}
 

@@ -9,16 +9,14 @@ import java.awt.image.BufferedImage;
 public class GameState implements GameConstants {
 	// The key is a unique identifier assigned to each Client and enemy by the 
 	// Server.  it is simply a counter maintained by the server
-	HashMap<Integer, Character> players;
-	HashMap<Integer, Character> enemies;
+	HashMap<Integer, Character> characters;
 	List<Scenic> obstacles;
 
 	HashMap<Integer, Vector> prevCoords; // Key: unique identifier for client
 	HashMap<Integer, Integer> prevHealths;
 
 	public GameState() {
-		players = new HashMap<>();
-		enemies = new HashMap<>();
+		characters = new HashMap<>();
 		obstacles = new ArrayList<>();
 		prevCoords = new HashMap<>();
 		prevHealths = new HashMap<>();
@@ -31,13 +29,8 @@ public class GameState implements GameConstants {
 	 */
 	public void applyGameDelta(GameDelta gd) {
 		Character c = null;
-		if (players.containsKey( gd.uniqueID )) {
-			c = players.get( gd.uniqueID );
-			c.setLocation( gd.coords );
-                        c.setHealth( gd.health );
-		}
-		else if (enemies.containsKey( gd.uniqueID )) {
-			c = enemies.get( gd.uniqueID );
+		if (characters.containsKey( gd.uniqueID )) {
+			c = characters.get( gd.uniqueID );
 			c.setLocation( gd.coords );
                         c.setHealth( gd.health );
 		}
@@ -52,11 +45,11 @@ public class GameState implements GameConstants {
 	 * @return A new GameDelta signifying the changes.
 	 */
 	public GameDelta createGameDelta(Integer uid) {
-		if (! (players.containsKey(uid) || enemies.containsKey(uid)))
+		if (! characters.containsKey(uid))
 			return null;
 
-		Character c = players.containsKey(uid) ? players.get(uid) : enemies.get(uid);
-		int type = players.containsKey(uid) ? PLAYER : ENEMY;
+		Character c = characters.get(uid);
+		int type = c.getType();
 
 		GameDelta gd = new GameDelta( uid, c.getBoxCollider().getLocation(), c.getHealth(), type ); 
 		return gd;
@@ -73,7 +66,7 @@ public class GameState implements GameConstants {
 	}
 
 	/**
-	 * Add a Character to players or enemies, depending on the type.
+	 * Add a Character to characters.
 	 * @param gd The GameDelta describing a non-extant Character.
 	 */
 	private void addCharacter(GameDelta gd) {
@@ -82,15 +75,10 @@ public class GameState implements GameConstants {
 	}
 
 	/**
-	 * Add a Character to players or enemies, depending on the type.
+	 * Add a Character to characters.
 	 * @param c The Character to be addded.
 	 */
-	public void add(Character c) {
-		if (c.getType() == ENEMY)
-			enemies.put(c.getUniqueID(), c);
-		else
-			players.put(c.getUniqueID(), c);
-	}
+	public void add(Character c) { characters.put(c.getUniqueID(), c); }
 
 	/**
 	 * Make a new Character from the given GameDelta.  If the given GameDelta
@@ -111,9 +99,12 @@ public class GameState implements GameConstants {
                 	c = new Character(playerImage, gd.coords);
 			c.setHealth( gd.health );
 			c.setUniqueID( gd.uniqueID );
+			c.setType(gd.type);
 		}
-		else 
+		else {
 			c = new Character(playerImage, new Vector(0f, 0f));
+			c.setType(ENEMY);
+		}
 
 		return c;
 	}
@@ -121,13 +112,9 @@ public class GameState implements GameConstants {
 
 	public String toString() {
 		String ret = "";
-		ret += "Players\n";
-		for (Integer uid : players.keySet())
-			ret += "\t" + players.get(uid) + "\n";
-
-		System.out.println("\nEnemies\n");
-		for (Integer uid : enemies.keySet())
-			ret += "\t" + enemies.get(uid) + "\n";
+		ret += "Characters\n";
+		for (Integer uid : characters.keySet())
+			ret += "\t" + characters.get(uid) + "\n";
 
 		return ret;
 	}
