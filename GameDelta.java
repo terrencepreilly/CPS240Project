@@ -23,6 +23,13 @@ class GameDelta implements java.io.Serializable {
 		this.type = type;
 	}
 
+	public GameDelta(Integer uniqueID) {
+		this.uniqueID = uniqueID;
+		this.coords = null;
+		this.health = 0;
+		this.type = 0;
+	}
+
 
 	public String toString() {
 		return String.format("delta: %s HP: %d ID: %d Type: %d", coords.toString(), health, uniqueID, type);
