@@ -45,10 +45,10 @@ public class Server implements GameConstants {
 		gamestate = new GameState();
 		enemy = gamestate.createCharacter(null);
 		enemy.setType(ENEMY);
-		gamestate.add(enemy);
 		enemy.setUniqueID(0);
+		gamestate.add(enemy);
 		prevID = 0;
-	}
+	} 
 
 	/**
 	 * Close the Server.
@@ -76,7 +76,10 @@ public class Server implements GameConstants {
                         out.writeObject(gd);
                         out.flush();
                 }
-                catch (IOException ioe) {}
+                catch (IOException ioe) {
+			System.out.println("Problem writing GameDelta\n");
+			ioe.printStackTrace();
+		}
         }
 
 	/**
@@ -85,8 +88,14 @@ public class Server implements GameConstants {
 	 */
 	public GameDelta readGameDelta() {
                 try { return (GameDelta) in.readObject(); }
-                catch (IOException ioe) { System.out.println(ioe);}
-                catch (ClassNotFoundException cnfe) {}
+                catch (IOException ioe) { 
+			//System.out.println("Problem reading GameDelta\n");
+		//	ioe.printStackTrace(); 
+		}
+                catch (ClassNotFoundException cnfe) {
+			System.out.println("Problem translating data\n");
+			cnfe.printStackTrace();
+		}
                 return null;
         }
 
@@ -94,23 +103,31 @@ public class Server implements GameConstants {
 	 * Read the next GameDelta from the connection, and apply it.  If the
 	 * uniqueID of the GameDelta is -1, redefine as prevID+1, apply, and 
 	 * return the updated GameDelta.
+	 * @return True if a valid GameDelta was read. False otherwise.
 	 */
-	public void readAndApply() {
+	//TODO update all clients with received delta.
+	public boolean readAndApply() {
 		GameDelta gd = readGameDelta();
-		if (gd == null)
-			return;
+		if (gd == null) {
+			return false;
+		}
+
 		if (gd.uniqueID == -1) {
 			prevID++;
 			gd.uniqueID = prevID;
 			writeGameDelta(gd);
 			gamestate.applyGameDelta(gd);
 		}
-		else
+		else {
 			gamestate.applyGameDelta(gd);
+			// update all clients here
+		}
+		return true;
 	}
 
 	public static void main(String[] args) {
 		Server s = new Server(8000);
+		s.readAndApply(); 
 		s.readAndApply();
 		System.out.println(s.gamestate);
 		s.close();

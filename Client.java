@@ -9,8 +9,7 @@ import java.io.IOException;
  * A basic Game Client.  Each player will run a Client, connected to a Server.
  * (Either on their own machine or on another.)
  */
-// TODO Request a unique id for the player from the server.  Update the 
-// player and send the resulting GameDelta to the Server.
+//TODO request updates for each character from server
 public class Client implements GameConstants {
 	String host;
 	int port;
@@ -37,12 +36,14 @@ public class Client implements GameConstants {
 		gamestate = new GameState();
 		player = gamestate.createCharacter(null);
 		player.setType(PLAYER);
-		gamestate.add(player);
 
 		writeGameDelta();
+
 		GameDelta initDelta = readGameDelta();
-		if (initDelta != null) 
+		if (initDelta != null)
 			player.setUniqueID(initDelta.uniqueID);
+
+		gamestate.add(player);
 	}
 
 	/**
@@ -74,6 +75,16 @@ public class Client implements GameConstants {
 		return null;
 	}
 
+	//TODO delete after testing
+	public void testMoveAndUpdateCharacter() {
+		player.setLocation( new Vector(500f, 500f) );
+		GameDelta gd = gamestate.createGameDelta(player);
+		System.out.println(gamestate.createGameDelta(player));
+		writeGameDelta(gd);
+//		System.out.println(gamestate);
+//		System.out.println("-\t\t\t" + gd);
+	}
+
 	/**
 	 * Close the Client.
 	 */
@@ -84,7 +95,10 @@ public class Client implements GameConstants {
 	
 	public static void main(String[] args) {
 		Client c = new Client("localhost", 8000);
-		System.out.println(c.player);
+//		System.out.println(c.player);
+		c.testMoveAndUpdateCharacter();
+//		System.out.println(c.player);
+//		System.out.println("\n\n" + c.gamestate);
 		c.close();
 	}
 }

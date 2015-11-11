@@ -12,14 +12,9 @@ public class GameState implements GameConstants {
 	HashMap<Integer, Character> characters;
 	List<Scenic> obstacles;
 
-	HashMap<Integer, Vector> prevCoords; // Key: unique identifier for client
-	HashMap<Integer, Integer> prevHealths;
-
 	public GameState() {
 		characters = new HashMap<>();
 		obstacles = new ArrayList<>();
-		prevCoords = new HashMap<>();
-		prevHealths = new HashMap<>();
 	}
 
 	/**
@@ -62,7 +57,11 @@ public class GameState implements GameConstants {
 	 * @return The GameDelta representing the new stats of this Character.
 	 */
 	public GameDelta createGameDelta(Character c) {
-		return createGameDelta( c.getUniqueID() );
+		if (characters.containsKey( c.getUniqueID() ))
+			return createGameDelta( c.getUniqueID() );
+		else {
+			return new GameDelta( c.getUniqueID(), c.getBoxCollider().getLocation(), c.getHealth(), c.getType() );
+		}
 	}
 
 	/**
