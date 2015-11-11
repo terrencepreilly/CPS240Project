@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
@@ -107,6 +108,12 @@ public class GameState implements GameConstants {
 
 		return c;
 	}
+
+	/**
+	 * Return all IDs held in this GameState.
+	 * @return A set of all IDs in this GameState.
+	 */
+	public Set<Integer> getIDs() { return characters.keySet(); }
 
 
 	public String toString() {

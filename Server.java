@@ -1,3 +1,5 @@
+import java.util.Set;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -112,15 +114,23 @@ public class Server implements GameConstants {
 			return false;
 		}
 
-		if (gd.uniqueID == -1) {
+		if (gd.uniqueID == UID_REQUEST) {
 			prevID++;
 			gd.uniqueID = prevID;
 			writeGameDelta(gd);
 			gamestate.applyGameDelta(gd);
 		}
+		else if (gd.uniqueID == UPDATE_REQUEST) {
+			Set<Integer> uids = gamestate.getIDs();
+			writeGameDelta( new GameDelta(uids.size()) );
+
+			for (Integer id : uids)
+				writeGameDelta( gamestate.createGameDelta(id) );
+
+			System.out.println("---" + uids.size());
+		}
 		else {
 			gamestate.applyGameDelta(gd);
-			// update all clients here
 		}
 		return true;
 	}
@@ -128,6 +138,7 @@ public class Server implements GameConstants {
 	public static void main(String[] args) {
 		Server s = new Server(8000);
 		s.readAndApply(); 
+		s.readAndApply();
 		s.readAndApply();
 		System.out.println(s.gamestate);
 		s.close();

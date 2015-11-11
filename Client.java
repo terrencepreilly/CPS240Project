@@ -75,6 +75,17 @@ public class Client implements GameConstants {
 		return null;
 	}
 
+	public void requestUpdate() {
+		writeGameDelta( new GameDelta(UPDATE_REQUEST) );
+		int n = readGameDelta().uniqueID;
+		System.out.println(n + " records to update");
+		for (int i = 0; i < n; i++) {
+			GameDelta gd = readGameDelta();
+			System.out.println( "\t" + gd );
+			gamestate.applyGameDelta(gd);
+		}
+	}
+
 	//TODO delete after testing
 	public void testMoveAndUpdateCharacter() {
 		player.setLocation( new Vector(500f, 500f) );
@@ -99,6 +110,8 @@ public class Client implements GameConstants {
 		c.testMoveAndUpdateCharacter();
 //		System.out.println(c.player);
 //		System.out.println("\n\n" + c.gamestate);
+		c.requestUpdate();
+		System.out.println( c.gamestate );
 		c.close();
 	}
 }
