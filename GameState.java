@@ -184,6 +184,18 @@ public class GameState implements GameConstants {
 		}
 	}
 
+	/**
+	 * Get the map of all Characters.
+	 * @return A HashMap of all Characters.
+	 */
+	public HashMap<Integer, Character> getCharacters() { return characters; }
+
+	/**
+	 * Get the list of all Obstacles.
+	 * @return A List of all obstacles.
+	 */
+	public List<Scenic> getObstacles() { return obstacles; }
+
 	public String toString() {
 		String ret = "";
 		ret += "Characters\n";

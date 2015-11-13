@@ -48,6 +48,7 @@ public class Server implements GameConstants {
 		enemy = gamestate.createCharacter(null);
 		enemy.setType(ENEMY);
 		enemy.setUniqueID(0);
+		enemy.setLocation(new Vector(100f, 100f));
 		gamestate.add(enemy);
 		prevID = 0;
 	} 
@@ -126,8 +127,6 @@ public class Server implements GameConstants {
 
 			for (Integer id : uids)
 				writeGameDelta( gamestate.createGameDelta(id) );
-
-			System.out.println("---" + uids.size());
 		}
 		else {
 			gamestate.applyGameDelta(gd);

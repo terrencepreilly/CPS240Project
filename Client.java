@@ -38,7 +38,9 @@ public class Client implements GameConstants {
 			out = new ObjectOutputStream( socket.getOutputStream() );
 			in = new ObjectInputStream( socket.getInputStream() );
 		}
-		catch (IOException ioe) {}
+		catch (IOException ioe) {
+			System.out.println("Unable to connect to host.");
+		}
 
 		if (gamestate == null)
 			this.gamestate = new GameState();
@@ -95,6 +97,12 @@ public class Client implements GameConstants {
 			gamestate.applyGameDelta(gd);
 		}
 	}
+
+	/**
+	 * Get the player.
+	 * @return The player for this Client.
+	 */
+	public Character getPlayer() { return player; }
 
 	//TODO delete after testing
 	public void testMoveAndUpdateCharacter() {

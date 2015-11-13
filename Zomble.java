@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.HashMap;
+
 import javax.imageio.ImageIO;
 
 import javax.swing.JFrame;
@@ -26,19 +28,35 @@ import javax.swing.SwingUtilities;
  * The main game class.  Used for debugging and testing items until networking 
  * is resolved. 
  */
-public class Zomble extends JFrame implements Runnable {
-	private volatile boolean running;
-	private Thread gameThread;
-	private BufferStrategy bs;
+public class Zomble extends JFrame implements Runnable, GameConstants {
+	private GameState gamestate;		// Game & Charaters
+	private Character player;
+
+	private Client client;			// Networking
+
+	private BufferStrategy bs;		// Graphics
 	private DisplayMode displayMode;
 	private Canvas canvas;
+	private BufferedImage playerImage;
+	private BufferedImage obstacleImage;
+	private BufferedImage enemyImage;
 	
-	private GameKeyboard gameKeyboard;
+	private GameKeyboard gameKeyboard;	// UI
+
+	private volatile boolean running;	// Game Logic
+	private Thread gameThread;
+
 
 	/**
 	 * Create the GUI, add elements, start the game thread.
 	 */
 	protected void createGUI(){
+		gamestate = new GameState();
+		client = new Client("localhost", 8000, gamestate);
+		player = client.getPlayer();
+
+		client.requestUpdate();
+
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		displayMode = gd.getDisplayMode();
@@ -80,6 +98,7 @@ public class Zomble extends JFrame implements Runnable {
 				try{
 					g = bs.getDrawGraphics();
 					g.clearRect(0, 0, displayMode.getWidth(), displayMode.getHeight());
+					render(g);
 				} finally {
 					if(g != null){
 						g.dispose();
@@ -89,27 +108,52 @@ public class Zomble extends JFrame implements Runnable {
 			bs.show();
 		} while(bs.contentsLost());
 	}
-	
+
+	/**
+	 * Draw all Characters to the screen.
+	 * @param g The graphics context.
+	 */
+	private void render(Graphics g) {
+		HashMap<Integer, Character> characters = gamestate.getCharacters();
+		for (Integer uid : characters.keySet()) {
+			Character c = characters.get(uid);
+			g.drawImage(
+				(c.getType() == ENEMY) ? enemyImage : playerImage,
+				(int) c.getLocation().x,
+				(int) c.getLocation().y,
+				null
+			);
+		}
+		for (Scenic s : gamestate.getObstacles()) {
+			g.drawImage(
+				obstacleImage,
+				(int) s.getLocation().x,
+				(int) s.getLocation().y,
+				null
+			);
+		}
+	}
 
 	/**
 	 * Initialize global variables, load images, set obstacles.
 	 */
 	private void initialize(){
 		//need to create our character
-		BufferedImage mainPlayerImage = null;
-		BufferedImage mainObstacleImage = null;
+		playerImage = null;
+		obstacleImage = null;
+		enemyImage = null;
+
 		try {
-			mainPlayerImage = ImageIO.read(new File("character.png"));
-			mainObstacleImage = ImageIO.read(new File("obstacle.png"));
+			playerImage = ImageIO.read(new File("character.png"));
+			obstacleImage = ImageIO.read(new File("obstacle.png"));
+			enemyImage = ImageIO.read(new File("character.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// add characters 
-		// add obstacles
 
 		//add new keyboard listener GameKeyboard
-		//gameKeyboard = new GameKeyboard(mainC);
+		gameKeyboard = new GameKeyboard( player );
 		canvas.addKeyListener(gameKeyboard);
 	}
 	
