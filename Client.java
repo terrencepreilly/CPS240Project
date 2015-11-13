@@ -21,11 +21,18 @@ public class Client implements GameConstants {
 	Character player;
 
 	/**
+	 * Create a new Client with internal gamestate.
+	 */
+	public Client(String host, int port) {
+		this(host, port, null);
+	}
+
+	/**
 	 * Create a new Client.
 	 * @param host The name of the server where we want to connect.
 	 * @param port The port of the server where we're connecting.
 	 */
-	public Client(String host, int port) {
+	public Client(String host, int port, GameState gamestate) {
 		try {
 			socket = new Socket(host, port);
 			out = new ObjectOutputStream( socket.getOutputStream() );
@@ -33,8 +40,11 @@ public class Client implements GameConstants {
 		}
 		catch (IOException ioe) {}
 
-		gamestate = new GameState();
-		player = gamestate.createCharacter(null);
+		if (gamestate == null)
+			this.gamestate = new GameState();
+		else
+			this.gamestate = gamestate;
+		player = this.gamestate.createCharacter(null);
 		player.setType(PLAYER);
 
 		writeGameDelta();
@@ -43,7 +53,7 @@ public class Client implements GameConstants {
 		if (initDelta != null)
 			player.setUniqueID(initDelta.uniqueID);
 
-		gamestate.add(player);
+		this.gamestate.add(player);
 	}
 
 	/**

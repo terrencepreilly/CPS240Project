@@ -5,17 +5,7 @@ import java.awt.event.KeyListener;
 
 
 /**
- * GameKeyboard.java
- *
- * Custom KeyListener/Keyboard class
- * We want this to move our character
- * Only problem is how do we do that without passing the
- * entire character and allowing it to be manipulated?
- * We don't. :) Well we could, but I prefer this way for now.
- * If we wanted we could re-write the process input method to return a
- * value. We would simply have to pass in the integer KeyCode of the value we wish to analyze
- * I have written such a method below. We may need this later because for boundary checking and such
- * it may be better to write complex if/case structures NOT in the GameKeyboard class
+ * A utility for handling Keyboard input.
  * @author Tyler Beachnau
  */
 class GameKeyboard implements KeyListener{

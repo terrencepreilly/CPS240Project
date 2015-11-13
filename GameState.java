@@ -1,11 +1,13 @@
 import java.util.HashMap;
 import java.util.Set;
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.geom.Point2D;
 
 public class GameState implements GameConstants {
 	// The key is a unique identifier assigned to each Client and enemy by the 
@@ -115,6 +117,72 @@ public class GameState implements GameConstants {
 	 */
 	public Set<Integer> getIDs() { return characters.keySet(); }
 
+        private Vector getAGoodLocation(BoxCollider obsBC, BoxCollider chaBC) {
+                // Find an overlapping vertex.
+                Point2D.Float overlaps = null;
+                for (Point2D.Float pf : chaBC.getVertices()) {
+                        if (obsBC.contains( pf ))
+                                overlaps = pf;
+                } 
+
+                // find closest edge 
+                Point2D.Float top = new Point2D.Float(0f, obsBC.getLocation().y);
+                Point2D.Float left = new Point2D.Float(obsBC.getLocation().x, 0f);
+                Point2D.Float right = new Point2D.Float(obsBC.getLocation().x + (float) obsBC.getWidth(), 0f);
+                Point2D.Float bottom = new Point2D.Float(0f, obsBC.getLocation().y + (float) obsBC.getHeight());
+
+                Point2D.Float closest = null;
+                for (Point2D.Float pf : Arrays.asList( new Point2D.Float[] { top, left, right, bottom } ) ) {
+                        if (closest == null || overlaps.distance(closest) > overlaps.distance(pf))
+                                closest = pf;
+                }
+
+                // Update one coordinate to push outside.
+                Vector addVec = new Vector(0f, 0f);
+                if (closest.equals(top)) 
+                        addVec.y = -1*(overlaps.y - closest.y) - 0.1f;  
+                else if (closest.equals(left))
+                        addVec.x = -1*(overlaps.x - closest.x) - 0.1f;
+                else if (closest.equals(right))
+                        addVec.x = closest.x - overlaps.x + 0.1f; 
+                else if (closest.equals(bottom))
+                        addVec.y = closest.y - overlaps.y + 0.1f; 
+                
+                return chaBC.getLocation().add(addVec);
+        }
+
+	/**
+	 * Detect collisions and restore characters to A Good Location.
+	 */
+	private void detectCollisions() {
+		boolean needToReset = false;
+		for (Integer cuid : characters.keySet()) {
+			Character c = characters.get(cuid);
+			BoxCollider cbc = c.getBoxCollider();
+
+			for (Scenic s : obstacles) {
+				BoxCollider sbc = s.getBoxCollider();
+				if (sbc.intersects(cbc)) {
+					needToReset = true;
+					c.setLocation(getAGoodLocation(sbc, cbc));
+				}
+			}
+
+			for (Integer cuid2 : characters.keySet()) {
+				Character c2 = characters.get(cuid2);
+				BoxCollider c2bc = c2.getBoxCollider();
+				if ( !(cuid == cuid2) && cbc.intersects(c2bc) ) {
+					needToReset = true;
+					c.setLocation(c.getLastGoodLocation());
+					c2.setLocation(c2.getLastGoodLocation());
+				}
+			}
+
+			if (! needToReset) {
+				c.setLastGoodLocation(c.getLocation());
+			}
+		}
+	}
 
 	public String toString() {
 		String ret = "";
