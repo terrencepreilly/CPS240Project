@@ -1,11 +1,26 @@
-import java.awt.event.*;
-import java.awt.image.*;
-import java.awt.*;
-import java.io.*;
-import java.util.*;
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.DisplayMode;
+import java.awt.Graphics;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import java.awt.geom.Point2D;
+
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 
 /**
  * The main game class.  Used for debugging and testing items until networking 
@@ -56,7 +71,7 @@ public class Zomble extends JFrame implements Runnable {
 	}
 
 	/**
-	 * Render the frame. ???
+	 * Render the frame.
 	 */
 	private void renderFrame() {
 		do{
@@ -70,7 +85,7 @@ public class Zomble extends JFrame implements Runnable {
 						g.dispose();
 					}
 				}
-			}while(bs.contentsRestored());
+			} while(bs.contentsRestored());
 			bs.show();
 		} while(bs.contentsLost());
 	}
