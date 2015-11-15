@@ -14,6 +14,7 @@ class Character extends Actor{
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
 	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
+	private int direction; //direction the character is facing to allow manipulation via degrees
 	
 	/**
 	 * Create a new Character.
@@ -28,6 +29,7 @@ class Character extends Actor{
 		setBoxCollider(image);
 		boxCollider.setLocation(location);
 		health = 10;
+		direction = 90; //default, facing north
 	}
 
 	/**
@@ -74,7 +76,22 @@ class Character extends Actor{
 		super.setLocation(location);
 		boxCollider.setLocation(location);
 	}
+	
+	/**
+	 * Set direction faced by character as a degree "based on unit circle" e.g. right = 0 degrees, left = 180 degrees, etc
+	 * @param dValue The value of the direction to be set, passed as a degree value.
+	 */
+	public void setDirection(int dValue){
+		direction = dValue % 360; //if user sets as 90, will be 90, if set as 360, will be 0,
+	}
 
+	/**
+	 * @return the direction faced by this character.
+	 */
+	public int getDirection(){
+		return direction;
+	}
+	
 	/**
 	 * Get the BoxCollider of this Character.
 	 * @return The BoxCollider for this Character.
