@@ -19,6 +19,8 @@ import java.io.IOException;
 // (I.e. when a client wants to create a new character and needs a 
 // unique id.  Use an Integer in the DataInputStream, and define constants
 // in GameConstants)
+
+// Implement runnable, then have a client which updates the enemy locations.
 public class Server implements GameConstants {
 	ServerSocket serverSocket;
 	Socket socket;

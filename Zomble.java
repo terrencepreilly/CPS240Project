@@ -84,7 +84,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	/**
 	 * Process user input.
 	 */
-	private void processInput(){
+	private void processInput() {
 		gameKeyboard.processInput();
 	}
 
@@ -190,6 +190,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		} catch(InterruptedException ex) {}
 		System.exit(0);
 	}
+
 	public static void main(String[] args ){
 		final Zomble app = new Zomble();
 		

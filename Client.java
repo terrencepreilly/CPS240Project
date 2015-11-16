@@ -26,6 +26,7 @@ public class Client extends AbstractClient implements GameConstants {
 		super(host, port, gamestate);
 
 		player = requestCharacter(PLAYER);
+		gamestate.add(player);
 	}
 
 	/**
