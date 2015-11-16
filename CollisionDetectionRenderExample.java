@@ -137,7 +137,7 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 	 * Move the enemy.  Enemy determines whether to use simpleStep or AStar.
 	 */
 	private void simpleMoveEnemy() {
-		/*
+		
 		dangerous.buildPath(
 			mainC.getLocation(),
 			displayMode.getWidth(),
@@ -147,7 +147,7 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 			mainC.getBoxCollider()
 		);
 		dangerous.step();
-		*/
+		
 	}
 
 	// This function is FUGLY.  
@@ -332,10 +332,10 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		//set image and location of our drawCharacter class
 		mainC = new Character(mainPlayerImage, new Vector(canvas.getWidth() / 2, canvas.getHeight() / 2));
 		mainBackground = new Background(canvas.getWidth(), canvas.getHeight());
-		/*
+		
 		for (Vector v : TEMPobsplace.getObstacles()) 
 			allObjects.add( new Scenic(mainObstacleImage, v ));
-		*/
+		
 		//add characters to the actor arraylist
 		allActors.add(mainC);
 		allActors.add(dangerous);
@@ -355,9 +355,6 @@ public class CollisionDetectionRenderExample extends JFrame implements Runnable 
 		processInput();
 		detectCollisions();
 		renderFrame();
-		//uncommenting the line below increases players speed over time, DO NOT use a value at or greater than 1, values lower than .08 are pretty acceptable
-		//but player speed can quickly go out of control, once we have a boundary it'll be nicer, and we can set a speed cap as well
-		//characterSpeed += 0.08f;
 		if (mainCMoved) 
 			simpleMoveEnemy();
 		sleep(10L);
