@@ -1,12 +1,9 @@
 import java.util.Set;
 
 import java.net.ServerSocket;
-import java.net.Socket;
-
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -15,133 +12,73 @@ import java.io.IOException;
  * and assigns unique ids to all Characters in the server and in 
  * each Client.
  */
-//TODO Handle unique IDs somehow.  Andle different types of requests.
-// (I.e. when a client wants to create a new character and needs a 
-// unique id.  Use an Integer in the DataInputStream, and define constants
-// in GameConstants)
-
-// Implement runnable, then have a client which updates the enemy locations.
 public class Server implements GameConstants {
-	ServerSocket serverSocket;
-	Socket socket;
-	ObjectInputStream in;
-	ObjectOutputStream out;
+	private ServerSocket serverSocket;
+	private GameState gamestate;
+	private int port;
 
-	Character enemy;
-	GameState gamestate;
+	private ArrayList<ServerThread> threads;
+	private boolean running;
 
-	private int prevID;
+	private SynchronizedIDCounter idcounter;
 
 	/**
 	 * Initialize the server at the given port.
 	 * @param port The port at which to open this Server.
 	 * @return A new Server.
 	 */
-	//TODO Connect multiple Clients
 	public Server(int port) {
+		gamestate = new GameState();
+		idcounter = new SynchronizedIDCounter();
+		threads = new ArrayList<ServerThread>();
+		running = true;
+		this.port = port;
+	}
+
+	/**
+	 * Connect any clients while the server is running.
+	 * Add the new thread to threads. (To join until all
+	 * have closed.)
+	 */
+	public void connectClients() {
 		try {
 			serverSocket = new ServerSocket(port);
-			socket = serverSocket.accept();
-			in = new ObjectInputStream( socket.getInputStream() );
-			out = new ObjectOutputStream( socket.getOutputStream() );
+			while (running) {
+				System.out.println("Waiting for thread...");
+				threads.add(
+					new ServerThread(
+						serverSocket.accept(),
+						gamestate,
+						idcounter
+					)
+				);
+				System.out.println("Connection found, starting thread");
+				threads.get( threads.size() - 1).start();
+			}
 		} catch (IOException ioe) {}
 
-		gamestate = new GameState();
-		enemy = gamestate.createCharacter(null);
-		enemy.setType(ENEMY);
-		enemy.setUniqueID(0);
-		enemy.setLocation(new Vector(100f, 100f));
-		gamestate.add(enemy);
-		prevID = 0;
 	} 
 
 	/**
 	 * Close the Server.
 	 */
 	public void close() {
-		try { in.close(); socket.close(); serverSocket.close(); }
+		System.out.println("Closing threads");
+		try { 
+			for (ServerThread st : threads) {
+				System.out.println("\tKilling " + st.getName());
+				st.killThread();
+				st.join();
+			}
+			serverSocket.close(); 
+		}
 		catch (IOException ioe) {}
-	}
-
-	/**
-	 * Send a GameDelta of the enemy to the connected Client.
-	 */
-	//TODO Send a GameDelta for each enemy, to each client.
-	public void writeGameDelta() {
-		GameDelta gd = gamestate.createGameDelta( enemy );
-		writeGameDelta(gd);
-	}
-
-	/**
-	 * Send the given GameDelta.
-	 * @param gd The GameDelta to send to the socket.
-	 */
-	public void writeGameDelta(GameDelta gd) {
-                try {
-                        out.writeObject(gd);
-                        out.flush();
-                }
-                catch (IOException ioe) {
-			System.out.println("Problem writing GameDelta\n");
-			ioe.printStackTrace();
-		}
-        }
-
-	/**
-	 * Read the next GameDelta from the connection.
-	 * @return The GameDelta that was read.
-	 */
-	public GameDelta readGameDelta() {
-                try { return (GameDelta) in.readObject(); }
-                catch (IOException ioe) { 
-			//System.out.println("Problem reading GameDelta\n");
-		//	ioe.printStackTrace(); 
-		}
-                catch (ClassNotFoundException cnfe) {
-			System.out.println("Problem translating data\n");
-			cnfe.printStackTrace();
-		}
-                return null;
-        }
-
-	/**
-	 * Read the next GameDelta from the connection, and apply it.  If the
-	 * uniqueID of the GameDelta is -1, redefine as prevID+1, apply, and 
-	 * return the updated GameDelta.
-	 * @return True if a valid GameDelta was read. False otherwise.
-	 */
-	//TODO update all clients with received delta.
-	public boolean readAndApply() {
-		GameDelta gd = readGameDelta();
-		if (gd == null) {
-			return false;
-		}
-
-		if (gd.uniqueID == UID_REQUEST) {
-			prevID++;
-			gd.uniqueID = prevID;
-			writeGameDelta(gd);
-			gamestate.applyGameDelta(gd);
-		}
-		else if (gd.uniqueID == UPDATE_REQUEST) {
-			Set<Integer> uids = gamestate.getIDs();
-			writeGameDelta( new GameDelta(uids.size()) );
-
-			for (Integer id : uids)
-				writeGameDelta( gamestate.createGameDelta(id) );
-		}
-		else {
-			gamestate.applyGameDelta(gd);
-		}
-		return true;
+		catch (InterruptedException ie) { System.out.println(ie); }
 	}
 
 	public static void main(String[] args) {
 		Server s = new Server(8000);
-		s.readAndApply(); 
-		s.readAndApply();
-		s.readAndApply();
-		System.out.println(s.gamestate);
+		s.connectClients();
 		s.close();
 	}
 

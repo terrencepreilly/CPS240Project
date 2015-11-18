@@ -7,3 +7,9 @@ Here is a list of features we have yet to implement:
 		- Losing health
 	* Sound
 	* Networking
+		- In order to implement multiple connections, the server must
+		use threading.  This makes a separate, enemy-handling client
+		unnecessary. Though it still may be easier, and cleaner.
+		A problem with multiple threads is that they must all update
+		gamestate.  GameState, then, must be synchronized, and use
+		only syncronized data types.

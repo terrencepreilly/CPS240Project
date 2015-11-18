@@ -10,4 +10,7 @@ public interface GameConstants {
 	// The number of Zombies to spawn at the start of the game.
 	// (Eventually change to a base spawn rate.)
 	public final int ZOMBIE_SPAWN = 2;
+
+	// Kills the thread this uniqueID is sent to.
+	public final int THREAD_KILL = -3;
 }

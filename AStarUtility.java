@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.LinkedHashSet;
 import java.util.ListIterator;
+import java.util.Collection;
 
 /**
  * A utility class for translating using the AStar algorithm.  Translates the 
@@ -15,12 +16,12 @@ class AStarUtility {
 	 * @param displayHeight The height of the display.
 	 * @param moveCharBC The boxCollider for the character who will
 	 * 	be moving.
-	 * @param allActors An ArrayList of all the Actors on the board.
+	 * @param allActors A Collection of all the Actors on the board.
 	 * @param allObjects An ArrayList of all the Objects on the board.
 	 * @return An ArrayList<Point> of nodes that the moving Actor can 
 	 * 	traverse.
 	 */
-	public static ArrayList<Point> getSpaces(int displayWidth, int displayHeight, BoxCollider moveCharBC, ArrayList<Character> allActors, ArrayList<Scenic> allObjects) {
+	public static ArrayList<Point> getSpaces(int displayWidth, int displayHeight, BoxCollider moveCharBC, Collection<Character> allActors, Collection<Scenic> allObjects) {
 		ArrayList<Point> ret = new ArrayList<Point>();
 		// 1) split the screen into moveCharBC size chunks
 		float width = (float) moveCharBC.getWidth();

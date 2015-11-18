@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /*
  * The actor is an abstract class meant to be extended by
@@ -86,11 +87,11 @@ public abstract class Actor {
 	 * 	nodes.)
 	 * @param dmH The hight dimension of Actor (for splitting the screen into
 	 * 	nodes.)
-	 * @param allActors An ArrayList of all the Actors on the board.
+	 * @param allActors A Collection of all the Actors on the board.
 	 * @param allObjects An ArrayList of all the Objects on the board.
 	 * @param mcBc The boxCollider for the main character.
 	 */
-	public void buildPath(Vector goal, int dmW, int dmH, ArrayList<Character> allActors, ArrayList<Scenic> allObjects, BoxCollider mcBC) {
+	public void buildPath(Vector goal, int dmW, int dmH, Collection<Character> allActors, Collection<Scenic> allObjects, BoxCollider mcBC) {
 		if (simpleStep) {
 			path = new LinkedList<Vector>();
 			path.add( goal.subtract(location) );

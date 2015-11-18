@@ -65,7 +65,7 @@ public class ZombieClient extends AbstractClient implements Runnable {
 			targetBC.getLocation(), // target
 			1000, // DisplayMode???????????
 			800,
-			gamestate.characters, // TODO MUST BE ARRAYLIST
+			gamestate.characters.values(), // TODO MUST BE ARRAYLIST
 			gamestate.obstacles, // TODO MUST BE ARRAYLIST
 			targetBC// target
 		);

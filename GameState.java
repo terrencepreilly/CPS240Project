@@ -25,7 +25,7 @@ public class GameState implements GameConstants {
 	 * given Character.
 	 * @param gd The GameDelta to apply.
 	 */
-	public void applyGameDelta(GameDelta gd) {
+	public synchronized void applyGameDelta(GameDelta gd) {
 		Character c = null;
 		if (characters.containsKey( gd.uniqueID )) {
 			c = characters.get( gd.uniqueID );
@@ -42,7 +42,7 @@ public class GameState implements GameConstants {
 	 * @param uid The unique ID for this Character.
 	 * @return A new GameDelta signifying the changes.
 	 */
-	public GameDelta createGameDelta(Integer uid) {
+	public synchronized GameDelta createGameDelta(Integer uid) {
 		if (! characters.containsKey(uid))
 			return null;
 
@@ -59,7 +59,7 @@ public class GameState implements GameConstants {
 	 * 	be used to create the GameDelta.
 	 * @return The GameDelta representing the new stats of this Character.
 	 */
-	public GameDelta createGameDelta(Character c) {
+	public synchronized GameDelta createGameDelta(Character c) {
 		if (characters.containsKey( c.getUniqueID() ))
 			return createGameDelta( c.getUniqueID() );
 		else {
@@ -71,7 +71,7 @@ public class GameState implements GameConstants {
 	 * Add a Character to characters.
 	 * @param gd The GameDelta describing a non-extant Character.
 	 */
-	private void addCharacter(GameDelta gd) {
+	private synchronized void addCharacter(GameDelta gd) {
 		Character c = createCharacter(gd);
 		add(c);
 	}
@@ -80,7 +80,7 @@ public class GameState implements GameConstants {
 	 * Add a Character to characters.
 	 * @param c The Character to be addded.
 	 */
-	public void add(Character c) { characters.put(c.getUniqueID(), c); }
+	public synchronized void add(Character c) { characters.put(c.getUniqueID(), c); }
 
 	/**
 	 * Make a new Character from the given GameDelta.  If the given GameDelta
@@ -88,7 +88,7 @@ public class GameState implements GameConstants {
 	 * @param gd The GameDelta.  If blank, use defaults.
 	 * @return A new Character.
 	 */
-	public Character createCharacter(GameDelta gd) {
+	public synchronized Character createCharacter(GameDelta gd) {
 		Character c = null;
                 BufferedImage playerImage = null;
                 try {
@@ -115,9 +115,9 @@ public class GameState implements GameConstants {
 	 * Return all IDs held in this GameState.
 	 * @return A set of all IDs in this GameState.
 	 */
-	public Set<Integer> getIDs() { return characters.keySet(); }
+	public synchronized Set<Integer> getIDs() { return characters.keySet(); }
 
-        private Vector getAGoodLocation(BoxCollider obsBC, BoxCollider chaBC) {
+        private synchronized Vector getAGoodLocation(BoxCollider obsBC, BoxCollider chaBC) {
                 // Find an overlapping vertex.
                 Point2D.Float overlaps = null;
                 for (Point2D.Float pf : chaBC.getVertices()) {
@@ -154,7 +154,7 @@ public class GameState implements GameConstants {
 	/**
 	 * Detect collisions and restore characters to A Good Location.
 	 */
-	private void detectCollisions() {
+	private synchronized void detectCollisions() {
 		boolean needToReset = false;
 		for (Integer cuid : characters.keySet()) {
 			Character c = characters.get(cuid);
@@ -188,15 +188,15 @@ public class GameState implements GameConstants {
 	 * Get the map of all Characters.
 	 * @return A HashMap of all Characters.
 	 */
-	public HashMap<Integer, Character> getCharacters() { return characters; }
+	public synchronized HashMap<Integer, Character> getCharacters() { return characters; }
 
 	/**
 	 * Get the list of all Obstacles.
 	 * @return A List of all obstacles.
 	 */
-	public List<Scenic> getObstacles() { return obstacles; }
+	public synchronized List<Scenic> getObstacles() { return obstacles; }
 
-	public String toString() {
+	public synchronized String toString() {
 		String ret = "";
 		ret += "Characters\n";
 		for (Integer uid : characters.keySet())
