@@ -77,7 +77,6 @@ public class ServerThread extends Thread implements GameConstants {
                         out.flush();
                 }
                 catch (IOException ioe) {
-			System.out.println("Problem writing GameDelta\n");
 			ioe.printStackTrace();
 		}
         }
@@ -143,6 +142,7 @@ public class ServerThread extends Thread implements GameConstants {
 			// Note, only one thread should update character location
 			// perhaps denote a given thread to be the updater
 			readAndApply();
+			System.out.println(gamestate);
 		}
 		close();
 	}
