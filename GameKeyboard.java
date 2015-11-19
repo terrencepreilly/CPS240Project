@@ -6,20 +6,19 @@ import java.awt.event.KeyListener;
 
 /**
  * A utility for handling Keyboard input.
- * @author Tyler Beachnau
  */
-class GameKeyboard implements KeyListener{
+class GameKeyboard implements KeyListener, GameConstants {
 
 	private Character character; //hold reference for main player
-	
-	private boolean[] keyPressed = new boolean[256];
-		
+	private Vector locUpdate;
+
 	/**
 	 * Create a new GameKeyboard instance.
 	 * @param character The character this keyboard controls.
 	 */
 	public GameKeyboard(Character character) {
 		this.character = character;
+		this.locUpdate = new Vector(0f, 0f);
 	}
 	
 	/**
@@ -27,45 +26,39 @@ class GameKeyboard implements KeyListener{
 	 * @param e The KeyEvent for the key that was pressed.
 	 */
 	public synchronized void keyPressed(KeyEvent e) {
-		keyPressed[e.getKeyCode()] = true;
+		if (e.getKeyCode() == KeyEvent.VK_LEFT)
+			locUpdate.x -= PLAYER_SPEED;
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+			locUpdate.x += PLAYER_SPEED;
+		if (e.getKeyCode() == KeyEvent.VK_UP)
+			locUpdate.y -= PLAYER_SPEED;
+		if (e.getKeyCode() == KeyEvent.VK_DOWN)
+			locUpdate.y += PLAYER_SPEED;
+	}
+
+        /**
+         * Reset whether the key was pressed.
+         * @param e The key to reset.
+         */
+        public synchronized void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_LEFT)
+                        locUpdate.x += PLAYER_SPEED;
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+                        locUpdate.x -= PLAYER_SPEED;
+                if (e.getKeyCode() == KeyEvent.VK_UP)
+                        locUpdate.y += PLAYER_SPEED;
+                if (e.getKeyCode() == KeyEvent.VK_DOWN)
+                        locUpdate.y -= PLAYER_SPEED;
 	}
 	
 	/**
 	 * Process the keys that were pressed, updating character location.
 	 */
 	public void processInput(){
-		if(keyPressed[KeyEvent.VK_LEFT]){
-			character.setLocation(new Vector(character.getLocation().x - 5.0f, character.getLocation().y));
-		}
-		if(keyPressed[KeyEvent.VK_RIGHT]){
-			character.setLocation(new Vector(character.getLocation().x + 5.0f, character.getLocation().y));
-		}
-		if(keyPressed[KeyEvent.VK_UP]){
-			character.setLocation(new Vector(character.getLocation().x, character.getLocation().y - 5.0f));
-		}
-		if(keyPressed[KeyEvent.VK_DOWN]){
-			character.setLocation(new Vector(character.getLocation().x, character.getLocation().y + 5.0f));
-		}
-		
+		Vector currLoc = character.getBoxCollider().getLocation();
+		character.setLocation( currLoc.add( locUpdate ) );
 	}
 	
-	/**
-	 * Return true if key is being pressed.
-	 * @param key The key being checked for whether or not it is pressed.
-	 * @return True if the key is being pressed.
-	 */
-	public boolean processInput(int key) {
-		return keyPressed[key];
-	}
-
-	/**
-	 * Reset whether the key was pressed.
-	 * @param e The key to reset.
-	 */
-	public synchronized void keyReleased(KeyEvent e) {
-		keyPressed[e.getKeyCode()] = false;
-	}
-
 	/**
 	 * Overrides the abstract method of KeyListener. No action.
 	 */
