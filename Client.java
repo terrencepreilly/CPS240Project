@@ -25,9 +25,12 @@ public class Client extends AbstractClient implements GameConstants {
 	public Client(String host, int port, GameState gamestate) {
 		super(host, port, gamestate);
 
-		// To request a new player, create a new player in the 
-		// gamestate with a uid of UID_REQUEST.  Then flag for
-		// update
+		GameDelta request = new GameDelta(UID_REQUEST, new Vector(0f, 0f), 10, PLAYER);
+		outthread.writeGameDelta(request);
+		GameDelta response = inthread.readGameDelta();
+
+		player = gamestate.createCharacter( response );
+
 		gamestate.add(player);
 	}
 
@@ -36,7 +39,7 @@ public class Client extends AbstractClient implements GameConstants {
 	 */
 	public void writeGameDelta() {
 		GameDelta gd = gamestate.createGameDelta( player );
-		writeGameDelta(gd);
+		outthread.writeGameDelta(gd);
 	}
 
 	/**
@@ -44,11 +47,4 @@ public class Client extends AbstractClient implements GameConstants {
 	 * @return The player for this Client.
 	 */
 	public Character getPlayer() { return player; }
-
-	public static void main(String[] args) {
-		Client c = new Client("localhost", 8000);
-		c.requestUpdate();
-		System.out.println( c.gamestate );
-		c.close();
-	}
 }

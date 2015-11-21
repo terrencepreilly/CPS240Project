@@ -15,8 +15,8 @@ public class GameState implements GameConstants {
 	// The key is a unique identifier assigned to each Client and enemy by the 
 	// Server.  it is simply a counter maintained by the server
 	HashMap<Integer, Character> characters;
-	Queue<Integer> updateFlags; 
-	List<Scenic> obstacles;
+	Queue<Integer> updateFlags;  // The uniqueID for characters that must be
+	List<Scenic> obstacles;		// updated
 
 	public GameState() {
 		characters = new HashMap<>();
@@ -33,7 +33,7 @@ public class GameState implements GameConstants {
 		Character c = null;
 		if (characters.containsKey( gd.uniqueID )) {
 			c = characters.get( gd.uniqueID );
-			c.setLocation( gd.coords );
+			c.changeLocUpdate( gd.locUpdate );
                         c.setHealth( gd.health );
 		}
 		else {
@@ -128,7 +128,7 @@ public class GameState implements GameConstants {
                 catch (IOException ioe) { System.out.println(ioe); }
 
 		if (gd != null) {
-                	c = new Character(playerImage, gd.coords);
+                	c = new Character(playerImage, gd.locUpdate);
 			c.setHealth( gd.health );
 			c.setUniqueID( gd.uniqueID );
 			c.setType(gd.type);
@@ -147,6 +147,15 @@ public class GameState implements GameConstants {
 	 */
 	public synchronized Set<Integer> getIDs() { return characters.keySet(); }
 
+	/**
+	 * Find the edge which this Character is closest to, and push the
+	 * Character outside, only updating the necessary coordinates. (To
+	 * ensure that the Character slides on the outside if the incident
+	 * is not perpendicular.)
+	 * @param obsBC The obstacle's BoxCollider.
+	 * @param chaBC the Characters BoxCollider.
+	 * @return A Vector of where to reset this Character's location.
+	 */
         private synchronized Vector getAGoodLocation(BoxCollider obsBC, BoxCollider chaBC) {
                 // Find an overlapping vertex.
                 Point2D.Float overlaps = null;
@@ -237,5 +246,12 @@ public class GameState implements GameConstants {
 		return ret;
 	}
 
+	/**
+	 * Update the location for every Character.
+	 */
+	public void step() {
+		for (Integer key : characters.keySet())
+			characters.get(key).step();
+	}
 
 }

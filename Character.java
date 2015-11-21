@@ -13,6 +13,7 @@ class Character extends Actor implements GameConstants {
 	private Integer uniqueID;
 	private Integer type;
 	private Vector locUpdate; // The step to take for this Character.
+	private boolean isUpdated; // if locUpdate has changed, set update flag
 	
 	/**
 	 * Create a new Character.
@@ -30,6 +31,7 @@ class Character extends Actor implements GameConstants {
 		uniqueID = -1;
 		type = 0;
 		locUpdate = new Vector(0f, 0f);
+		isUpdated = false;
 	}
 
 	/**
@@ -124,7 +126,16 @@ class Character extends Actor implements GameConstants {
 	/**
 	 * Change the direction/amount to move for this Character.
 	 */
-	public void changeLocUpdate(Vector v) { locUpdate = locUpdate.add(v); }
+	public void changeLocUpdate(Vector v) { 
+		locUpdate = locUpdate.add(v); 
+		isUpdated = true;
+	}
+
+	public boolean hasBeenUpdated() {
+		boolean ret = isUpdated;
+		isUpdated = false;
+		return ret;
+	}
 
 	/**
 	 * Return the step amount for this character. (locUpdate).

@@ -52,10 +52,8 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 */
 	protected void createGUI(){
 		gamestate = new GameState();
-		client = new Client("localhost", 8000, gamestate);
+		client = new Client("localhost", 8000, gamestate); // TIMEOUT!!
 		player = client.getPlayer();
-
-		client.requestUpdate();
 
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
@@ -85,9 +83,10 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 * Process user input.
 	 */
 	private void processInput() {
-		gameKeyboard.processInput();
-		client.writeGameDelta();
-		client.requestUpdate();
+		gamestate.step();
+
+		if (player.hasBeenUpdated())
+			gamestate.flagForUpdate(player);
 	}
 
 	/**

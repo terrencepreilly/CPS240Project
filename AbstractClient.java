@@ -9,8 +9,8 @@ import java.io.IOException;
  * An abstract class implementing a Client which talks to a Server.
  */
 public abstract class AbstractClient implements GameConstants {
-	private ClientOutputThread outthread;
-	private ClientInputThread inthread;
+	ClientOutputThread outthread;
+	ClientInputThread inthread;
 	GameState gamestate;
 
 	/**
