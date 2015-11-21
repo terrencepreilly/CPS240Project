@@ -3,11 +3,7 @@ import java.awt.image.BufferedImage;
 
 
 /**
- * The character is an image, and a location, it will create it's own boxcollider
- * All you must do is pass it the image, and its location of starting. You may set health later
- * and there are methods for getting it's box collider and last good location. You should set the
- * last good location anytime a collision is NOT detected. Consequently there is a method
- * to set the location, this will in turn set the boxCollider to a new location
+ * Represents a moveable, actionable Character in the game.
  */
 class Character extends Actor implements GameConstants {
 	
@@ -16,6 +12,7 @@ class Character extends Actor implements GameConstants {
 	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
 	private Integer uniqueID;
 	private Integer type;
+	private Vector locUpdate; // The step to take for this Character.
 	
 	/**
 	 * Create a new Character.
@@ -32,6 +29,7 @@ class Character extends Actor implements GameConstants {
 		health = 10;
 		uniqueID = -1;
 		type = 0;
+		locUpdate = new Vector(0f, 0f);
 	}
 
 	/**
@@ -121,6 +119,24 @@ class Character extends Actor implements GameConstants {
 	 */
 	protected void setBoxCollider(BufferedImage image){
 		boxCollider = new BoxCollider(image);
+	}
+
+	/**
+	 * Change the direction/amount to move for this Character.
+	 */
+	public void changeLocUpdate(Vector v) { locUpdate = locUpdate.add(v); }
+
+	/**
+	 * Return the step amount for this character. (locUpdate).
+	 */
+	public Vector getLocUpdate() { return locUpdate; }
+
+	/**
+	 * Take a step in the direction/magnetude of locUpdate.
+	 */
+	public void step() {
+		Vector prevCoords = boxCollider.getLocation();
+		boxCollider.setLocation( prevCoords.add( locUpdate ) );
 	}
 
 	/**

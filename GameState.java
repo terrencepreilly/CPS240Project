@@ -1,8 +1,10 @@
 import java.util.HashMap;
 import java.util.Set;
 import java.util.List;
+import java.util.Queue;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -13,11 +15,13 @@ public class GameState implements GameConstants {
 	// The key is a unique identifier assigned to each Client and enemy by the 
 	// Server.  it is simply a counter maintained by the server
 	HashMap<Integer, Character> characters;
+	Queue<Integer> updateFlags; 
 	List<Scenic> obstacles;
 
 	public GameState() {
 		characters = new HashMap<>();
 		obstacles = new ArrayList<>();
+		updateFlags = new LinkedList<>();
 	}
 
 	/**
@@ -49,7 +53,7 @@ public class GameState implements GameConstants {
 		Character c = characters.get(uid);
 		int type = c.getType();
 
-		GameDelta gd = new GameDelta( uid, c.getBoxCollider().getLocation(), c.getHealth(), type ); 
+		GameDelta gd = new GameDelta( uid, c.getLocUpdate(), c.getHealth(), type ); 
 		return gd;
 	}
 
@@ -63,7 +67,7 @@ public class GameState implements GameConstants {
 		if (characters.containsKey( c.getUniqueID() ))
 			return createGameDelta( c.getUniqueID() );
 		else {
-			return new GameDelta( c.getUniqueID(), c.getBoxCollider().getLocation(), c.getHealth(), c.getType() );
+			return new GameDelta( c.getUniqueID(), c.getLocUpdate(), c.getHealth(), c.getType() );
 		}
 	}
 
@@ -81,6 +85,32 @@ public class GameState implements GameConstants {
 	 * @param c The Character to be addded.
 	 */
 	public synchronized void add(Character c) { characters.put(c.getUniqueID(), c); }
+
+	/**
+	 * Flag a character for updates.
+	 */
+	public synchronized void flagForUpdate(Integer uid) {
+		updateFlags.offer( uid );
+	}
+
+	/**
+	 * Flag a character for updates.
+	 */
+	public synchronized void flagForUpdate(Character c) {
+		flagForUpdate( c.getUniqueID() );
+	}
+
+	/**
+	 * Return a List of GameDeltas for any character which 
+	 * should be pushed. 
+	 */
+	public synchronized GameDelta getUpdate() {
+		Integer uid = updateFlags.poll();
+		if (uid != null)
+			return createGameDelta(uid);
+		else
+			return null;
+	}
 
 	/**
 	 * Make a new Character from the given GameDelta.  If the given GameDelta
@@ -188,7 +218,9 @@ public class GameState implements GameConstants {
 	 * Get the map of all Characters.
 	 * @return A HashMap of all Characters.
 	 */
-	public synchronized HashMap<Integer, Character> getCharacters() { return characters; }
+	public synchronized HashMap<Integer, Character> getCharacters() { 
+		return characters; 
+	}
 
 	/**
 	 * Get the list of all Obstacles.
@@ -204,4 +236,6 @@ public class GameState implements GameConstants {
 
 		return ret;
 	}
+
+
 }

@@ -29,9 +29,10 @@ public class ServerThread extends Thread implements GameConstants {
 	/**
 	 * Initialize the server at the given port.
 	 * @param port The port at which to open this Server.
+	 * @param gamestate The GameState held by the Server.
+	 * @param SynchronizedIDCounter The IdCounter held by the Server.
 	 * @return A new Server.
 	 */
-	//TODO Connect multiple Clients
 	public ServerThread(Socket socket, GameState gamestate, 
 	SynchronizedIDCounter idcounter) {
 		try {

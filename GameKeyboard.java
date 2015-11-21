@@ -10,7 +10,6 @@ import java.awt.event.KeyListener;
 class GameKeyboard implements KeyListener, GameConstants {
 
 	private Character character; //hold reference for main player
-	private Vector locUpdate;
 
 	/**
 	 * Create a new GameKeyboard instance.
@@ -18,7 +17,6 @@ class GameKeyboard implements KeyListener, GameConstants {
 	 */
 	public GameKeyboard(Character character) {
 		this.character = character;
-		this.locUpdate = new Vector(0f, 0f);
 	}
 	
 	/**
@@ -27,13 +25,13 @@ class GameKeyboard implements KeyListener, GameConstants {
 	 */
 	public synchronized void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-			locUpdate.x -= PLAYER_SPEED;
+			character.changeLocUpdate(new Vector(-1f*PLAYER_SPEED,0f));
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-			locUpdate.x += PLAYER_SPEED;
+			character.changeLocUpdate(new Vector(PLAYER_SPEED, 0f));
 		if (e.getKeyCode() == KeyEvent.VK_UP)
-			locUpdate.y -= PLAYER_SPEED;
+			character.changeLocUpdate(new Vector(0f,-1f*PLAYER_SPEED));
 		if (e.getKeyCode() == KeyEvent.VK_DOWN)
-			locUpdate.y += PLAYER_SPEED;
+			character.changeLocUpdate(new Vector(0f, PLAYER_SPEED));
 	}
 
         /**
@@ -41,22 +39,21 @@ class GameKeyboard implements KeyListener, GameConstants {
          * @param e The key to reset.
          */
         public synchronized void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT)
-                        locUpdate.x += PLAYER_SPEED;
+		if (e.getKeyCode() == KeyEvent.VK_LEFT)
+                        character.changeLocUpdate(new Vector(PLAYER_SPEED,0f));
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-                        locUpdate.x -= PLAYER_SPEED;
+                        character.changeLocUpdate(new Vector(-1f*PLAYER_SPEED,0f));
                 if (e.getKeyCode() == KeyEvent.VK_UP)
-                        locUpdate.y += PLAYER_SPEED;
+                        character.changeLocUpdate(new Vector(0f,PLAYER_SPEED));
                 if (e.getKeyCode() == KeyEvent.VK_DOWN)
-                        locUpdate.y -= PLAYER_SPEED;
+                        character.changeLocUpdate(new Vector(0f,-1f*PLAYER_SPEED));
 	}
 	
 	/**
 	 * Process the keys that were pressed, updating character location.
 	 */
 	public void processInput(){
-		Vector currLoc = character.getBoxCollider().getLocation();
-		character.setLocation( currLoc.add( locUpdate ) );
+		character.step();
 	}
 	
 	/**

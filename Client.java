@@ -25,7 +25,9 @@ public class Client extends AbstractClient implements GameConstants {
 	public Client(String host, int port, GameState gamestate) {
 		super(host, port, gamestate);
 
-		player = requestCharacter(PLAYER);
+		// To request a new player, create a new player in the 
+		// gamestate with a uid of UID_REQUEST.  Then flag for
+		// update
 		gamestate.add(player);
 	}
 
