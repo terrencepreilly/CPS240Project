@@ -1,4 +1,3 @@
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -11,8 +10,9 @@ import java.awt.event.KeyListener;
 class GameKeyboard implements KeyListener{
 
 	private Character character; //hold reference for main player
+	protected int charDirection = 1;//character facing south to start
 	
-	private boolean[] keyPressed = new boolean[256];
+	protected boolean[] keyPressed = new boolean[256];
 		
 	/**
 	 * Create a new GameKeyboard instance.
@@ -36,15 +36,19 @@ class GameKeyboard implements KeyListener{
 	public void processInput(){
 		if(keyPressed[KeyEvent.VK_LEFT]){
 			character.setLocation(new Vector(character.getLocation().x - 5.0f, character.getLocation().y));
+			charDirection = 3;
 		}
 		if(keyPressed[KeyEvent.VK_RIGHT]){
 			character.setLocation(new Vector(character.getLocation().x + 5.0f, character.getLocation().y));
+			charDirection = 2;
 		}
 		if(keyPressed[KeyEvent.VK_UP]){
 			character.setLocation(new Vector(character.getLocation().x, character.getLocation().y - 5.0f));
+			charDirection = 0;
 		}
 		if(keyPressed[KeyEvent.VK_DOWN]){
 			character.setLocation(new Vector(character.getLocation().x, character.getLocation().y + 5.0f));
+			charDirection = 1;
 		}
 		
 	}
