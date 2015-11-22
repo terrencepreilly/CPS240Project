@@ -163,7 +163,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 			charImage2 = makeTransparent(charImage2);
 			charImage3 = ImageIO.read(new File("img3.png"));
 			charImage3 = makeTransparent(charImage3);
-			charImage4 = ImageIO.read(new File("img4.png"));
+			charImage4 = ImageIO.read(new File("playerBack.png"));
 			charImage4 = makeTransparent(charImage4);
 			//mainPlayerImage = ImageIO.read(new File("character.png"));
 			//mainObstacleImage = ImageIO.read(new File("obstacle.png"));
