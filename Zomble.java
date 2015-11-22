@@ -32,6 +32,7 @@ import javax.swing.SwingUtilities;
 public class Zomble extends JFrame implements Runnable, GameConstants {
 	private GameState gamestate;		// Game & Charaters
 	private Character player;
+	private Actor act;
 	private Client client;			// Networking
 	private int frames = 0;		//frame count for character movement
 	private BufferStrategy bs;		// Graphics
@@ -41,9 +42,19 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	private BufferedImage obstacleImage;
 	private BufferedImage enemyImage;
 	private BufferedImage charImage;//south facing
+	private BufferedImage charImage1;//south facing2
 	private BufferedImage charImage2;//east facing
 	private BufferedImage charImage3;//west facing
 	private BufferedImage charImage4;//north facing
+	private BufferedImage charImage5;//north facing2
+	
+	private BufferedImage mobImage;//south facing
+	private BufferedImage mobImage1;//south facing2
+	private BufferedImage mobImage2;//east facing
+	private BufferedImage mobImage3;//west facing
+	private BufferedImage mobImage4;//north facing
+	private BufferedImage mobImage5;//north facing2
+	
 	private GameKeyboard gameKeyboard;	// UI
 	private Image background;
 	private volatile boolean running;	// Game Logic
@@ -117,10 +128,15 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 * @param g The graphics context.
 	 */
 	private void render(Graphics g) {
-		player.setImage(action(playerImage));
 		HashMap<Integer, Character> characters = gamestate.getCharacters();
 		for (Integer uid : characters.keySet()) {
 			Character c = characters.get(uid);
+			if(c.getType() == PLAYER){
+				c.setImage(action(playerImage));
+			}
+			if(c.getType() == ENEMY){
+				c.setImage(action(enemyImage));
+			}
 			g.drawImage(
 				(c.getType() == ENEMY) ? enemyImage : playerImage,
 				(int) c.getLocation().x,
@@ -137,34 +153,28 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 			);
 		}
 	}
-	/* 
-	 *Make background of character transparent 
-	 */
-	public BufferedImage makeTransparent(BufferedImage image){
-		BufferedImage transparent = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		for(int i = 0; i<image.getWidth(); i++){
-			for(int j = 0; j<image.getHeight(); j++){
-				if(image.getRGB(i, j) != image.getRGB(0, 0)){
-					transparent.setRGB(i, j, image.getRGB(i, j));
-				}
-				
-			}
-		}
-		return transparent;
-	}
+	
 	/*
 	 * Returns the correct image based on character direction
 	 */
 	public BufferedImage action(BufferedImage move){
 		try {
+			//player images
 			charImage = ImageIO.read(new File("playerFrwd.png"));
-			charImage = makeTransparent(charImage);
-			charImage2 = ImageIO.read(new File("img2.png"));
-			charImage2 = makeTransparent(charImage2);
-			charImage3 = ImageIO.read(new File("img3.png"));
-			charImage3 = makeTransparent(charImage3);
+			charImage1 = ImageIO.read(new File("playerFrwd2.png"));
+			charImage2 = ImageIO.read(new File("playerSide.png"));
+			charImage3 = ImageIO.read(new File("playerSide2.png"));
 			charImage4 = ImageIO.read(new File("playerBack.png"));
-			charImage4 = makeTransparent(charImage4);
+			charImage5 = ImageIO.read(new File("playerBack2.png"));
+			
+			//zombie images
+			mobImage = ImageIO.read(new File("zombieFrwd.png"));
+			mobImage1 = ImageIO.read(new File("zombieFrwd2.png"));
+			mobImage2 = ImageIO.read(new File("zombieSide.png"));
+			mobImage3 = ImageIO.read(new File("zombieSide2.png"));
+			mobImage4 = ImageIO.read(new File("zombieBack.png"));
+			mobImage5 = ImageIO.read(new File("zombieBack2.png"));
+
 			//mainPlayerImage = ImageIO.read(new File("character.png"));
 			//mainObstacleImage = ImageIO.read(new File("obstacle.png"));
 			frames++;
@@ -172,34 +182,65 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 				frames = 0;
 			}
 			if(gameKeyboard.charDirection == 1){
-				playerImage = charImage;
+				
+				if(gameKeyboard.keyPressed[KeyEvent.VK_DOWN]){
+					if(frames > 0 && frames <25){
+						playerImage = charImage;
+						enemyImage = mobImage;
+					}
+					else if(frames >=25 && frames < 50){
+						playerImage = charImage1;
+						enemyImage = mobImage1;
+					}
+				}else{
+					playerImage = charImage1;
+					enemyImage = mobImage;
+				}
 			}
 			if(gameKeyboard.charDirection == 2){
 				if(gameKeyboard.keyPressed[KeyEvent.VK_RIGHT]){
 					if(frames > 0 && frames <25){
 						playerImage = charImage2;
+						enemyImage = mobImage2;
 					}
 					else if(frames >=25 && frames < 50){
 						playerImage = charImage3;
+						enemyImage = mobImage3;
 					}
 				}else{
 					playerImage = charImage2;
+					enemyImage = mobImage3;
 				}
 			}
 			if(gameKeyboard.charDirection == 3){
 				if(gameKeyboard.keyPressed[KeyEvent.VK_LEFT]){
 					if(frames >0 && frames <25){
 						playerImage = horizontalFlip(charImage2);
+						enemyImage = horizontalFlip(mobImage2);
 					}
 					else if(frames >=25 && frames < 50){
 						playerImage = horizontalFlip(charImage3);
+						enemyImage = horizontalFlip(mobImage3);
 					}
 				}else{
 					playerImage = horizontalFlip(charImage2);
+					enemyImage = horizontalFlip(mobImage3);
 				}
 			}
 			if(gameKeyboard.charDirection == 0){
-				playerImage = charImage4;
+				if(gameKeyboard.keyPressed[KeyEvent.VK_UP]){
+					if(frames > 0 && frames <25){
+						playerImage = charImage4;
+						enemyImage = mobImage4;
+					}
+					else if(frames >=25 && frames < 50){
+						playerImage = charImage5;
+						enemyImage = mobImage5;
+					}
+				}else{
+					playerImage = charImage4;
+					enemyImage = mobImage4;
+				}
 			}
 
 		} catch (IOException e) {
