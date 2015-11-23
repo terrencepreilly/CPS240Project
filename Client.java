@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.Arrays;
 
 /**
  * A player game Client, extends AbstractClient to talk with Server.
@@ -23,13 +25,13 @@ public class Client extends AbstractClient implements GameConstants {
          * @return A newly instantiated Client with one player.
 	 */
 	public Client(String host, int port, GameState gamestate) {
-		super(host, port, gamestate);
 		// Request an ID from the Server.
-		int uid = new DataInputStream( socket.getInputStream() ).readInt();
-		player = gamestate.createCharacter( 
-			new GameDelta(uid, new Vector(0f, 0f), 10, PLAYER)
+		super(host, port, gamestate, 
+			new LinkedList<>( Arrays.asList( new Integer[] { 
+				PLAYER, END_UID_REQUEST 
+			}))
 		);
-		gamestate.add(player);
+		player = charactersCreated.get(0);
 	}
 
 	/**

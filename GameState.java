@@ -86,7 +86,6 @@ public class GameState implements GameConstants {
 	 */
 	public synchronized void add(Character c) { 
 		characters.put(c.getUniqueID(), c); 
-		flagForUpdate( c );
 	}
 
 	/**

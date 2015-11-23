@@ -52,8 +52,12 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 */
 	protected void createGUI(){
 		gamestate = new GameState();
-		client = new Client("localhost", 8000, gamestate); // TIMEOUT!!
-		player = client.getPlayer();
+		client = new Client("localhost", 8000, gamestate); 
+
+		player = null;
+		while (player == null)
+			player = client.getPlayer();
+
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		displayMode = gd.getDisplayMode();
@@ -118,8 +122,8 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 			Character c = characters.get(uid);
 			g.drawImage(
 				(c.getType() == ENEMY) ? enemyImage : playerImage,
-				(int) c.getLocation().x,
-				(int) c.getLocation().y,
+				(int) c.getBoxCollider().getLocation().x,
+				(int) c.getBoxCollider().getLocation().y,
 				null
 			);
 		}
@@ -152,8 +156,11 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		}
 
 		//add new keyboard listener GameKeyboard
+		System.out.println("ZOMBLE:\tinitialize\tinitializing GameKeyBoard");
 		gameKeyboard = new GameKeyboard( player );
+		System.out.println("ZOMBLE:\tinitialize\tGKB initialized");
 		canvas.addKeyListener(gameKeyboard);
+		System.out.println("ZOMBLE:\tinitialize\tListener added");
 	}
 	
 

@@ -1,8 +1,7 @@
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-
+import java.util.Arrays;
 
 /**
  * A utility for handling Keyboard input.
@@ -17,6 +16,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 	 */
 	public GameKeyboard(Character character) {
 		this.character = character;
+		System.out.println("GAMEKEYBOARD:\tconstructor\tfinished");
 	}
 	
 	/**
@@ -32,6 +32,13 @@ class GameKeyboard implements KeyListener, GameConstants {
 			character.changeLocUpdate(new Vector(0f,-1f*PLAYER_SPEED));
 		if (e.getKeyCode() == KeyEvent.VK_DOWN)
 			character.changeLocUpdate(new Vector(0f, PLAYER_SPEED));
+		if (Arrays.asList( new Integer[] {
+			KeyEvent.VK_LEFT,
+			KeyEvent.VK_RIGHT,
+			KeyEvent.VK_UP,
+			KeyEvent.VK_DOWN
+		}).contains( e.getKeyCode() ))
+			System.out.println("GAMEKEYBOARD\tkeyPressed\t" + character.getLocUpdate());
 	}
 
         /**
@@ -47,6 +54,13 @@ class GameKeyboard implements KeyListener, GameConstants {
                         character.changeLocUpdate(new Vector(0f,PLAYER_SPEED));
                 if (e.getKeyCode() == KeyEvent.VK_DOWN)
                         character.changeLocUpdate(new Vector(0f,-1f*PLAYER_SPEED));
+		if (Arrays.asList( new Integer[] {
+                        KeyEvent.VK_LEFT,
+                        KeyEvent.VK_RIGHT,
+                        KeyEvent.VK_UP,
+                        KeyEvent.VK_DOWN
+                }).contains( e.getKeyCode() ))
+                        System.out.println("GAMEKEYBOARD\tkeyReleased");
 	}
 	
 	/**

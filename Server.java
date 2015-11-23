@@ -1,7 +1,10 @@
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.io.DataOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.EOFException;
 
 import java.util.Set;
 import java.util.ArrayList;
@@ -43,21 +46,44 @@ public class Server implements GameConstants {
 	 * have closed.)
 	 */
 	public void connectClients() {
+		System.out.println("SERVER:\tconnectClients");
 		try {
 			serverSocket = new ServerSocket(port);
+			System.out.println("SERVER:\tconnectClients\tserverSocket instantiated");
 			while (running) {
 				Socket socket = serverSocket.accept();
 
-				new DataOutputStream(
-					socket.getOutputStream()
-				).writeInt( syncID.next() );
+				System.out.println("SERVER:\tconnectClients\tsocket connection accpted");
+				serveUniqueIDs(socket);
 
-				executor.execute(new InputHandler(socket, gamestate));
+				System.out.println("SERVER:\tconnectClients\tInputHandler created");
 				executor.execute(new OutputHandler(socket, gamestate));
+				executor.execute(new InputHandler(socket, gamestate));
+				System.out.println("SERVER:\tconnectClients\tOutputHandler created");
 			}
-		} catch (IOException ioe) {}
+		}
+		catch (IOException ioe) {}
 
 	} 
+
+	/**
+	 * 
+	 */
+	public void serveUniqueIDs(Socket socket) throws IOException {
+		System.out.println("SERVER:\tserveUniqueIDs");
+		DataOutputStream dos = new DataOutputStream(
+			socket.getOutputStream() );
+		DataInputStream dis = new DataInputStream(
+			socket.getInputStream() );
+
+		int rec = dis.readInt();
+		while (rec != END_UID_REQUEST) {
+			System.out.println("SERVER:\tserveUniqueIDs\t" + rec + " served");
+			dos.writeInt( syncID.next() );
+			rec = dis.readInt();
+		}
+		System.out.println("SERVER:\tserveUniqueIDs\tfinished");
+	}
 
 	/**
 	 * Close the Server.

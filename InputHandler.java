@@ -21,8 +21,9 @@ class InputHandler implements Runnable {
 		try {
 			while (true) {
 				GameDelta gd = (GameDelta) in.readObject();
-				System.out.println("Received: " + gd);
+				System.out.println("INPUTHANDLER:\trun\tReceived: " + gd);
 				gamestate.applyGameDelta(gd);
+				System.out.println("INPUTHANDLER:\trun\tapplied delta");
 			}
 		}
 		catch (EOFException eofe) { eofe.printStackTrace(); }

@@ -4,8 +4,8 @@ public interface GameConstants {
 
 	public final float PLAYER_SPEED = 2.5f;
 
-	// GameDelta.uniqueID for requesting a new ID.
-	public final int UID_REQUEST = -1; 
+	public final int END_UID_REQUEST = -217;
+
 	// GameDelta.uniqueID for requesting update of GameState
 	public final int UPDATE_REQUEST = -2;
 
