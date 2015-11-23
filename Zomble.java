@@ -54,7 +54,6 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		gamestate = new GameState();
 		client = new Client("localhost", 8000, gamestate); // TIMEOUT!!
 		player = client.getPlayer();
-
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		displayMode = gd.getDisplayMode();
@@ -74,7 +73,6 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		canvas.createBufferStrategy(2);
 		bs = canvas.getBufferStrategy();
 		canvas.requestFocus();
-
 		gameThread = new Thread(this);
 		gameThread.start();
 	}

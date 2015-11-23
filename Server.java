@@ -1,9 +1,11 @@
-import java.util.Set;
-
 import java.net.ServerSocket;
+import java.net.Socket;
 
 import java.io.IOException;
+
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 
 
 /**
@@ -17,10 +19,10 @@ public class Server implements GameConstants {
 	private GameState gamestate;
 	private int port;
 
-	private ArrayList<ServerThread> threads;
+	private ExecutorService executor;
 	private boolean running;
 
-	private SynchronizedIDCounter idcounter;
+	private SynchronizedIDCounter syncID;
 
 	/**
 	 * Initialize the server at the given port.
@@ -29,10 +31,10 @@ public class Server implements GameConstants {
 	 */
 	public Server(int port) {
 		gamestate = new GameState();
-		idcounter = new SynchronizedIDCounter();
-		threads = new ArrayList<ServerThread>();
+		executor = Executors.newCachedThreadPool();
 		running = true;
 		this.port = port;
+		syncID = new SynchronizedIDCounter();
 	}
 
 	/**
@@ -44,16 +46,14 @@ public class Server implements GameConstants {
 		try {
 			serverSocket = new ServerSocket(port);
 			while (running) {
-				System.out.println("Waiting for thread...");
-				threads.add(
-					new ServerThread(
-						serverSocket.accept(),
-						gamestate,
-						idcounter
-					)
-				);
-				System.out.println("Connection found, starting thread");
-				threads.get( threads.size() - 1).start();
+				Socket socket = serverSocket.accept();
+
+				new DataOutputStream(
+					socket.getOutputStream()
+				).writeInt( syncID.next() );
+
+				executor.execute(new InputHandler(socket, gamestate));
+				executor.execute(new OutputHandler(socket, gamestate));
 			}
 		} catch (IOException ioe) {}
 
@@ -65,15 +65,10 @@ public class Server implements GameConstants {
 	public void close() {
 		System.out.println("Closing threads");
 		try { 
-			for (ServerThread st : threads) {
-				System.out.println("\tKilling " + st.getName());
-				st.killThread();
-				st.join();
-			}
+			executor.shutdown();
 			serverSocket.close(); 
 		}
 		catch (IOException ioe) {}
-		catch (InterruptedException ie) { System.out.println(ie); }
 	}
 
 	public static void main(String[] args) {

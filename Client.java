@@ -24,22 +24,12 @@ public class Client extends AbstractClient implements GameConstants {
 	 */
 	public Client(String host, int port, GameState gamestate) {
 		super(host, port, gamestate);
-
-		GameDelta request = new GameDelta(UID_REQUEST, new Vector(0f, 0f), 10, PLAYER);
-		outthread.writeGameDelta(request);
-		GameDelta response = inthread.readGameDelta();
-
-		player = gamestate.createCharacter( response );
-
+		// Request an ID from the Server.
+		int uid = new DataInputStream( socket.getInputStream() ).readInt();
+		player = gamestate.createCharacter( 
+			new GameDelta(uid, new Vector(0f, 0f), 10, PLAYER)
+		);
 		gamestate.add(player);
-	}
-
-	/**
-	 * Write a GameDelta to the server to update the position of player.
-	 */
-	public void writeGameDelta() {
-		GameDelta gd = gamestate.createGameDelta( player );
-		outthread.writeGameDelta(gd);
 	}
 
 	/**

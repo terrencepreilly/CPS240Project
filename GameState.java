@@ -84,7 +84,10 @@ public class GameState implements GameConstants {
 	 * Add a Character to characters.
 	 * @param c The Character to be addded.
 	 */
-	public synchronized void add(Character c) { characters.put(c.getUniqueID(), c); }
+	public synchronized void add(Character c) { 
+		characters.put(c.getUniqueID(), c); 
+		flagForUpdate( c );
+	}
 
 	/**
 	 * Flag a character for updates.

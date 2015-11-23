@@ -1,16 +1,14 @@
+import java.util.concurrent.*;
 
 import java.net.Socket;
 
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.io.IOException;
 
 /**
  * An abstract class implementing a Client which talks to a Server.
  */
 public abstract class AbstractClient implements GameConstants {
-	ClientOutputThread outthread;
-	ClientInputThread inthread;
+	ExecutorService executor;
 	GameState gamestate;
 
 	/**
@@ -29,24 +27,23 @@ public abstract class AbstractClient implements GameConstants {
 		else
 			this.gamestate = gamestate;
 
-		outthread = new ClientOutputThread(host, port, gamestate);
-		inthread = new ClientInputThread(host, port, gamestate);
-		outthread.start();
-		inthread.start();
+		Socket socket = null;
+		executor = Executors.newFixedThreadPool(2);
+		try {
+			socket = new Socket(host, port);
+			
+			executor.execute(new OutputHandler(socket, gamestate));
+			executor.execute(new InputHandler(socket, gamestate));
+		}
+		catch (IOException ioe) {
+			System.out.println("Problem connectin to server AC41");
+		}
 	}
 
 	/**
 	 * Close the Client.
 	 */
 	public void close() {
-		try {
-			outthread.killThread();
-			outthread.join();
-			inthread.killThread();
-			inthread.join();
-		}
-		catch (InterruptedException ie) {
-			System.out.println("Unable to close threads.");
-		}
+		executor.shutdown();
 	}
 }
