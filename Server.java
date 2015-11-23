@@ -58,13 +58,15 @@ public class Server implements GameConstants {
 
 				System.out.println("SERVER:\tconnectClients\tInputHandler created");
 				executor.execute(new OutputHandler(socket, gamestate));
-				executor.execute(new InputHandler(socket, gamestate));
+				executor.execute(new ServerInputHandler(socket, gamestate));
 				System.out.println("SERVER:\tconnectClients\tOutputHandler created");
 			}
 		}
 		catch (IOException ioe) {}
 
 	} 
+
+// setFlagForUpdate for any updates coming from server.
 
 	/**
 	 * 

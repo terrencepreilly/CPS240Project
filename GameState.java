@@ -33,7 +33,7 @@ public class GameState implements GameConstants {
 		Character c = null;
 		if (characters.containsKey( gd.uniqueID )) {
 			c = characters.get( gd.uniqueID );
-			c.changeLocUpdate( gd.locUpdate );
+			c.setLocation( gd.locUpdate );
                         c.setHealth( gd.health );
 		}
 		else {
@@ -53,7 +53,7 @@ public class GameState implements GameConstants {
 		Character c = characters.get(uid);
 		int type = c.getType();
 
-		GameDelta gd = new GameDelta( uid, c.getLocUpdate(), c.getHealth(), type ); 
+		GameDelta gd = new GameDelta( uid, c.getLocation(), c.getHealth(), type ); 
 		return gd;
 	}
 
@@ -67,7 +67,7 @@ public class GameState implements GameConstants {
 		if (characters.containsKey( c.getUniqueID() ))
 			return createGameDelta( c.getUniqueID() );
 		else {
-			return new GameDelta( c.getUniqueID(), c.getLocUpdate(), c.getHealth(), c.getType() );
+			return new GameDelta( c.getUniqueID(), c.getLocation(), c.getHealth(), c.getType() );
 		}
 	}
 
@@ -247,13 +247,4 @@ public class GameState implements GameConstants {
 
 		return ret;
 	}
-
-	/**
-	 * Update the location for every Character.
-	 */
-	public void step() {
-		for (Integer key : characters.keySet())
-			characters.get(key).step();
-	}
-
 }

@@ -7,15 +7,17 @@ import java.util.Arrays;
  * A utility for handling Keyboard input.
  */
 class GameKeyboard implements KeyListener, GameConstants {
-
+	private GameState gamestate;
 	private Character character; //hold reference for main player
+	private Vector updateLoc = new Vector(0f, 0f);
 
 	/**
 	 * Create a new GameKeyboard instance.
 	 * @param character The character this keyboard controls.
 	 */
-	public GameKeyboard(Character character) {
+	public GameKeyboard(Character character, GameState gamestate) {
 		this.character = character;
+		this.gamestate = gamestate;
 		System.out.println("GAMEKEYBOARD:\tconstructor\tfinished");
 	}
 	
@@ -25,20 +27,13 @@ class GameKeyboard implements KeyListener, GameConstants {
 	 */
 	public synchronized void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-			character.changeLocUpdate(new Vector(-1f*PLAYER_SPEED,0f));
+			updateLoc = new Vector(-1f*PLAYER_SPEED,0f);
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-			character.changeLocUpdate(new Vector(PLAYER_SPEED, 0f));
+			updateLoc = new Vector(PLAYER_SPEED, 0f);
 		if (e.getKeyCode() == KeyEvent.VK_UP)
-			character.changeLocUpdate(new Vector(0f,-1f*PLAYER_SPEED));
+			updateLoc = new Vector(0f,-1f*PLAYER_SPEED);
 		if (e.getKeyCode() == KeyEvent.VK_DOWN)
-			character.changeLocUpdate(new Vector(0f, PLAYER_SPEED));
-		if (Arrays.asList( new Integer[] {
-			KeyEvent.VK_LEFT,
-			KeyEvent.VK_RIGHT,
-			KeyEvent.VK_UP,
-			KeyEvent.VK_DOWN
-		}).contains( e.getKeyCode() ))
-			System.out.println("GAMEKEYBOARD\tkeyPressed\t" + character.getLocUpdate());
+			updateLoc = new Vector(0f, PLAYER_SPEED);
 	}
 
         /**
@@ -47,27 +42,23 @@ class GameKeyboard implements KeyListener, GameConstants {
          */
         public synchronized void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-                        character.changeLocUpdate(new Vector(PLAYER_SPEED,0f));
+			updateLoc = new Vector(0f, updateLoc.y);
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-                        character.changeLocUpdate(new Vector(-1f*PLAYER_SPEED,0f));
+			updateLoc = new Vector(0f, updateLoc.y);
                 if (e.getKeyCode() == KeyEvent.VK_UP)
-                        character.changeLocUpdate(new Vector(0f,PLAYER_SPEED));
+			updateLoc = new Vector(updateLoc.x, 0f);
                 if (e.getKeyCode() == KeyEvent.VK_DOWN)
-                        character.changeLocUpdate(new Vector(0f,-1f*PLAYER_SPEED));
-		if (Arrays.asList( new Integer[] {
-                        KeyEvent.VK_LEFT,
-                        KeyEvent.VK_RIGHT,
-                        KeyEvent.VK_UP,
-                        KeyEvent.VK_DOWN
-                }).contains( e.getKeyCode() ))
-                        System.out.println("GAMEKEYBOARD\tkeyReleased");
+			updateLoc = new Vector(updateLoc.x, 0f);
 	}
 	
 	/**
 	 * Process the keys that were pressed, updating character location.
 	 */
 	public void processInput(){
-		character.step();
+		Vector currLoc = character.getBoxCollider().getLocation();
+		character.setLocation( currLoc.add(updateLoc) );
+		if (updateLoc.magnetude() != 0f)
+			gamestate.flagForUpdate( character.getUniqueID() );
 	}
 	
 	/**

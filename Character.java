@@ -12,8 +12,6 @@ class Character extends Actor implements GameConstants {
 	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
 	private Integer uniqueID;
 	private Integer type;
-	private Vector locUpdate; // The step to take for this Character.
-	private boolean isUpdated; // if locUpdate has changed, set update flag
 	
 	/**
 	 * Create a new Character.
@@ -30,8 +28,6 @@ class Character extends Actor implements GameConstants {
 		health = 10;
 		uniqueID = -1;
 		type = 0;
-		locUpdate = new Vector(0f, 0f);
-		isUpdated = false;
 	}
 
 	/**
@@ -102,8 +98,11 @@ class Character extends Actor implements GameConstants {
 	 * @param location The location of this Character.
 	 */
 	public void setLocation(Vector location) {
-		super.setLocation(location);
 		boxCollider.setLocation(location);
+	}
+
+	public Vector getLocation() {
+		return boxCollider.getLocation();
 	}
 
 	/**
@@ -121,33 +120,6 @@ class Character extends Actor implements GameConstants {
 	 */
 	protected void setBoxCollider(BufferedImage image){
 		boxCollider = new BoxCollider(image);
-	}
-
-	/**
-	 * Change the direction/amount to move for this Character.
-	 */
-	public void changeLocUpdate(Vector v) { 
-		locUpdate = locUpdate.add(v); 
-		isUpdated = true;
-	}
-
-	public boolean hasBeenUpdated() {
-		boolean ret = isUpdated;
-		isUpdated = false;
-		return ret;
-	}
-
-	/**
-	 * Return the step amount for this character. (locUpdate).
-	 */
-	public Vector getLocUpdate() { return locUpdate; }
-
-	/**
-	 * Take a step in the direction/magnetude of locUpdate.
-	 */
-	public void step() {
-		Vector prevCoords = boxCollider.getLocation();
-		boxCollider.setLocation( prevCoords.add( locUpdate ) );
 	}
 
 	/**

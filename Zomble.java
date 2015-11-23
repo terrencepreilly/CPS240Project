@@ -85,10 +85,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 * Process user input.
 	 */
 	private void processInput() {
-		gamestate.step();
-
-		if (player.hasBeenUpdated())
-			gamestate.flagForUpdate(player);
+		gameKeyboard.processInput();
 	}
 
 	/**
@@ -157,7 +154,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 
 		//add new keyboard listener GameKeyboard
 		System.out.println("ZOMBLE:\tinitialize\tinitializing GameKeyBoard");
-		gameKeyboard = new GameKeyboard( player );
+		gameKeyboard = new GameKeyboard( player, gamestate );
 		System.out.println("ZOMBLE:\tinitialize\tGKB initialized");
 		canvas.addKeyListener(gameKeyboard);
 		System.out.println("ZOMBLE:\tinitialize\tListener added");

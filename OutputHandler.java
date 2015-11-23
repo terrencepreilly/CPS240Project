@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.Socket;
 
 class OutputHandler implements Runnable {
-	private Socket socket;
-	private GameState gamestate;
-	private ObjectOutputStream out;
+	Socket socket;
+	GameState gamestate;
+	ObjectOutputStream out;
 
 	private int prev;
 
@@ -32,11 +32,11 @@ class OutputHandler implements Runnable {
 				}
 
 				// make room for other processes
-//				Thread.sleep(10L);
+				Thread.sleep(10L);
 			}
 		}
 		catch (IOException ioe) { ioe.printStackTrace(); }
-//		catch (InterruptedException ie) { ie.printStackTrace(); }
+		catch (InterruptedException ie) { ie.printStackTrace(); }
 		System.out.println("OUTPUTHANDLER:\trun\tfinish");
 	}
 }
