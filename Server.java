@@ -8,6 +8,7 @@ import java.io.EOFException;
 
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.*;
 
 
@@ -38,6 +39,9 @@ public class Server implements GameConstants {
 		running = true;
 		this.port = port;
 		syncID = new SynchronizedIDCounter();
+		try {
+			serverSocket = new ServerSocket(port);
+		} catch (IOException ioe) { ioe.printStackTrace(); }
 	}
 
 	/**
@@ -48,30 +52,33 @@ public class Server implements GameConstants {
 	public void connectClients() {
 		System.out.println("SERVER:\tconnectClients");
 		try {
-			serverSocket = new ServerSocket(port);
 			System.out.println("SERVER:\tconnectClients\tserverSocket instantiated");
 			while (running) {
 				Socket socket = serverSocket.accept();
 
 				System.out.println("SERVER:\tconnectClients\tsocket connection accpted");
-				serveUniqueIDs(socket);
+				// Pass the values to OutputHandler so that
+				// updates from a uid aren't 
+				LinkedList uids = serveUniqueIDs(socket);
 
 				System.out.println("SERVER:\tconnectClients\tInputHandler created");
-				executor.execute(new OutputHandler(socket, gamestate));
+				executor.execute(new ServerOutputHandler(socket, gamestate, uids));
 				executor.execute(new ServerInputHandler(socket, gamestate));
 				System.out.println("SERVER:\tconnectClients\tOutputHandler created");
 			}
 		}
-		catch (IOException ioe) {}
+		catch (IOException ioe) { ioe.printStackTrace(); }
 
 	} 
 
 // setFlagForUpdate for any updates coming from server.
 
 	/**
-	 * 
+	 * Send a unique ID to the connecting Client.
+	 * @param socket The Socket connecting this Server to the Client.
+	 * @return A list containing each unique ID that was sent.
 	 */
-	public void serveUniqueIDs(Socket socket) throws IOException {
+	public LinkedList serveUniqueIDs(Socket socket) throws IOException {
 		System.out.println("SERVER:\tserveUniqueIDs");
 		DataOutputStream dos = new DataOutputStream(
 			socket.getOutputStream() );
@@ -79,12 +86,16 @@ public class Server implements GameConstants {
 			socket.getInputStream() );
 
 		int rec = dis.readInt();
+		LinkedList<Integer> ret = new LinkedList<>();
 		while (rec != END_UID_REQUEST) {
 			System.out.println("SERVER:\tserveUniqueIDs\t" + rec + " served");
-			dos.writeInt( syncID.next() );
+			ret.addLast( syncID.next() );
+			dos.writeInt( ret.getLast() );
 			rec = dis.readInt();
 		}
 		System.out.println("SERVER:\tserveUniqueIDs\tfinished");
+
+		return ret;
 	}
 
 	/**

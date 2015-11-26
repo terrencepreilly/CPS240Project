@@ -24,7 +24,7 @@ class OutputHandler implements Runnable {
 		System.out.println("OUTPUTHANDLER:\trun\tbegin");
 		try {
 			while (true) {
-				GameDelta gd = gamestate.getUpdate();
+				GameDelta gd = gamestate.getUpdate(); // NULLPointerException
 				if (gd != null) {
 					System.out.println("OUTPUTHANDLER:\trun\tsending" + gd);
 					out.writeObject(gd);

@@ -10,14 +10,19 @@ class InputHandler implements Runnable {
 	ObjectInputStream in;
 
 	public InputHandler(Socket socket, GameState gamestate) {
+		System.out.println("INPUTHANDLER:\tconstructor\tstart");
 		this.socket = socket;
 		this.gamestate = gamestate;
+		System.out.println("INPUTHANDLER:\tconstructor\tmiddle");
 		try {
 			in = new ObjectInputStream( socket.getInputStream() );
+			System.out.println("INPUTHANDLER:\tconstructor\tin instantiated");
 		} catch (IOException ioe) { ioe.printStackTrace(); }
+		System.out.println("INPUTHANDLER:\tconstructor\tfinish");
 	}
 
 	public void run() {
+		System.out.println("INPUTHANDLER:\trun");
 		try {
 			while (true) {
 				GameDelta gd = (GameDelta) in.readObject();

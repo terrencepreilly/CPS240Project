@@ -30,6 +30,7 @@ public abstract class AbstractClient implements GameConstants {
 	 */
 	public AbstractClient(String host, int port, GameState gamestate,
 	List<Integer> ctypes) {
+		System.out.println("ABSTRACTCLIENT:\tconstructor\tctypes: " + ctypes.size() );
 		charactersCreated = new LinkedList<>();
 		if (gamestate == null)
 			this.gamestate = new GameState();
@@ -43,8 +44,11 @@ public abstract class AbstractClient implements GameConstants {
 
 			populateGameState(socket, ctypes);
 
-			executor.execute(new OutputHandler(socket, gamestate));
-			executor.execute(new InputHandler(socket, gamestate));
+			System.out.println("ABSTRACTCLIENT:\tconstructor\tcreateOutputHandler");
+			executor.execute(new OutputHandler(socket, this.gamestate));
+			System.out.println("ABSTRACTCLIENT:\tconstructor\tcreateInputHandler");
+			executor.execute(new InputHandler(socket, this.gamestate));
+			System.out.println("ABSTRACTCLIENT:\tconstructor\tconstructor\tfinished");
 		}
 		catch (IOException ioe) {
 			System.out.println("Problem connectin to server AC41");

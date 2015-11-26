@@ -28,7 +28,7 @@ public abstract class Actor {
 		this.image = image;
 		this.location = location;
 		this.path = null;
-		this.simpleStep = false; // TODO determine when to use simpleStep. 
+		this.simpleStep = true; // TODO determine when to use simpleStep. 
 		this.stepSize = 1.5f;
 	}
 
