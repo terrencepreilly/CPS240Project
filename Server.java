@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.EOFException;
 
 import java.util.Set;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.*;
@@ -28,6 +29,8 @@ public class Server implements GameConstants {
 
 	private SynchronizedIDCounter syncID;
 
+	private Random rand;
+
 	/**
 	 * Initialize the server at the given port.
 	 * @param port The port at which to open this Server.
@@ -35,6 +38,9 @@ public class Server implements GameConstants {
 	 */
 	public Server(int port) {
 		gamestate = new GameState();
+		rand = new Random(RANDSEED);
+		addObstacles();
+
 		executor = Executors.newCachedThreadPool();
 		running = true;
 		this.port = port;
@@ -42,6 +48,25 @@ public class Server implements GameConstants {
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException ioe) { ioe.printStackTrace(); }
+	}
+
+	/**
+	 * Create a given number of obstacles at random locations seeded with 
+	 * RANDSEED, so that it is the same each time.
+	 */
+	private void addObstacles() {
+		for (int i = 0; i < OBSTACLE_SPAWN; i++) {
+			float randX = (float) rand.nextFloat() * SCREEN_WIDTH;
+			float randY = (float) rand.nextFloat() * SCREEN_HEIGHT;
+			gamestate.applyGameDelta(
+				new GameDelta(
+					-1,
+					new Vector(randX, randY),
+					0,
+					OBSTACLE
+				)
+			);
+		}
 	}
 
 	/**

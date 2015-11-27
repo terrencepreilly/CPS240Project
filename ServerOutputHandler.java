@@ -17,8 +17,23 @@ class ServerOutputHandler extends OutputHandler {
 		}
 	}
 
+	private void writeInitialGameState() {
+                try {
+                        for (Integer uid: gamestate.characters.keySet()) {
+                                GameDelta gd = gamestate.createGameDelta(uid);
+                                out.writeObject(gd);
+                        }
+                        for (Scenic o : gamestate.obstacles) {
+                                GameDelta gd = gamestate.createGameDelta(o);
+                                out.writeObject(gd);
+                        }
+                        out.flush();
+                } catch (IOException ioe) { ioe.printStackTrace(); }
+        }
+
 	//TODO Don't pass the locations back to the client you got it from.
 	public void run() {
+		writeInitialGameState();
                 try {
                         while (true) {
                                 GameDelta gd = gamestate.getUpdate();

@@ -26,19 +26,30 @@ public class GameState implements GameConstants {
 
 	/**
 	 * Apply the given GameDelta.  Updates coordinates and health of a
-	 * given Character.
+	 * given Character. Adds obstacles indiscriminately.
 	 * @param gd The GameDelta to apply.
 	 */
 	public synchronized void applyGameDelta(GameDelta gd) {
-		Character c = null;
-		if (characters.containsKey( gd.uniqueID )) {
-			c = characters.get( gd.uniqueID );
-			c.setLocation( gd.locUpdate );
-                        c.setHealth( gd.health );
+		if (gd.type == OBSTACLE) {
+			boolean add = true;
+			for (Scenic obstacle : obstacles) {
+				if (gd.locUpdate.compareTo(obstacle.getLocation()) == 0)
+					add = false;
+			}
+			if (add)
+				obstacles.add(createObstacle(gd));
 		}
 		else {
-			addCharacter(gd);
-		}
+			Character c = null;
+			if (characters.containsKey( gd.uniqueID )) {
+				c = characters.get( gd.uniqueID );
+				c.setLocation( gd.locUpdate );
+				c.setHealth( gd.health );
+			}
+			else {
+				addCharacter(gd);
+			}
+		}	
 	}
 
 	/**
@@ -69,6 +80,15 @@ public class GameState implements GameConstants {
 		else {
 			return new GameDelta( c.getUniqueID(), c.getLocation(), c.getHealth(), c.getType() );
 		}
+	}
+
+	/**
+	 * Return a new GameDelta for the given Obstacle, whether or not it is 
+	 * in the GameState.
+	 * @return A GameDelta representing an Obstacle.
+	 */
+	public synchronized GameDelta createGameDelta(Scenic o) {
+		return new GameDelta( 0, o.getLocation(), 0, OBSTACLE );
 	}
 
 	/**
@@ -125,7 +145,7 @@ public class GameState implements GameConstants {
                 BufferedImage playerImage = null;
                 try {
                         //TODO differentiate image by gd.type
-                        playerImage = ImageIO.read( new File("character.png") );
+                        playerImage = ImageIO.read( new File(PLR_IMAGE_FILENAME) );
                 }
                 catch (IOException ioe) { System.out.println(ioe); }
 
@@ -141,6 +161,20 @@ public class GameState implements GameConstants {
 		}
 
 		return c;
+	}
+
+	/**
+	 * Make a new Obstacle.
+	 */
+	public synchronized Scenic createObstacle(GameDelta gd) {
+		Scenic s = null;
+		BufferedImage obstacleImage = null;
+		try {
+			obstacleImage = ImageIO.read( new File(OBS_IMAGE_FILENAME));
+		} catch (IOException ioe) { System.out.println(ioe); }
+
+		s = new Scenic(obstacleImage, gd.locUpdate);
+		return s;
 	}
 
 	/**
