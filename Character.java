@@ -9,7 +9,6 @@ class Character extends Actor implements GameConstants {
 	
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
-	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
 	private Integer uniqueID;
 	private Integer type;
 	
@@ -23,8 +22,6 @@ class Character extends Actor implements GameConstants {
 		//character is an image, location, and a boxCollider, health set to 10 until changed
 		super(image, location);
 		lastGoodLocation = location;
-		setBoxCollider(image);
-		boxCollider.setLocation(location);
 		health = 10;
 		uniqueID = -1;
 		type = 0;
@@ -91,35 +88,6 @@ class Character extends Actor implements GameConstants {
 	 */
 	public void setHealth(int health){
 		this.health = health;
-	}
-
-	/**
-	 * Set the location of this Character.
-	 * @param location The location of this Character.
-	 */
-	public void setLocation(Vector location) {
-		boxCollider.setLocation(location);
-	}
-
-	public Vector getLocation() {
-		return boxCollider.getLocation();
-	}
-
-	/**
-	 * Get the BoxCollider of this Character.
-	 * @return The BoxCollider for this Character.
-	 */ 
-	public BoxCollider getBoxCollider(){
-		return boxCollider;
-	}
-
-	/**
-	 * Set the BoxCollider for this Character.
-	 * @param image The image which determines the dimensions of this 
-	 * 	Character's BoxCollider.
-	 */
-	protected void setBoxCollider(BufferedImage image){
-		boxCollider = new BoxCollider(image);
 	}
 
 	/**

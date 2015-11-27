@@ -50,21 +50,16 @@ public class Server implements GameConstants {
 	 * have closed.)
 	 */
 	public void connectClients() {
-		System.out.println("SERVER:\tconnectClients");
 		try {
-			System.out.println("SERVER:\tconnectClients\tserverSocket instantiated");
 			while (running) {
 				Socket socket = serverSocket.accept();
 
-				System.out.println("SERVER:\tconnectClients\tsocket connection accpted");
 				// Pass the values to OutputHandler so that
 				// updates from a uid aren't 
 				LinkedList uids = serveUniqueIDs(socket);
 
-				System.out.println("SERVER:\tconnectClients\tInputHandler created");
 				executor.execute(new ServerOutputHandler(socket, gamestate, uids));
 				executor.execute(new ServerInputHandler(socket, gamestate));
-				System.out.println("SERVER:\tconnectClients\tOutputHandler created");
 			}
 		}
 		catch (IOException ioe) { ioe.printStackTrace(); }
@@ -79,7 +74,6 @@ public class Server implements GameConstants {
 	 * @return A list containing each unique ID that was sent.
 	 */
 	public LinkedList serveUniqueIDs(Socket socket) throws IOException {
-		System.out.println("SERVER:\tserveUniqueIDs");
 		DataOutputStream dos = new DataOutputStream(
 			socket.getOutputStream() );
 		DataInputStream dis = new DataInputStream(
@@ -88,12 +82,10 @@ public class Server implements GameConstants {
 		int rec = dis.readInt();
 		LinkedList<Integer> ret = new LinkedList<>();
 		while (rec != END_UID_REQUEST) {
-			System.out.println("SERVER:\tserveUniqueIDs\t" + rec + " served");
 			ret.addLast( syncID.next() );
 			dos.writeInt( ret.getLast() );
 			rec = dis.readInt();
 		}
-		System.out.println("SERVER:\tserveUniqueIDs\tfinished");
 
 		return ret;
 	}
@@ -102,7 +94,6 @@ public class Server implements GameConstants {
 	 * Close the Server.
 	 */
 	public void close() {
-		System.out.println("Closing threads");
 		try { 
 			executor.shutdown();
 			serverSocket.close(); 

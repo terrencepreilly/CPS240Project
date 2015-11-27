@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +12,8 @@ import java.awt.GraphicsEnvironment;
  * A class which handles the enemy characters of the game.  Should be
  * run on the same computer as the Server.
  */
-public class ZombieClient extends AbstractClient implements Runnable {
+public class ZombieClient extends AbstractClient 
+implements Runnable, GameConstants {
 	private boolean running;  // goes forever (will be contained in Server)
 				// Is this a good idea?
 	private HashMap<Character, Vector> prevUpdate;
@@ -25,16 +28,24 @@ public class ZombieClient extends AbstractClient implements Runnable {
 	 */
 	public ZombieClient() { 
 		super("localhost", 8000, null, getZombieRequests()); 
+
 		targetMap = new HashMap<>();
 		prevUpdate = new HashMap<>();
-		for (Character c : charactersCreated)
-			prevUpdate.put(c, c.getLocation().add(new Vector(0f, 0f)));
-		System.out.println("ZOMBIECLIENT:\tconstructor\tfinished");
+
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
                 GraphicsDevice gd = ge.getDefaultScreenDevice();
-                DisplayMode displayMode = gd.getDisplayMode();
-		screenWidth = displayMode.getWidth();
-		screenHeight = displayMode.getHeight();
+                DisplayMode dm = gd.getDisplayMode();
+		screenWidth = dm.getWidth();
+		screenHeight = dm.getHeight();
+
+		Random r = new Random(RANDSEED);
+		for (Character c : charactersCreated) {
+			prevUpdate.put(c, c.getBoxCollider().getLocation().copy());
+
+			float randX = r.nextFloat() * screenWidth;
+			float randY = r.nextFloat() * screenHeight;
+			c.setLocation( new Vector(randX, randY) );
+		}
 	}
 
 	/**
@@ -48,7 +59,6 @@ public class ZombieClient extends AbstractClient implements Runnable {
                 for (int i = 0; i < ZOMBIE_SPAWN; i++)
                         requestUIDs.addLast( ENEMY );
                 requestUIDs.addLast( END_UID_REQUEST );
-		System.out.printf("ZOMBIECLIENT:\tgetZombieRequests\t%d requested\n", requestUIDs.size());
 		return requestUIDs;
 	}
 
@@ -59,7 +69,6 @@ public class ZombieClient extends AbstractClient implements Runnable {
 	 * into a target Map.
 	 */
 	private void assignTargets() {
-		System.out.println("ZOMBIECLIENT:\tassignTargets");
 		for (Character zomb : charactersCreated) {
 			Vector zv = zomb.getBoxCollider().getLocation();
 			Integer closeP = -1;
@@ -81,7 +90,6 @@ public class ZombieClient extends AbstractClient implements Runnable {
 
 			targetMap.put(zomb, closeP);
 		}
-		System.out.println("ZOMBIECLIENT:\tassignTargets\t" + targetMap.size() + " tagets assigned");
 	}
 
 	private void moveCharacter(Character z) {
@@ -96,14 +104,14 @@ public class ZombieClient extends AbstractClient implements Runnable {
 			gamestate.obstacles, // TODO MUST BE ARRAYLIST
 			targetBC// target
 		);
-		((Actor) z).step();
+		z.step();
 		flagIfMoved(z);
 	}
 
 	private void flagIfMoved(Character c) {
-		if (prevUpdate.get(c).magnetude() != c.getLocation().magnetude()) {
+		if (prevUpdate.get(c).compareTo(c.getBoxCollider().getLocation()) != 0) {
 			gamestate.flagForUpdate(c);
-			prevUpdate.put(c, c.getLocation().add(new Vector(0f, 0f)));
+			prevUpdate.put(c, c.getBoxCollider().getLocation().copy());
 		}
 	}
 
@@ -120,7 +128,6 @@ public class ZombieClient extends AbstractClient implements Runnable {
 	 */
 	public void run() {
 		running = true;
-		System.out.println("ZOMBIECLIENT:\trun");
 		int count = 0;
 		while (running) {
 			// detectCollisions?

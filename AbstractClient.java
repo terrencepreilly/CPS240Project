@@ -30,7 +30,6 @@ public abstract class AbstractClient implements GameConstants {
 	 */
 	public AbstractClient(String host, int port, GameState gamestate,
 	List<Integer> ctypes) {
-		System.out.println("ABSTRACTCLIENT:\tconstructor\tctypes: " + ctypes.size() );
 		charactersCreated = new LinkedList<>();
 		if (gamestate == null)
 			this.gamestate = new GameState();
@@ -44,43 +43,31 @@ public abstract class AbstractClient implements GameConstants {
 
 			populateGameState(socket, ctypes);
 
-			System.out.println("ABSTRACTCLIENT:\tconstructor\tcreateOutputHandler");
 			executor.execute(new OutputHandler(socket, this.gamestate));
-			System.out.println("ABSTRACTCLIENT:\tconstructor\tcreateInputHandler");
 			executor.execute(new InputHandler(socket, this.gamestate));
-			System.out.println("ABSTRACTCLIENT:\tconstructor\tconstructor\tfinished");
 		}
 		catch (IOException ioe) {
-			System.out.println("Problem connectin to server AC41");
 		}
 	}
 
 	public void populateGameState(Socket socket, List<Integer> ctypes) 
 	throws IOException {
-		System.out.println("ABSTRACTCLIENT:\tpopulateGameState");
 		DataOutputStream dos = new DataOutputStream( 	
 			socket.getOutputStream());
 		DataInputStream dis = new DataInputStream(
 			socket.getInputStream());
-		System.out.println("ABSTRACTCLIENT:\tpopulateGameState\tInput and Output streams created");
 
 		for (Integer i : ctypes) {
 			dos.writeInt( i );
 			if (i == END_UID_REQUEST)
 				break;
-			System.out.println("ABSTRACTCLIENT:\tpopulateGameState\t" + i + " written");
 			int uid = dis.readInt();
-			System.out.println("ABSTRACTCLIENT:\tpopulateGameState\t" + uid + " read");
 			Character c = gamestate.createCharacter( new GameDelta(
 				uid, new Vector(0f, 0f), 10, i) );
-			System.out.println("ABSTRACTCLIENT:\tpopulateGameState\tcreated " + c);
 			gamestate.add(c);
-			System.out.println("ABSTRACTCLIENT:\tpopulateGameState\tadded Character");
 			gamestate.flagForUpdate(c);
-			System.out.println("ABSTRACTCLIENT:\tpopulateGameState\tflagged for Update");
 			charactersCreated.add(c);
 		}
-		System.out.println("ABSTRACTCLIENT:\tpopulateGameState\tfinished");
 	}
 
 	/**

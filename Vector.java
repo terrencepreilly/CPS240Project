@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
  * and a y coordinate they are public and can be accessed by 
  * Vector.x/Vector.y
  */
-class Vector implements java.io.Serializable {
+class Vector implements java.io.Serializable, Comparable {
 	public float x;
 	public float y;
 	
@@ -20,6 +20,12 @@ class Vector implements java.io.Serializable {
 		this.x = x;
 		this.y = y;
 	}
+
+	/**
+	 * Return a copy of this Vector.
+	 * @return A copy of this Vector.
+	 */
+	public Vector copy() { return new Vector(x, y); }
 
 	/**
 	 * Return a String representation of this Vector.
@@ -106,5 +112,26 @@ class Vector implements java.io.Serializable {
 	 */
 	public Point2D.Float toPoint2DFloat() {
 		return new Point2D.Float(x, y);
+	}
+
+	/**
+	 * Return 0 if this Vector is the same as other, return -1 if
+	 * first x then y component is smaller, otherwise return 1.
+	 * @return -1, 0, or 1 by comparing first x, then y components.
+	 */ 
+	public int compareTo(Object o) { 
+		Vector other = (Vector) o;
+		if (this.x < other.x)
+			return -1;
+		else if (this.x > other.x)
+			return 1;
+		else {
+			if (this.y < other.y)
+				return -1;
+			else if (this.y > other.y)
+				return 1;
+			else
+				return 0;
+		}
 	}
 }

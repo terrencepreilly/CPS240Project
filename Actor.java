@@ -10,14 +10,13 @@ import java.util.Collection;
  * very least. They have assessor/mutators methods for the 
  * location and image
  */
-public abstract class Actor {
+public abstract class Actor implements GameConstants {
+	protected BoxCollider boxCollider;
 	protected BufferedImage image;
 	protected Vector location;
 	private LinkedList<Vector> path;		// The path of this actor to take
 	private boolean simpleStep;		// Whether to use simpleStep algorithm
-					// or AStar
-	private float stepSize;
-	
+
 	/**
 	 * Create a new Actor object.
 	 * @param image The image for this character.
@@ -29,7 +28,8 @@ public abstract class Actor {
 		this.location = location;
 		this.path = null;
 		this.simpleStep = true; // TODO determine when to use simpleStep. 
-		this.stepSize = 1.5f;
+		this.boxCollider = new BoxCollider(image);
+		this.boxCollider.setLocation(location);
 	}
 
 	/**
@@ -64,20 +64,16 @@ public abstract class Actor {
 	 */
 	public void setLocation(Vector location){
 		this.location = location;
+		this.boxCollider.setLocation(location);
 	}
 
 	/**
-	 * Set the boxCollider for this Actor (determines the boundaries
-	 * of the Actor.
-	 * @param image The image whose dimensions describe the boundaries.
+	 * Return the BoxCollider of this Actor.
+	 * @return The BoxCollider of this Actor.
 	 */
-	protected abstract void setBoxCollider(BufferedImage image);
-
-	/**
-	 * Get the boxCollider for this Actor.
-	 * @return The boxCollider for this Actor.
-	 */
-	public abstract BoxCollider getBoxCollider();
+	public BoxCollider getBoxCollider() {
+		return this.boxCollider;
+	}
 
 	/**
 	 * Build a path from current location to goal, using either the
@@ -124,26 +120,26 @@ public abstract class Actor {
 	public void step() {
 		if (simpleStep && path != null) {
 			Vector p = path.peek();
-			if (location.distance(p) < stepSize) {
+			if (location.distance(p) < ACTOR_SPEED) {
 				setLocation(location.add(p));
 				path = null;
 			}
 			else {
-				float divisor = p.magnetude() / stepSize;
+				float divisor = p.magnetude() / ACTOR_SPEED;
 				Vector step = p.divide(divisor);
-				setLocation(location.add(step));
+				setLocation(this.location.add(step));
 			}
 		}
 		else if (path != null && path.size() > 0) {
 			Vector p = path.peek();
-			if (location.distance(location.add(p)) < stepSize) { 
+			if (location.distance(location.add(p)) < ACTOR_SPEED) { 
 				setLocation(location.add(p));
 				path.pop();
 				if (path.size() == 0)
 					path = null;
 			}
 			else {
-				float divisor = p.magnetude() / stepSize;
+				float divisor = p.magnetude() / ACTOR_SPEED;
 				Vector step = p.divide(divisor);
 				setLocation(location.add(step));
 				Vector newp = path.pop().subtract(step);
