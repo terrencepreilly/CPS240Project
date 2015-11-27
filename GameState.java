@@ -227,35 +227,30 @@ public class GameState implements GameConstants {
         }
 
 	/**
-	 * Detect collisions and restore characters to A Good Location.
+	 * Detect collision for a single character and restor to a good location.
 	 */
-	private synchronized void detectCollisions() {
+	public synchronized void detectCollisions(Character c) {
 		boolean needToReset = false;
-		for (Integer cuid : characters.keySet()) {
-			Character c = characters.get(cuid);
-			BoxCollider cbc = c.getBoxCollider();
-
-			for (Scenic s : obstacles) {
-				BoxCollider sbc = s.getBoxCollider();
-				if (sbc.intersects(cbc)) {
-					needToReset = true;
-					c.setLocation(getAGoodLocation(sbc, cbc));
-				}
+		BoxCollider cbc = c.getBoxCollider();
+		for (Scenic s : obstacles) {
+			BoxCollider sbc = s.getBoxCollider();
+			if (sbc.intersects(cbc)) {
+				needToReset = true;
+				c.setLocation(getAGoodLocation(sbc, cbc));
 			}
+		}
 
-			for (Integer cuid2 : characters.keySet()) {
-				Character c2 = characters.get(cuid2);
-				BoxCollider c2bc = c2.getBoxCollider();
-				if ( !(cuid == cuid2) && cbc.intersects(c2bc) ) {
-					needToReset = true;
-					c.setLocation(c.getLastGoodLocation());
-					c2.setLocation(c2.getLastGoodLocation());
-				}
+		for (Integer cuid2 : characters.keySet()) {
+			Character c2 = characters.get(cuid2);
+			BoxCollider c2bc = c2.getBoxCollider();
+			if ( !(cuid2 == c.getUniqueID()) && cbc.intersects(c2bc)) {
+				needToReset = true;
+				c.setLocation(c.getLastGoodLocation());
 			}
+		}
 
-			if (! needToReset) {
-				c.setLastGoodLocation(c.getLocation());
-			}
+		if (! needToReset) {
+			c.setLastGoodLocation(c.getLocation());
 		}
 	}
 

@@ -86,6 +86,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 */
 	private void processInput() {
 		gameKeyboard.processInput();
+		gamestate.detectCollisions(player);
 	}
 
 	/**

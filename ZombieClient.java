@@ -105,6 +105,7 @@ implements Runnable, GameConstants {
 			targetBC// target
 		);
 		z.step();
+		gamestate.detectCollisions(z);
 		flagIfMoved(z);
 	}
 
