@@ -13,13 +13,13 @@ public interface GameConstants {
 
 	// The number of Zombies to spawn at the start of the game.
 	// (Eventually change to a base spawn rate.)
-	public final int ZOMBIE_SPAWN = 3;
+	public final int ZOMBIE_SPAWN = 20;
 	public final int OBSTACLE_SPAWN = 5;
 
 	// Kills the thread this uniqueID is sent to.
 	public final int THREAD_KILL = -3;
 
-	public final int RANDSEED = 318;
+	public final int RANDSEED = 319;
 
 	public final String OBS_IMAGE_FILENAME = "obstacle.png";
 	public final String PLR_IMAGE_FILENAME = "character.png";

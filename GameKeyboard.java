@@ -18,7 +18,6 @@ class GameKeyboard implements KeyListener, GameConstants {
 	public GameKeyboard(Character character, GameState gamestate) {
 		this.character = character;
 		this.gamestate = gamestate;
-		System.out.println("GAMEKEYBOARD:\tconstructor\tfinished");
 	}
 	
 	/**

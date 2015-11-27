@@ -31,20 +31,20 @@ class ServerOutputHandler extends OutputHandler {
                 } catch (IOException ioe) { ioe.printStackTrace(); }
         }
 
-	//TODO Don't pass the locations back to the client you got it from.
 	public void run() {
 		writeInitialGameState();
                 try {
                         while (true) {
+				// TODO getUpdate pops the update off of the list,
+				// but that means ONLY ONE CLIENT receives it.
                                 GameDelta gd = gamestate.getUpdate();
-                                if (gd != null && !uids.contains(gd.uniqueID)) { //Glitchy 
-//				if (gd != null) { // TODO WTF?
+                                if (gd != null && !uids.contains(gd.uniqueID)) { 
                                         out.writeObject(gd);
                                         out.flush();
                                 }
 
                                 // make room for other processes
-                                Thread.sleep(10L);
+                                Thread.sleep(1L);
                         }
                 }
                 catch (IOException ioe) { ioe.printStackTrace(); }
