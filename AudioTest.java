@@ -1,87 +1,178 @@
 /*
  * Marcus Fields
- * Audio Test program
- * 
- * The purpose of this is to just get audio working in our project with a small GUI sample. 
- * 
- * This uses JavaFX.
+ * AudioTest update
+ * This time, it uses Java swing.
  * 
  * The audio files are located in the src/AudioFiles directory of a project.
  * 
- * Sounds are from freesound.org. They are not final. If you guys find some more audio that you like 
- * better, then you can replace them with your own in the AudioFiles directory. Or just tell me and
- * I can do it/upload them to the github repository
- * 
- * Later, if you guys wish, when I get the actual project to work on my computer, I can incorporate some
- * of this into the actual gameplay.
+ * Just a heads-up: there's this weird compatibility thing with Java swing's audio capabilities; it will only work
+ * with certain .wav files --or else it'll throw a LineUnavailableException-- which is incredibly irritating. I got 
+ * most of it work, though. There's probably some work-around for this that I overlooked;till studying the documentation.
  */
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.media.AudioClip;
+import javax.swing.JFrame;
+import javax.swing.*;
+import javax.sound.sampled.*;
+
+import java.awt.*;
+import java.awt.event.*;
+
 import java.io.*;
 
-public class AudioTest extends Application {
-	public static void main(String[] args) {
-		Application.launch(args);
-	}
-	@Override // Override the start method in the Application class
-	public void start(Stage primaryStage) {
+
+public class AudioTest extends JFrame{
+	//Sound set-up
+	private final AudioInputStream aisItemGet;
+	private final Clip clpItemGet;
+	
+		private final AudioInputStream aisZombieGroan1;
+		private final Clip clpZombieGroan1;
+	
+		private final AudioInputStream aisBGMAmbience;
+		private final Clip clpBGMAmbience;
+	
+	//Frame settings
+	private static final long serialVersionUID = -1L;
+	private final int WIDTH = 480;
+	private final int HEIGHT = (int) (WIDTH*0.5625);
+	public final Dimension RESOLUTION = new Dimension(WIDTH,HEIGHT);
+	private JFrame frame = new JFrame();
+	private JPanel varPanelMain = new JPanel();
+	
+	//Registering the E-H
+	private JButton varButtonExit = new JButton("Exit application");
+	private JButton varButtonPlayZombieGroan = new JButton("Zombie groaning");
+	private JButton varButtonPlayItemGet = new JButton("Item get");
+	private JButton varButtonLoopBGMAmbience = new JButton("Ambience music");
+
+
+	public AudioTest() throws UnsupportedAudioFileException,IOException,LineUnavailableException {
+		//GUI settings
+		setMinimumSize(RESOLUTION);
+		setPreferredSize(RESOLUTION);
+		setMaximumSize(RESOLUTION);
 		
-		//Creating File objects from our audio directory
-		final String fleSoundSlashSword1 = new File("AudioFiles/sndSlashSword1.wav").toURI().toString();
-		final String fleSoundZombieGroan1 = new File("AudioFiles/sndZombieGroan1.wav").toURI().toString();
-		final String fleMusicAmbience = new File("AudioFiles/sndBGMAmbience.wav").toURI().toString();
+		//GUI frame
+		varPanelMain.add(varButtonExit);	
+		varPanelMain.add(varButtonPlayZombieGroan);
+		varPanelMain.add(varButtonPlayItemGet);
+		varPanelMain.add(varButtonLoopBGMAmbience);
+		frame.add(varPanelMain);
+		frame.setTitle("Marktatious Graphics");
+		frame.setSize(WIDTH,HEIGHT);
+		frame.setVisible(true);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		//Creating clips and AIS for each sound/BGM
+		clpItemGet = AudioSystem.getClip();
+		aisItemGet = AudioSystem.getAudioInputStream(new File("AudioFiles/sndItemGet.wav"));
+		
+		clpZombieGroan1 = AudioSystem.getClip();
+		aisZombieGroan1 = AudioSystem.getAudioInputStream(new File("AudioFiles/sndZombieGroan1.wav")); //Fresound.org
+		
+		clpBGMAmbience = AudioSystem.getClip();
+		aisBGMAmbience = AudioSystem.getAudioInputStream(new File("AudioFiles/sndBGMAmbience.wav")); //Freesound.org
+		
+		
+		//E-H system
+		varButtonExit.addActionListener(new ButtonEvent("Exit"));
+		varButtonPlayZombieGroan.addActionListener(new ButtonEvent("PlayZombieGroanSound"));
+		varButtonPlayItemGet.addActionListener(new ButtonEvent("PlayItemGetSound"));
+		varButtonLoopBGMAmbience.addActionListener(new ButtonEvent("LoopBGMAmbience"));
+		
+		
+	}						
+	
+	class ButtonEvent implements ActionListener {
+		//Register each button with a String command to do something.
+		//There's probably a way to do this better, but doesn't really matter in this case ATM
+		String varCommand;
+		public ButtonEvent(String varCommand) {
+			this.varCommand = varCommand;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			//Exit the program
+			if (varCommand.equals("Exit")) {
+				frame.dispose();
+				System.exit(1);
+			}
+			//Play an item sound (could be for some kind of powerup or something; mainly a placeholder)
+			else if (varCommand.equals("PlayItemGetSound")) {
+				PlayClip(clpItemGet,aisItemGet);
+			} 
+			//Play a zombie groan sample
+			else if (varCommand.equals("PlayZombieGroanSound")) {
+				PlayClip(clpZombieGroan1,aisZombieGroan1);
+			} 
+			//Loop the background ambience
+			else if (varCommand.equals("LoopBGMAmbience")) {
+				LoopClip(clpBGMAmbience,aisBGMAmbience);
+			}
+			//Debugging
+			else {
+				System.out.println("Error: button doesn't have a command!");
+			}
+		}
+		//Essentially, this method block determines whether a clip is already playing. And if so, stop it and then play the sound
+		public void PlayClip(Clip sound,AudioInputStream ais) {
+			try {
+				if (sound.isOpen() == true) {
+					if(sound.isRunning() || sound.isActive()) {
+						sound.stop();
+						sound.flush();
+					}
+				}
+				else {
+					sound.open(ais);
+				}
+				sound.setFramePosition(0);
+				sound.start();
+			}
+			catch (LineUnavailableException exception) {
+				System.out.println("Line unavailable!");
+			}
+			catch (IOException exception) {
+				System.out.println("IO unavailable!");
+			}
+		}
+		//Same only loop it instead
+		public void LoopClip(Clip sound,AudioInputStream ais) {
+			try {
 				
-		//Create AudioClip objects from our Files
-		AudioClip varSoundSlashSword1 = new AudioClip(fleSoundSlashSword1);
-		AudioClip varSoundZombieGroan1 = new AudioClip(fleSoundZombieGroan1);
-		AudioClip varMusicAmbience = new AudioClip(fleMusicAmbience);
+				if (sound.isOpen() == true) {
+					if(sound.isRunning() || sound.isActive()) {
+						sound.stop();
+						sound.flush();
+					}
+				}
+				else {
+					sound.open(ais);
+				}
+				sound.setFramePosition(0);
+				sound.start();
+				sound.loop(Clip.LOOP_CONTINUOUSLY);
+				
+			}
+			catch (LineUnavailableException exception) {
+				System.out.println("Line unavailable!");
+			}
+			catch (IOException exception) {
+				System.out.println("IO unavailable!");
+			}
+		}
+	}
+
+	public static void main(String[] args) throws LineUnavailableException,IOException,UnsupportedAudioFileException {
+		//Simply run the program
+		AudioTest varScene = new AudioTest();
+	}
+
 	
-		//Create Button GUI objects for our AudioClips
-		Button varButtonPlaySlashSound = new Button("Slash");
-		Button varButtonPlayZombieGroanSound = new Button("Zombie Groan");
-		Button varButtonLoopAmbienceMusic = new Button("Ambience BGM");
-	
-		//Event handling for each of our buttons
-		varButtonPlaySlashSound.setOnAction(e -> {
-			if (varSoundSlashSword1.isPlaying() == true) {
-				varSoundSlashSword1.stop();
-			}
-			varSoundSlashSword1.play();
-		});
-		varButtonPlayZombieGroanSound.setOnAction(e -> {
-			if (varSoundZombieGroan1.isPlaying() == true) {
-				varSoundZombieGroan1.stop();
-			}
-			varSoundZombieGroan1.play();
-		});
-		varMusicAmbience.setCycleCount(AudioClip.INDEFINITE);
-		varButtonLoopAmbienceMusic.setOnAction(e -> {
-			if (varMusicAmbience.isPlaying() == true) {
-				varMusicAmbience.stop();
-			}
-			varMusicAmbience.play();
-		});
 
-
-		//Layouts
-		HBox hBox = new HBox(10);
-		hBox.setAlignment(Pos.CENTER);
-		BorderPane varPane = new BorderPane();
-		varPane.setCenter(varButtonLoopAmbienceMusic);
-		varPane.setBottom(hBox);
-		varPane.setLeft(varButtonPlaySlashSound);
-		varPane.setTop(varButtonPlayZombieGroanSound);
-
-		//Create a scene for our stage
-		Scene varScene = new Scene(varPane,480,(int) (480*0.5625));
-		primaryStage.setTitle("Audio GUI test");
-		primaryStage.setScene(varScene);
-		primaryStage.show(); 
- 	}
 }
+
+
