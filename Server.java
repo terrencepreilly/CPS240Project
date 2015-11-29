@@ -63,7 +63,8 @@ public class Server implements GameConstants {
 					-1,
 					new Vector(randX, randY),
 					0,
-					OBSTACLE
+					OBSTACLE,
+					System.currentTimeMillis()
 				)
 			);
 		}

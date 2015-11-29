@@ -26,4 +26,7 @@ public interface GameConstants {
 
 	public final int SCREEN_WIDTH = 1000;
 	public final int SCREEN_HEIGHT = 800;
+
+	public final float ENEMY_WIDTH = 20f;
+	public final float ENEMY_HEIGHT = 20f;
 }

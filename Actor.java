@@ -27,9 +27,13 @@ public abstract class Actor implements GameConstants {
 		this.image = image;
 		this.location = location;
 		this.path = null;
-		this.simpleStep = true; // TODO determine when to use simpleStep. 
-		this.boxCollider = new BoxCollider(image);
-		this.boxCollider.setLocation(location);
+		this.simpleStep = Math.random() < 0.2 ? false : true; // 20% chance of using AStar instead of simpleStep
+		if (image != null) {
+			this.boxCollider = new BoxCollider(image);
+			this.boxCollider.setLocation(location);
+		}
+		else
+			this.boxCollider = new BoxCollider(ENEMY_WIDTH, ENEMY_HEIGHT, 0f, 0f);
 	}
 
 	/**

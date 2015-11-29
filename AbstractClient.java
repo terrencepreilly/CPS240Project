@@ -63,7 +63,7 @@ public abstract class AbstractClient implements GameConstants {
 				break;
 			int uid = dis.readInt();
 			Character c = gamestate.createCharacter( new GameDelta(
-				uid, new Vector(0f, 0f), 10, i) );
+				uid, new Vector(0f, 0f), 10, i, System.currentTimeMillis()));
 			gamestate.add(c);
 			gamestate.flagForUpdate(c);
 			charactersCreated.add(c);

@@ -7,20 +7,6 @@ Here is a list of features we have yet to implement:
 		- Losing health
 	* Sound
 	* Networking
-		- GameUpdate glitch.
-			GameDeltas are currently held in a queue, and each
-			ServerOutputHandler takes a Delta off the queue and 
-			serves it to its client.  However, when one ServerOutput
-			Handler takes off a GameDelta, none of the other ServerOut
-			putHandlers can access it.  Resulting in shuttering.
 		- AStar Glitch.
 			A null pointer exception is being thrown.  Something is 
 			not being accessed.
-		- Multithreading Glitch.
-			ConcurrentModificationExceptions are thrown, especially
-			with high numbers of Zombies, because GameState itself
-			isn't locked; only the methods are.  Its internal
-			fields must also be synchronized and thread-safe.  Use
-			the java static synchronized data structure factories to
-			resolve.
-				Or, use a binary semaphore. (Only one permit.)

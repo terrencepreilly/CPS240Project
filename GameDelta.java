@@ -6,6 +6,7 @@ class GameDelta implements java.io.Serializable {
 	Vector locUpdate;
 	int health;
 	int type;
+	long timestamp; 
 
 	/**
 	 * Create a snapshot of a character to pass between hosts.
@@ -16,11 +17,12 @@ class GameDelta implements java.io.Serializable {
 	 * @param type The type of character (GameState.PLAYER or 
 	 *      GameState.ENEMY).
 	 */
-	public GameDelta(Integer uniqueID, Vector locUpdate, int health, int type) {
+	public GameDelta(Integer uniqueID, Vector locUpdate, int health, int type, long timestamp) {
 		this.uniqueID = uniqueID;
 		this.locUpdate = locUpdate;
 		this.health = health;
 		this.type = type;
+		this.timestamp = timestamp;
 	}
 
 	public GameDelta(Integer uniqueID) {
@@ -28,10 +30,11 @@ class GameDelta implements java.io.Serializable {
 		this.locUpdate = null;
 		this.health = 0;
 		this.type = 0;
+		this.timestamp = 0L;
 	}
 
 
 	public String toString() {
-		return String.format("delta: %s HP: %d ID: %d Type: %d", locUpdate.toString(), health, uniqueID, type);
+		return String.format("delta: %s HP: %d ID: %d Type: %d Timestamp: %d", locUpdate.toString(), health, uniqueID, type, timestamp);
 	}
 }

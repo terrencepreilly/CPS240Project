@@ -2,6 +2,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.net.Socket;
 import java.io.IOException;
+import java.util.List;
 
 class ServerOutputHandler extends OutputHandler {
 	// UIDs not to update for this client. (The client's own characters.
@@ -15,6 +16,7 @@ class ServerOutputHandler extends OutputHandler {
 			if (o instanceof Integer)
 				this.uids.add( (Integer) o );
 		}
+		prevSent = System.currentTimeMillis();
 	}
 
 	private void writeInitialGameState() {
@@ -29,26 +31,26 @@ class ServerOutputHandler extends OutputHandler {
                         }
                         out.flush();
                 } catch (IOException ioe) { ioe.printStackTrace(); }
+		prevSent = System.currentTimeMillis();
         }
 
 	public void run() {
 		writeInitialGameState();
                 try {
                         while (true) {
-				// TODO getUpdate pops the update off of the list,
-				// but that means ONLY ONE CLIENT receives it.
-                                GameDelta gd = gamestate.getUpdate();
-                                if (gd != null && !uids.contains(gd.uniqueID)) { 
-                                        out.writeObject(gd);
-                                        out.flush();
-                                }
-
+                                List<GameDelta> l = gamestate.getUpdate(prevSent);
+				for (GameDelta gd : l) {
+					if (gd != null && !uids.contains(gd.uniqueID)) { 
+						out.writeObject(gd);
+						out.flush();
+					}
+				}
+				prevSent = System.currentTimeMillis();
                                 // make room for other processes
                                 Thread.sleep(1L);
                         }
                 }
                 catch (IOException ioe) { ioe.printStackTrace(); }
                 catch (InterruptedException ie) { ie.printStackTrace(); }
-
 	}
 }

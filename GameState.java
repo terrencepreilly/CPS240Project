@@ -10,18 +10,23 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.geom.Point2D;
+import java.util.concurrent.locks.*;
 
 public class GameState implements GameConstants {
-	// The key is a unique identifier assigned to each Client and enemy by the 
-	// Server.  it is simply a counter maintained by the server
-	HashMap<Integer, Character> characters;
-	Queue<Integer> updateFlags;  // The uniqueID for characters that must be
-	List<Scenic> obstacles;		// updated
+	HashMap<Integer, Character> characters; // key is uniqueID
+	HashMap<Integer, GameDelta> updateFlags;
+	List<Scenic> obstacles;
+	private Lock lock;
 
 	public GameState() {
 		characters = new HashMap<>();
 		obstacles = new ArrayList<>();
-		updateFlags = new LinkedList<>();
+		updateFlags = new HashMap<>();
+		lock = new ReentrantLock();
+	}
+
+	public Lock getLock() {
+		return lock;
 	}
 
 	/**
@@ -64,7 +69,7 @@ public class GameState implements GameConstants {
 		Character c = characters.get(uid);
 		int type = c.getType();
 
-		GameDelta gd = new GameDelta( uid, c.getLocation(), c.getHealth(), type ); 
+		GameDelta gd = new GameDelta( uid, c.getLocation(), c.getHealth(), type, System.currentTimeMillis()); 
 		return gd;
 	}
 
@@ -78,7 +83,7 @@ public class GameState implements GameConstants {
 		if (characters.containsKey( c.getUniqueID() ))
 			return createGameDelta( c.getUniqueID() );
 		else {
-			return new GameDelta( c.getUniqueID(), c.getLocation(), c.getHealth(), c.getType() );
+			return new GameDelta( c.getUniqueID(), c.getLocation(), c.getHealth(), c.getType(), System.currentTimeMillis() );
 		}
 	}
 
@@ -88,7 +93,7 @@ public class GameState implements GameConstants {
 	 * @return A GameDelta representing an Obstacle.
 	 */
 	public synchronized GameDelta createGameDelta(Scenic o) {
-		return new GameDelta( 0, o.getLocation(), 0, OBSTACLE );
+		return new GameDelta( 0, o.getLocation(), 0, OBSTACLE, System.currentTimeMillis());
 	}
 
 	/**
@@ -112,7 +117,7 @@ public class GameState implements GameConstants {
 	 * Flag a character for updates.
 	 */
 	public synchronized void flagForUpdate(Integer uid) {
-		updateFlags.offer( uid );
+		updateFlags.put( uid, createGameDelta(uid) );
 	}
 
 	/**
@@ -123,15 +128,15 @@ public class GameState implements GameConstants {
 	}
 
 	/**
-	 * Return a List of GameDeltas for any character which 
-	 * should be pushed. 
+	 * Return a list of updates occuring after this time.
 	 */
-	public synchronized GameDelta getUpdate() {
-		Integer uid = updateFlags.poll();
-		if (uid != null)
-			return createGameDelta(uid);
-		else
-			return null;
+	public synchronized List<GameDelta> getUpdate(long prevUpdate) {
+		List<GameDelta> l = new LinkedList<>();
+		for (Integer key : updateFlags.keySet()) {
+			if (updateFlags.get(key).timestamp > prevUpdate)
+				l.add(updateFlags.get(key));
+		}
+		return l;
 	}
 
 	/**
