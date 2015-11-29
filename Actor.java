@@ -27,7 +27,7 @@ public abstract class Actor implements GameConstants {
 		this.image = image;
 		this.location = location;
 		this.path = null;
-		this.simpleStep = Math.random() < 0.2 ? false : true; // 20% chance of using AStar instead of simpleStep
+		this.simpleStep = Math.random() < ASTAR_RATE ? false : true; // 20% chance of using AStar instead of simpleStep
 		if (image != null) {
 			this.boxCollider = new BoxCollider(image);
 			this.boxCollider.setLocation(location);
@@ -97,14 +97,23 @@ public abstract class Actor implements GameConstants {
 			path.add( goal.subtract(location) );
 		}
 		else if (path == null) {
-			ArrayList<Point> spaces = AStarUtility.getSpaces(
-				dmW,
-				dmH,
-				this.getBoxCollider(),
-				allActors,
-				allObjects
-			);
-
+			ArrayList<Point> spaces;
+			if (USE_CORNER_ASTAR)
+				spaces = AStarUtility.getCornerSpaces(
+					dmW, 
+					dmH, 
+					this.getBoxCollider(), 
+					allActors, 
+					allObjects 
+				);
+			else
+				spaces = AStarUtility.getSpaces(
+					dmW,
+					dmH,
+					this.getBoxCollider(),
+					allActors,
+					allObjects
+				);
 			LinkedList<Point> pointPath = AStarUtility.getPath(
 				spaces,
 				this.getBoxCollider(),

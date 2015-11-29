@@ -50,6 +50,11 @@ public abstract class AbstractClient implements GameConstants {
 		}
 	}
 
+	/**
+	 * Populate the GameState from the Server.
+ 	 * @param socket The Client socket, to read from the Server.
+	 * @param ctypes The types of characters to place.
+	 */
 	public void populateGameState(Socket socket, List<Integer> ctypes) 
 	throws IOException {
 		DataOutputStream dos = new DataOutputStream( 	

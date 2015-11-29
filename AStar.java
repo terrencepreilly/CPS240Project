@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 /**
  * A class which implements the A* Pathfinding Algorithm.
  */
-class AStar {
+class AStar implements GameConstants {
 	private ArrayList<Point> spaces; 	// Open, available places to move
 	private Point start;
 	private Point goal; 
@@ -156,7 +156,7 @@ class AStar {
 			openset.remove(current);
 			closedset.add(current);
 
-			for (Point neighbor : getNeighbors(current)) {
+			for (Point neighbor : USE_CORNER_ASTAR ? spaces : getNeighbors(current)) {
 				if (closedset.contains(neighbor)) 
 					continue;
 				double temp_g = gscores.get(current) + distance(current, neighbor);

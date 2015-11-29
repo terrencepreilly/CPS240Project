@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
  */
 class Scenic extends Actor {
 
-	private BoxCollider boxCollider; //boxCollider for this Scenic object. Should have 2 vectors
+	private BoxCollider boxCollider;
 	
 	/**
 	 * Create a new Scenic instance.

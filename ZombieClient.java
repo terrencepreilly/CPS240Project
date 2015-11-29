@@ -92,23 +92,32 @@ implements Runnable, GameConstants {
 		}
 	}
 
+	/**
+	 * Calculate a new path for this Character, and take a step along 
+	 * said path.
+	 * @param z The Character to move.
+	 */
 	private void moveCharacter(Character z) {
 		if (targetMap.get(z) == null || targetMap.get(z) == -1)
 			return;
 		BoxCollider targetBC = gamestate.characters.get( targetMap.get(z) ).getBoxCollider();
 		z.buildPath(
-			targetBC.getLocation(), // target
+			targetBC.getLocation(),
 			screenWidth,
 			screenHeight,
-			gamestate.characters.values(), // TODO MUST BE ARRAYLIST
-			gamestate.obstacles, // TODO MUST BE ARRAYLIST
-			targetBC// target
+			gamestate.characters.values(),
+			gamestate.obstacles,
+			targetBC
 		);
 		z.step();
 		gamestate.detectCollisions(z);
 		flagIfMoved(z);
 	}
 
+	/**
+	 * Flag the Character if it has moved.
+	 * @param c The Character to flag.
+	 */
 	private void flagIfMoved(Character c) {
 		if (prevUpdate.get(c).compareTo(c.getBoxCollider().getLocation()) != 0) {
 			gamestate.flagForUpdate(c);

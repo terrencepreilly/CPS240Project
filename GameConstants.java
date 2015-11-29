@@ -1,28 +1,35 @@
+/**
+ * A container interface for game constants.
+ */
 public interface GameConstants {
-	public final Integer PLAYER = 0;
-	public final Integer ENEMY = 1;
-	public final Integer OBSTACLE = 2;
-
+	// Speed of player and enemy
 	public final float PLAYER_SPEED = 2.5f;
 	public final float ACTOR_SPEED = 2.5f;
 
-	public final int END_UID_REQUEST = -217;
+	// Pathfinding variables
+	public final boolean USE_CORNER_ASTAR = true;
+	public final float ASTAR_RATE = 0.2f;
 
-	// GameDelta.uniqueID for requesting update of GameState
-	public final int UPDATE_REQUEST = -2;
-
-	// The number of Zombies to spawn at the start of the game.
-	// (Eventually change to a base spawn rate.)
-	public final int ZOMBIE_SPAWN = 20;
+	// Spawn rates for enemies and obstacles.
+	public final int ZOMBIE_SPAWN = 1;
 	public final int OBSTACLE_SPAWN = 5;
 
-	// Kills the thread this uniqueID is sent to.
-	public final int THREAD_KILL = -3;
-
+	// The random seed
 	public final int RANDSEED = 319;
 
+	// Images for characters and obstacles
 	public final String OBS_IMAGE_FILENAME = "obstacle.png";
 	public final String PLR_IMAGE_FILENAME = "character.png";
+
+	//---------------INTERNAL CONSTANTS, DO NOT CHANGE---------------//
+	public final Integer PLAYER = 0;
+	public final Integer ENEMY = 1;
+	public final Integer OBSTACLE = 2;
+	public final int END_UID_REQUEST = -217;
+	// GameDelta.uniqueID for requesting update of GameState
+	public final int UPDATE_REQUEST = -2;
+	// Kills the thread this uniqueID is sent to.
+	public final int THREAD_KILL = -3;
 
 	public final int SCREEN_WIDTH = 1000;
 	public final int SCREEN_HEIGHT = 800;

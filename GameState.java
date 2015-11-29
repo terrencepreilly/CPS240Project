@@ -18,6 +18,10 @@ public class GameState implements GameConstants {
 	List<Scenic> obstacles;
 	private Lock lock;
 
+	/**
+	 * Create a new GameState with empty internal values.
+	 * @return A new instance of GameState.
+	 */
 	public GameState() {
 		characters = new HashMap<>();
 		obstacles = new ArrayList<>();
@@ -25,6 +29,10 @@ public class GameState implements GameConstants {
 		lock = new ReentrantLock();
 	}
 
+	/**
+	 * Return a Lock for this instance.
+ 	 * @return A Lock for this instance.
+	 */
 	public Lock getLock() {
 		return lock;
 	}
@@ -259,6 +267,7 @@ public class GameState implements GameConstants {
 		}
 	}
 
+	// TODO Remove this method. (Concurrency issues.)
 	/**
 	 * Get the map of all Characters.
 	 * @return A HashMap of all Characters.

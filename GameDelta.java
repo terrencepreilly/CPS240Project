@@ -16,6 +16,7 @@ class GameDelta implements java.io.Serializable {
 	 * @param health The current health of this Character.
 	 * @param type The type of character (GameState.PLAYER or 
 	 *      GameState.ENEMY).
+	 * @param timestamp The time this GameDelta was originally requested.
 	 */
 	public GameDelta(Integer uniqueID, Vector locUpdate, int health, int type, long timestamp) {
 		this.uniqueID = uniqueID;
@@ -25,6 +26,12 @@ class GameDelta implements java.io.Serializable {
 		this.timestamp = timestamp;
 	}
 
+        /**
+         * Create a snapshot of a character to pass between hosts, with 
+	 * no initial information save the uniqueID. (Used for Scenic objects.)
+         * @param uniqueID The uniqueID of this Character. (Assigned by
+         *      an auto-fill counter in the Server.
+         */
 	public GameDelta(Integer uniqueID) {
 		this.uniqueID = uniqueID;
 		this.locUpdate = null;
@@ -33,8 +40,18 @@ class GameDelta implements java.io.Serializable {
 		this.timestamp = 0L;
 	}
 
-
+	/**
+	 * Return a String representation of this GameDelta for testing purposes.
+	 * @return A String representation of this GameDelta.
+	 */
 	public String toString() {
-		return String.format("delta: %s HP: %d ID: %d Type: %d Timestamp: %d", locUpdate.toString(), health, uniqueID, type, timestamp);
+		return String.format(
+			"delta: %s HP: %d ID: %d Type: %d Timestamp: %d",
+			locUpdate.toString(), 
+			health, 
+			uniqueID, 
+			type, 
+			timestamp
+		);
 	}
 }

@@ -4,10 +4,19 @@ import java.net.Socket;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A task for handling all output from a Server.
+ */
 class ServerOutputHandler extends OutputHandler {
-	// UIDs not to update for this client. (The client's own characters.
+	// UIDs not to update for this client. (The client's own characters.)
 	HashSet<Integer> uids;
 
+	/**
+	 * Create a new ServerOutputHandler task.
+ 	 * @param socket The connection from this Server to a Client.
+	 * @param gamestate The Server's GameState.
+	 * @return A new instance of ServerOutputHandler.
+	 */
 	public ServerOutputHandler(Socket socket, GameState gamestate, 
 	LinkedList uids) {
 		super(socket, gamestate);
@@ -19,6 +28,9 @@ class ServerOutputHandler extends OutputHandler {
 		prevSent = System.currentTimeMillis();
 	}
 
+	/**
+	 * Write out the GameState to the Client at the time of its creation.
+	 */
 	private void writeInitialGameState() {
                 try {
                         for (Integer uid: gamestate.characters.keySet()) {
@@ -34,6 +46,11 @@ class ServerOutputHandler extends OutputHandler {
 		prevSent = System.currentTimeMillis();
         }
 
+	/**
+	 * Start the ServerOutputHandler. (I.e. wait for changes to the GameState,
+	 * which come from the ServerInputHandler, and write them to the Client 
+	 * through the socket.
+	 */
 	public void run() {
 		writeInitialGameState();
                 try {

@@ -8,7 +8,7 @@ import java.util.Arrays;
  */
 class GameKeyboard implements KeyListener, GameConstants {
 	private GameState gamestate;
-	private Character character; //hold reference for main player
+	private Character character;
 	private Vector updateLoc = new Vector(0f, 0f);
 
 	/**
