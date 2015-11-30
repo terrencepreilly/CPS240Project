@@ -1,6 +1,5 @@
-
 import java.awt.image.BufferedImage;
-
+import java.util.LinkedList;
 
 /**
  * The character is an image, and a location, it will create it's own boxcollider
@@ -9,12 +8,21 @@ import java.awt.image.BufferedImage;
  * last good location anytime a collision is NOT detected. Consequently there is a method
  * to set the location, this will in turn set the boxCollider to a new location
  */
-class Character extends Actor{
+public class Character extends Actor{
 	
+	public static final float ATTACK_SPEED = .50f; //final for attack speed (seconds)
+	
+	//variables related to position and collision detection
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
 	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
 	private int direction; //direction the character is facing to allow manipulation via degrees
+	
+	//variables related to attacking
+	private LinkedList<Weapon> weapons = new LinkedList<Weapon>();
+	private boolean isAttacking;
+	private boolean isPlayer;
+	private double attackCounter; //hold counter
 	
 	/**
 	 * Create a new Character.
@@ -28,10 +36,11 @@ class Character extends Actor{
 		lastGoodLocation = location;
 		setBoxCollider(image);
 		boxCollider.setLocation(location);
-		health = 10;
+		health = 100;
 		direction = 90; //default, facing north
+		isPlayer = false; //default not a player
 	}
-
+	
 	/**
 	 * Get the health of this character.
 	 * @return The current health of this Character.
@@ -66,6 +75,22 @@ class Character extends Actor{
 	 */
 	public void setHealth(int health){
 		this.health = health;
+	}
+	
+	/**
+	 * Sets whether the player is a human or not, default Character is set to false!
+	 * When creating new Characters that are human controlled ENSURE you call this with true passed
+	 * @param isPlayer true if human controlled character
+	 */
+	public void isPlayer(boolean isPlayer){
+		this.isPlayer = isPlayer;
+	}
+	/**
+	 *
+	 * @return returns if this character is a player controlled by a human
+	 */
+	public boolean isPlayer(){
+		return isPlayer;
 	}
 
 	/**
@@ -107,6 +132,44 @@ class Character extends Actor{
 	 */
 	protected void setBoxCollider(BufferedImage image){
 		boxCollider = new BoxCollider(image);
+	}
+	
+	/**
+	 * initiate attack status!!!
+	 */
+	public void attack(){
+		if(isAttacking && attackCounter > ATTACK_SPEED){
+			isAttacking = false;
+			attackCounter = 0;
+		} else if(!isAttacking) {
+			isAttacking = true;
+		}
+	}
+	
+	public void updateCharacterV(double delta){
+		attackCounter += delta;
+		if(isAttacking&& attackCounter > ATTACK_SPEED){
+			isAttacking = false;
+			attackCounter = 0;
+		}
+	}
+	/**
+	 * 
+	 * @param isAttacking sets attacking flag
+	 */
+	public void isAttacking(boolean isAttacking){
+		this.isAttacking = isAttacking;
+	}
+	public boolean isAttacking(){
+		return isAttacking;
+	}
+	
+	public Weapon getWeapon(){
+		return weapons.get(0);
+	}
+	
+	public void addWeapon(Weapon w){
+		weapons.add(w);
 	}
 
 	/**
