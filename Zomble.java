@@ -188,8 +188,9 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 * collisions, renders the images, and moves the enemy players.
 	 * Also, pauses the thread for 10 milliseconds.
 	 */
-	private void gameLoop() {
-		processInput();
+	private void gameLoop(double delta) {
+		player.updateCharacterV(delta);
+		processInput(delta);
 		renderFrame();
 		try { Thread.sleep(10L); } catch (InterruptedException ex) {}
 	}

@@ -23,7 +23,10 @@ class Scenic extends Actor {
 	}
 
 	public Scenic(Vector location, Vector dimensions) {
-		
+		super();
+		this.image = null;
+		this.location = location;
+		this.boxCollider = new BoxCollider(location.x, location.y, dimensions.x, dimensions.y);
 	}
 	
 	/**

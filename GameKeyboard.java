@@ -15,6 +15,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 	private GameState gamestate;
 	private Character character;
 	private Vector updateLoc = new Vector(0f, 0f);
+	private double delta;
 
 	/**
 	 * Create a new GameKeyboard instance.
@@ -23,6 +24,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 	public GameKeyboard(Character character, GameState gamestate) {
 		this.character = character;
 		this.gamestate = gamestate;
+		this.delta = 1d;
 	}
 	
 	/**
@@ -45,8 +47,8 @@ class GameKeyboard implements KeyListener, GameConstants {
 		float properYCoord = ((float) SCREEN_HEIGHT / 2f) - yCoord;
 		float directionX;
 		float directionY;
-		directionX = ((float) Math.cos(Math.toRadians( character.getDirection())) * PLAYER_SPEED * 60f);
-		directionY = ((float) Math.sin(Math.toRadians( character.getDirection())) * PLAYER_SPEED * 60f);
+		directionX = ((float) Math.cos(Math.toRadians( character.getDirection())) * delta * PLAYER_SPEED * 60f);
+		directionY = ((float) Math.sin(Math.toRadians( character.getDirection())) * delta * PLAYER_SPEED * 60f);
 		properXCoord += directionX;
 		properYCoord += directionY;
 		float nxCoord = properXCoord + ((float) SCREEN_WIDTH / 2f);
@@ -111,11 +113,14 @@ class GameKeyboard implements KeyListener, GameConstants {
 	/**
 	 * Process the keys that were pressed, updating character location.
 	 */
-	public void processInput(){
+	public void processInput(double delta){
+		this.delta = delta;
+		System.out.println("before: " + character.getLocation());
 		Vector currLoc = character.getBoxCollider().getLocation();
 		character.setLocation( currLoc.add(updateLoc) );
 		if (updateLoc.magnetude() != 0f)
 			gamestate.flagForUpdate( character.getUniqueID() );
+		System.out.println("after: " + character.getLocation() + "\n");
 	}
 	
 	/**

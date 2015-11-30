@@ -30,6 +30,7 @@ public interface GameConstants {
 	public final Integer PLAYER = 0;
 	public final Integer ENEMY = 1;
 	public final Integer OBSTACLE = 2;
+	public final Integer BORDER_OBSTACLE = 3;
 	public final int END_UID_REQUEST = -217;
 	// GameDelta.uniqueID for requesting update of GameState
 	public final int UPDATE_REQUEST = -2;

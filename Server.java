@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.EOFException;
 
 import java.util.Set;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -68,13 +69,32 @@ public class Server implements GameConstants {
 				)
 			);
 		}
+		addBorderObstacles();
 	}
 
 	/**
 	 * Add borders so that the characters cannot go off of the screen.
 	 */
 	private void addBorderObstacles() {
-		
+		ArrayList<Vector> borderLocations = new ArrayList<>(
+			Arrays.asList( new Vector[] {
+				new Vector(0f, 0f - SCREEN_HEIGHT),
+				new Vector(SCREEN_WIDTH, 0f),
+				new Vector(SCREEN_HEIGHT, 0f),
+				new Vector(0-SCREEN_WIDTH, 0f)
+			})
+		);
+		for (Vector bl : borderLocations) {
+			gamestate.applyGameDelta(
+				new GameDelta(
+					-1,
+					bl,
+					0,
+					BORDER_OBSTACLE,
+					System.currentTimeMillis()
+				)
+			);
+		}
 	}
 
 	/**

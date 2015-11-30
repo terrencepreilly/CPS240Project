@@ -43,14 +43,16 @@ public class GameState implements GameConstants {
 	 * @param gd The GameDelta to apply.
 	 */
 	public synchronized void applyGameDelta(GameDelta gd) {
-		if (gd.type == OBSTACLE) {
+		if (gd.type == OBSTACLE || gd.type == BORDER_OBSTACLE) {
 			boolean add = true;
 			for (Scenic obstacle : obstacles) {
 				if (gd.locUpdate.compareTo(obstacle.getLocation()) == 0)
 					add = false;
 			}
-			if (add)
+			if (add && gd.type == OBSTACLE)
 				obstacles.add(createObstacle(gd));
+			if (add && gd.type == BORDER_OBSTACLE)
+				obstacles.add(createBorderObstacle(gd));
 		}
 		else {
 			Character c = null;
@@ -188,6 +190,14 @@ public class GameState implements GameConstants {
 
 		s = new Scenic(obstacleImage, gd.locUpdate);
 		return s;
+	}
+
+	/**
+	 * Create a new Scenic which will act as an outer border for the game.
+	 */
+	public synchronized Scenic createBorderObstacle(GameDelta gd) {
+		return new Scenic( gd.locUpdate, 
+			new Vector(SCREEN_WIDTH, SCREEN_HEIGHT) );
 	}
 
 	/**

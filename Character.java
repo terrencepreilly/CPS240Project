@@ -78,6 +78,7 @@ class Character extends Actor implements GameConstants {
 		}
 	}
 
+	// TODO used?
 	/**
 	 *
 	 */

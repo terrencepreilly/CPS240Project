@@ -18,6 +18,17 @@ public abstract class Actor implements GameConstants {
 	private boolean simpleStep;		// Whether to use simpleStep algorithm
 
 	/**
+	 * Create a new, blank Actor instance.
+	 * @return A blank Actor instance.
+	 */
+	public Actor() {
+		this.boxCollider = null;
+		this.image = null;
+		this.location = null;
+		this.path = null;
+	}
+
+	/**
 	 * Create a new Actor object.
 	 * @param image The image for this character.
 	 * @param location The location of this character.
