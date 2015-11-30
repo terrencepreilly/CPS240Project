@@ -1,9 +1,7 @@
+package input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-
-
 /**
  * GameKeyboard.java
  *
@@ -18,7 +16,7 @@ import java.awt.event.KeyListener;
  * it may be better to write complex if/case structures NOT in the GameKeyboard class
  * @author Tyler Beachnau
  */
-class GameKeyboard implements KeyListener{
+public class GameKeyboard implements KeyListener{
 
 	private Character character; //hold reference for main player
 	
@@ -37,7 +35,11 @@ class GameKeyboard implements KeyListener{
 	 * @param e The KeyEvent for the key that was pressed.
 	 */
 	public synchronized void keyPressed(KeyEvent e) {
-		keyPressed[e.getKeyCode()] = true;
+		try{
+			keyPressed[e.getKeyCode()] = true;
+		} catch(ArrayIndexOutOfBoundsException aioob){
+			//just ignore, means a key beyond normal keyboard (windows for example), was pressed
+		}
 	}
 	
 	/**
@@ -73,7 +75,11 @@ class GameKeyboard implements KeyListener{
 	 * @param e The key to reset.
 	 */
 	public synchronized void keyReleased(KeyEvent e) {
-		keyPressed[e.getKeyCode()] = false;
+		try{
+			keyPressed[e.getKeyCode()] = false;
+		} catch(ArrayIndexOutOfBoundsException aioobe){
+			//do nothing, releasing a key that is uncommon (windows key for example)
+		}
 	}
 
 	/**
