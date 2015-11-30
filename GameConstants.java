@@ -5,6 +5,7 @@ public interface GameConstants {
 	// Speed of player and enemy
 	public final float PLAYER_SPEED = 2.5f;
 	public final float ACTOR_SPEED = 2.5f;
+	public static final float ATTACK_SPEED = 0.5f;
 
 	// Pathfinding variables
 	public final boolean USE_CORNER_ASTAR = true;
@@ -36,4 +37,9 @@ public interface GameConstants {
 
 	public final float ENEMY_WIDTH = 20f;
 	public final float ENEMY_HEIGHT = 20f;
+
+	public final int RIGHT = 0;
+	public final int LEFT = 180;
+	public final int UP = 90;
+	public final int DOWN = 270;
 }

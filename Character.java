@@ -1,5 +1,6 @@
 
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 
 /**
@@ -11,6 +12,13 @@ class Character extends Actor implements GameConstants {
 	private int health;
 	private Integer uniqueID;
 	private Integer type;
+
+	// variables related to attacking and position
+	private int direction;
+	private LinkedList<Weapon> weapons = new LinkedList<Weapon>();
+	private boolean isAttacking;
+	private boolean isPlayer;
+	private double attackCounter;
 	
 	/**
 	 * Create a new Character.
@@ -22,9 +30,10 @@ class Character extends Actor implements GameConstants {
 		//character is an image, location, and a boxCollider, health set to 10 until changed
 		super(image, location);
 		lastGoodLocation = location;
-		health = 10;
+		health = 100;
+		direction = UP; // default, facing North
 		uniqueID = -1;
-		type = 0;
+		type = ENEMY;
 	}
 
 	/**
@@ -38,6 +47,79 @@ class Character extends Actor implements GameConstants {
 	 * @return The type of Character, either ENEMY (default) or PLAYER.
 	 */
 	public Integer getType() { return type; }
+
+	/**
+	 * Set direction faced by Character as a degree. (Right = 0, left = 180,
+	 * etc.)
+	 * @param direction The direction to set for this Character.
+	 */
+	public void setDirection(int direction) {
+		this.direction = direction % 360;
+	}
+
+	/**
+	 * Get the direction this Character faces.
+	 * @return The direction this Character faces.
+	 */
+	public int getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Set attack status to true.
+	 */
+	public void attack() {
+		if (isAttacking && attackCounter > ATTACK_SPEED) {
+			isAttacking = false;
+			attackCounter = 0;
+		}
+		else if (!isAttacking) {
+			isAttacking = true;
+		}
+	}
+
+	/**
+	 *
+	 */
+	public void updateCharacterV(double delta) {
+		attackCounter += delta;
+		if (isAttacking && attackCounter > ATTACK_SPEED) {
+			isAttacking = false;
+			attackCounter = 0;
+		}
+	}
+
+	/**
+	 * Set this Character to be attacking or not attacking.
+	 * @param isAttacking Whether or not this Character is attacking.
+	 */
+	public void setAttacking(boolean isAttacking) {
+		this.isAttacking = isAttacking;
+	}
+
+	/**
+	 * Returns true if this Character is attacking, otherwise false.
+	 * @return True if this Character is attacking, otherwise false.
+	 */
+	public boolean getAttacking() {
+		return isAttacking;
+	}
+
+	/**
+	 * Gets the Weapon at the front of the Weapon list.
+ 	 * @return The Weapon at the front of the Weapon list.
+	 */
+	public Weapon getWeapon() {
+		return weapons.get(0);
+	}
+
+	/**
+	 * Add a Weapon to this Weapon list.
+	 * @param w The Weapon to add to the Weapon list.
+	 */
+	public void addWeapon(Weapon w) {
+		weapons.add(w);
+	}
 
 	/**
 	 * Set the unique id for this Character. Can only be called once.
