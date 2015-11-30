@@ -58,7 +58,7 @@ public class AudioTest extends JFrame{
 		varPanelMain.add(varButtonPlayItemGet);
 		varPanelMain.add(varButtonLoopBGMAmbience);
 		frame.add(varPanelMain);
-		frame.setTitle("Marktatious Graphics");
+		frame.setTitle("Test");
 		frame.setSize(WIDTH,HEIGHT);
 		frame.setVisible(true);
 		frame.setResizable(false);
