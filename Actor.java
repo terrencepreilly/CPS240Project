@@ -1,3 +1,4 @@
+
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public abstract class Actor {
 		this.location = location;
 		this.path = null;
 		this.simpleStep = false; // TODO determine when to use simpleStep. 
-		this.stepSize = 1.5f;
+		this.stepSize = 7.5f;
 	}
 
 	/**
@@ -121,6 +122,8 @@ public abstract class Actor {
 	 * build one.
 	 */
 	public void step() {
+		//TODO -- NEED TO implement delta to control step size of enemies relative to FPS!!! no idea how to do this currently >.<
+		
 		if (simpleStep && path != null) {
 			Vector p = path.peek();
 			if (location.distance(p) < stepSize) {
