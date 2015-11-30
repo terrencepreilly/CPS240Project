@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * It will also use the image passed in the constructor to store the necessary
  * width and height of the collider values (height and width of the original image
  */
-class BoxCollider extends Rectangle2D.Float {
+public class BoxCollider extends Rectangle2D.Float {
 
 	/**
 	 * Create a new BoxCollider.
