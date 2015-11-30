@@ -71,6 +71,13 @@ public class Server implements GameConstants {
 	}
 
 	/**
+	 * Add borders so that the characters cannot go off of the screen.
+	 */
+	private void addBorderObstacles() {
+		
+	}
+
+	/**
 	 * Connect any clients while the server is running.
 	 * Add the new thread to threads. (To join until all
 	 * have closed.)

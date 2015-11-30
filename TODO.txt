@@ -10,3 +10,7 @@ Here is a list of features we have yet to implement:
 		- AStar Glitch.
 			A null pointer exception is being thrown.  Something is 
 			not being accessed.
+
+
+Merging:
+	Change GameDelta to account for changes in direction.

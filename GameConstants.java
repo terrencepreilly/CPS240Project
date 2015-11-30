@@ -12,15 +12,19 @@ public interface GameConstants {
 	public final float ASTAR_RATE = 0.2f;
 
 	// Spawn rates for enemies and obstacles.
-	public final int ZOMBIE_SPAWN = 10;
-	public final int OBSTACLE_SPAWN = 10;
+	public final int ZOMBIE_SPAWN = 5;
+	public final int OBSTACLE_SPAWN = 2;
 
 	// The random seed
 	public final int RANDSEED = 309;
 
 	// Images for characters and obstacles
-	public final String OBS_IMAGE_FILENAME = "obstacle.png";
-	public final String PLR_IMAGE_FILENAME = "character.png";
+	public final String IMGFLD = "Images/";
+	public final String OBS_IMAGE_FILENAME = IMGFLD + "redCar.png";
+	public final String PLR_IMAGE_FILENAME = IMGFLD + "characterForward1.png";
+	public final String ENE_IMAGE_FILENAME = IMGFLD + "zombieForward1.png";
+	public final String BAC_IMAGE_FILENAME = IMGFLD + "bg.png";
+	public final String WEA_IMAGE_FILENAME = IMGFLD + "swordImage.png";
 
 	//---------------INTERNAL CONSTANTS, DO NOT CHANGE---------------//
 	public final Integer PLAYER = 0;

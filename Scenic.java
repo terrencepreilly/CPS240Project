@@ -21,6 +21,10 @@ class Scenic extends Actor {
 		setBoxCollider(image); //create a boxCollider when created
 		boxCollider.setLocation(location); //set initial location for boxcollider
 	}
+
+	public Scenic(Vector location, Vector dimensions) {
+		
+	}
 	
 	/**
 	 * Set the BoxCollider for this Scenic.

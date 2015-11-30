@@ -42,11 +42,15 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	private BufferedImage playerImage;
 	private BufferedImage obstacleImage;
 	private BufferedImage enemyImage;
+	private BufferedImage backgroundImage;
+	private BufferedImage weaponImage;
 	
 	private GameKeyboard gameKeyboard;	// UI
 
 	private volatile boolean running;	// Game Logic
 	private Thread gameThread;
+
+	private BackGround bg;
 
 
 	/**
@@ -128,6 +132,14 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 				(int) c.getBoxCollider().getLocation().y,
 				null
 			);
+			if (c.getAttacking()) {
+				g.drawImage(
+					c.getWeapon().getImage(),
+					(int) c.getLocation().x,
+					(int) c.getLocation().y,
+					null
+				);
+			}
 		}
 		for (Scenic s : gamestate.getObstacles()) {
 			g.drawImage(
@@ -138,6 +150,9 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 			);
 		}
 		lock.unlock();
+		// characters should be picked up by the garbage collector,
+		// but if it's not immediately, unlocking it may be allowing
+		// for the ConcurrencyModificationException
 	}
 
 	/**
@@ -148,11 +163,15 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		playerImage = null;
 		obstacleImage = null;
 		enemyImage = null;
+		backgroundImage = null;
+		weaponImage = null;
 
 		try {
-			playerImage = ImageIO.read(new File("character.png"));
-			obstacleImage = ImageIO.read(new File("obstacle.png"));
-			enemyImage = ImageIO.read(new File("character.png"));
+			playerImage = ImageIO.read(new File(PLR_IMAGE_FILENAME));
+			obstacleImage = ImageIO.read(new File(OBS_IMAGE_FILENAME));
+			enemyImage = ImageIO.read(new File(ENE_IMAGE_FILENAME));
+			//backgroundImage = ImageIO.read(new File(BAC_IMAGE_FILENAME));
+			weaponImage = ImageIO.read(new File(WEA_IMAGE_FILENAME));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -169,7 +188,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 * collisions, renders the images, and moves the enemy players.
 	 * Also, pauses the thread for 10 milliseconds.
 	 */
-	private void gameLoop(){
+	private void gameLoop() {
 		processInput();
 		renderFrame();
 		try { Thread.sleep(10L); } catch (InterruptedException ex) {}
