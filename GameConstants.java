@@ -11,11 +11,11 @@ public interface GameConstants {
 	public final float ASTAR_RATE = 0.2f;
 
 	// Spawn rates for enemies and obstacles.
-	public final int ZOMBIE_SPAWN = 1;
-	public final int OBSTACLE_SPAWN = 5;
+	public final int ZOMBIE_SPAWN = 10;
+	public final int OBSTACLE_SPAWN = 10;
 
 	// The random seed
-	public final int RANDSEED = 319;
+	public final int RANDSEED = 309;
 
 	// Images for characters and obstacles
 	public final String OBS_IMAGE_FILENAME = "obstacle.png";
