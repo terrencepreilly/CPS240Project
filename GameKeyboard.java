@@ -47,8 +47,8 @@ class GameKeyboard implements KeyListener, GameConstants {
 		float properYCoord = ((float) SCREEN_HEIGHT / 2f) - yCoord;
 		float directionX;
 		float directionY;
-		directionX = ((float) Math.cos(Math.toRadians( character.getDirection())) * delta * PLAYER_SPEED * 60f);
-		directionY = ((float) Math.sin(Math.toRadians( character.getDirection())) * delta * PLAYER_SPEED * 60f);
+		directionX = ((float) Math.cos(Math.toRadians( character.getDirection())) * (float) delta * PLAYER_SPEED * 60f);
+		directionY = ((float) Math.sin(Math.toRadians( character.getDirection())) * (float) delta * PLAYER_SPEED * 60f);
 		properXCoord += directionX;
 		properYCoord += directionY;
 		float nxCoord = properXCoord + ((float) SCREEN_WIDTH / 2f);

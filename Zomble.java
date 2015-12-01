@@ -90,8 +90,8 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	/**
 	 * Process user input.
 	 */
-	private void processInput() {
-		gameKeyboard.processInput();
+	private void processInput(double delta) {
+		gameKeyboard.processInput(delta);
 		gamestate.detectCollisions(player);
 	}
 
@@ -200,12 +200,40 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 */
 	public void run(){
 		running = true;
+		long currentTime = System.nanoTime();
+		long lastTime = currentTime;
+		double nsPerFrame;
+
 		initialize();
+
 		while(running){
-			gameLoop();
+			currentTime = System.nanoTime();
+			nsPerFrame = currentTime - lastTime;
+			gameLoop(nsPerFrame / 1.0E9);
+			lastTime = currentTime;
 		}
 	}
 	
+
+/*
+        public void run(){
+                createGUI(); //make the GUI
+                initialize(); //initialize everything
+                long currentTime = System.nanoTime();
+                long lastTime = currentTime;
+                double nsPerFrame;
+                running = true;
+
+                while(running){
+                        currentTime = System.nanoTime();
+                        nsPerFrame = currentTime - lastTime;
+                        gameLoop(nsPerFrame / 1.0E9);
+                        lastTime = currentTime;
+                }
+        }
+
+*/
+
 	/**
 	 * Set "running" to false and joins the gameThread to stop the game.
 	 */
