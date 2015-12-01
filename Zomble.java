@@ -214,26 +214,6 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		}
 	}
 	
-
-/*
-        public void run(){
-                createGUI(); //make the GUI
-                initialize(); //initialize everything
-                long currentTime = System.nanoTime();
-                long lastTime = currentTime;
-                double nsPerFrame;
-                running = true;
-
-                while(running){
-                        currentTime = System.nanoTime();
-                        nsPerFrame = currentTime - lastTime;
-                        gameLoop(nsPerFrame / 1.0E9);
-                        lastTime = currentTime;
-                }
-        }
-
-*/
-
 	/**
 	 * Set "running" to false and joins the gameThread to stop the game.
 	 */

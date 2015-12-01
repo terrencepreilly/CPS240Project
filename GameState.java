@@ -51,8 +51,10 @@ public class GameState implements GameConstants {
 			}
 			if (add && gd.type == OBSTACLE)
 				obstacles.add(createObstacle(gd));
-			if (add && gd.type == BORDER_OBSTACLE)
-				obstacles.add(createBorderObstacle(gd));
+			if (add && gd.type == BORDER_OBSTACLE) {
+				Scenic s = createBorderObstacle(gd);
+				obstacles.add(s);
+			}
 		}
 		else {
 			Character c = null;
@@ -103,7 +105,7 @@ public class GameState implements GameConstants {
 	 * @return A GameDelta representing an Obstacle.
 	 */
 	public synchronized GameDelta createGameDelta(Scenic o) {
-		return new GameDelta( 0, o.getLocation(), 0, OBSTACLE, System.currentTimeMillis());
+		return new GameDelta( 0, o.getLocation(), 0, o.getType(), System.currentTimeMillis());
 	}
 
 	/**
@@ -196,8 +198,8 @@ public class GameState implements GameConstants {
 	 * Create a new Scenic which will act as an outer border for the game.
 	 */
 	public synchronized Scenic createBorderObstacle(GameDelta gd) {
-		return new Scenic( gd.locUpdate, 
-			new Vector(SCREEN_WIDTH, SCREEN_HEIGHT) );
+		Scenic s = new Scenic(gd.locUpdate, new Vector(SCREEN_WIDTH, SCREEN_HEIGHT));
+		return s;
 	}
 
 	/**
@@ -222,6 +224,7 @@ public class GameState implements GameConstants {
                         if (obsBC.contains( pf ))
                                 overlaps = pf;
                 } 
+		System.out.println("overlaps: " + overlaps);
 
                 // find closest edge 
                 Point2D.Float top = new Point2D.Float(0f, obsBC.getLocation().y);
@@ -235,6 +238,8 @@ public class GameState implements GameConstants {
                                 closest = pf;
                 }
 
+		System.out.println("closest: " + closest);
+
                 // Update one coordinate to push outside.
                 Vector addVec = new Vector(0f, 0f);
                 if (closest.equals(top)) 
@@ -245,6 +250,7 @@ public class GameState implements GameConstants {
                         addVec.x = closest.x - overlaps.x + 0.1f; 
                 else if (closest.equals(bottom))
                         addVec.y = closest.y - overlaps.y + 0.1f; 
+		System.out.println(addVec);
                 
                 return chaBC.getLocation().add(addVec);
         }
@@ -259,7 +265,11 @@ public class GameState implements GameConstants {
 			BoxCollider sbc = s.getBoxCollider();
 			if (sbc.intersects(cbc)) {
 				needToReset = true;
+				if (s.getType() == BORDER_OBSTACLE)
+					System.out.println(c.getBoxCollider());
 				c.setLocation(getAGoodLocation(sbc, cbc));
+				if (s.getType() == BORDER_OBSTACLE)
+					System.out.println(c.getBoxCollider() + "\n");
 			}
 		}
 
@@ -277,7 +287,6 @@ public class GameState implements GameConstants {
 		}
 	}
 
-	// TODO Remove this method. (Concurrency issues.)
 	/**
 	 * Get the map of all Characters.
 	 * @return A HashMap of all Characters.

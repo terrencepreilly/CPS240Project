@@ -11,7 +11,6 @@ class Character extends Actor implements GameConstants {
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
 	private Integer uniqueID;
-	private Integer type;
 
 	// variables related to attacking and position
 	private int direction;
@@ -35,18 +34,6 @@ class Character extends Actor implements GameConstants {
 		uniqueID = -1;
 		type = ENEMY;
 	}
-
-	/**
-	 * Set the type of Character. (Either PLAYER or ENEMY).
-	 * @param type From GameConstants.
-	 */
-	public void setType(int type) { this.type = type; }
-
-	/**
-	 * Get the type of Character.
-	 * @return The type of Character, either ENEMY (default) or PLAYER.
-	 */
-	public Integer getType() { return type; }
 
 	/**
 	 * Set direction faced by Character as a degree. (Right = 0, left = 180,

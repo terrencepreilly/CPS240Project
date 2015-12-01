@@ -115,12 +115,11 @@ class GameKeyboard implements KeyListener, GameConstants {
 	 */
 	public void processInput(double delta){
 		this.delta = delta;
-		System.out.println("before: " + character.getLocation());
 		Vector currLoc = character.getBoxCollider().getLocation();
 		character.setLocation( currLoc.add(updateLoc) );
 		if (updateLoc.magnetude() != 0f)
 			gamestate.flagForUpdate( character.getUniqueID() );
-		System.out.println("after: " + character.getLocation() + "\n");
+		gamestate.detectCollisions(character);
 	}
 	
 	/**

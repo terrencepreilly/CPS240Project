@@ -14,6 +14,7 @@ public abstract class Actor implements GameConstants {
 	protected BoxCollider boxCollider;
 	protected BufferedImage image;
 	protected Vector location;
+	protected Integer type;
 	private LinkedList<Vector> path;		// The path of this actor to take
 	private boolean simpleStep;		// Whether to use simpleStep algorithm
 
@@ -26,6 +27,7 @@ public abstract class Actor implements GameConstants {
 		this.image = null;
 		this.location = null;
 		this.path = null;
+		this.type = OBSTACLE;
 	}
 
 	/**
@@ -45,6 +47,7 @@ public abstract class Actor implements GameConstants {
 		}
 		else
 			this.boxCollider = new BoxCollider(ENEMY_WIDTH, ENEMY_HEIGHT, 0f, 0f);
+		this.type = OBSTACLE;
 	}
 
 	/**
@@ -63,6 +66,18 @@ public abstract class Actor implements GameConstants {
 	public Vector getLocation(){
 		return location;
 	}
+
+        /**
+         * Get the type of Actor.
+         * @return The type of Actor (by default, OBSTACLE).
+         */
+        public Integer getType() { return type; }
+
+	/**
+         * Set the type of Actor.
+         * @param type From GameConstants.
+         */
+        public void setType(int type) { this.type = type; }
 
 	/**
 	 * Set the image for this Actor.

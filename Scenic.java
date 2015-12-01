@@ -27,6 +27,7 @@ class Scenic extends Actor {
 		this.image = null;
 		this.location = location;
 		this.boxCollider = new BoxCollider(location.x, location.y, dimensions.x, dimensions.y);
+		this.type = BORDER_OBSTACLE;
 	}
 	
 	/**

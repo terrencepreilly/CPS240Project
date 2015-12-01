@@ -32,6 +32,7 @@ public class Client extends AbstractClient implements GameConstants {
 			}))
 		);
 		player = charactersCreated.get(0);
+		((Actor) player).setLocation(new Vector(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
 	}
 
 	/**
