@@ -265,11 +265,10 @@ public class GameState implements GameConstants {
 			BoxCollider sbc = s.getBoxCollider();
 			if (sbc.intersects(cbc)) {
 				needToReset = true;
-				if (s.getType() == BORDER_OBSTACLE)
-					System.out.println(c.getBoxCollider());
-				c.setLocation(getAGoodLocation(sbc, cbc));
-				if (s.getType() == BORDER_OBSTACLE)
-					System.out.println(c.getBoxCollider() + "\n");
+				if (s.getType() == OBSTACLE)
+					c.setLocation(getAGoodLocation(sbc, cbc));
+				else
+					c.setLocation(c.getLastGoodLocation());
 			}
 		}
 
