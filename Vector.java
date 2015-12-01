@@ -21,6 +21,11 @@ class Vector implements java.io.Serializable, Comparable {
 		this.y = y;
 	}
 
+	public Vector(Point2D p) {
+		this.x = (float) p.getX();
+		this.y = (float) p.getY();
+	}
+
 	/**
 	 * Return a copy of this Vector.
 	 * @return A copy of this Vector.

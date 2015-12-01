@@ -1,9 +1,12 @@
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Arc2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.LinkedList;
 import java.util.HashMap;
 
 import java.util.concurrent.locks.*;
@@ -34,12 +37,13 @@ class GameKeyboard implements KeyListener, GameConstants {
 	 */
 	public synchronized void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-//			updateLoc = new Vector(-1f*PLAYER_SPEED,0f);
 			updateDirection = PLAYER_TURN_SPEED;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-//			updateLoc = new Vector(PLAYER_SPEED, 0f);
 			updateDirection = -1 * PLAYER_TURN_SPEED;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			upAction();
 		}
 
 /*
@@ -80,6 +84,44 @@ class GameKeyboard implements KeyListener, GameConstants {
 			}
 		}
 */
+	}
+
+	public void upAction() {
+		Lock lock = gamestate.getLock();
+		lock.lock();
+		HashMap<Integer, Character> characters = gamestate.getCharacters();
+
+		for (Integer uid : characters.keySet()) {
+			Character c2 = characters.get(uid);
+			boolean isNotSame = character.getUniqueID() != uid;
+			float dist = (float) character.getBoxCollider().getWidth() / 2f;
+
+			if (isNotSame && isClose(character, c2, dist)) {
+				System.out.println("b: " + c2.getHealth());
+				c2.setHealth( c2.getHealth() - HITTING_POWER );
+				System.out.println("a: " + c2.getHealth());
+				gamestate.flagForUpdate(c2);
+			}
+		}
+
+		characters = null;
+		lock.unlock();
+	}
+
+	public boolean isClose(Character c1, Character c2, float dist) {
+		List<Point2D.Float> l1 = c1.getBoxCollider().getVertices();
+		List<Point2D.Float> l2 = c2.getBoxCollider().getVertices();
+
+		for (Point2D p1 : l1) {
+			Vector v1 = new Vector(p1);
+			for (Point2D p2 : l2) {
+				Vector v2 = new Vector(p2);
+				if (v1.distance(v2) < dist)
+					return true;
+			}
+		}
+
+		return false;
 	}
 
         /**

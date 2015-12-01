@@ -9,13 +9,15 @@ public interface GameConstants {
 
 	public final int PLAYER_TURN_SPEED = 5;
 
+	public final int HITTING_POWER = 2;
+
 	// Pathfinding variables
 	public final boolean USE_CORNER_ASTAR = true;
 	public final float ASTAR_RATE = 0.2f;
 
 	// Spawn rates for enemies and obstacles.
-	public final int ZOMBIE_SPAWN = 2;
-	public final int OBSTACLE_SPAWN = 0;
+	public final int ZOMBIE_SPAWN = 7;
+	public final int OBSTACLE_SPAWN = 3;
 
 	// The random seed
 	public final int RANDSEED = 309;

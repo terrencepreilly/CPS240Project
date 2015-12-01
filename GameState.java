@@ -224,7 +224,6 @@ public class GameState implements GameConstants {
                         if (obsBC.contains( pf ))
                                 overlaps = pf;
                 } 
-		System.out.println("overlaps: " + overlaps);
 
                 // find closest edge 
                 Point2D.Float top = new Point2D.Float(0f, obsBC.getLocation().y);
@@ -238,8 +237,6 @@ public class GameState implements GameConstants {
                                 closest = pf;
                 }
 
-		System.out.println("closest: " + closest);
-
                 // Update one coordinate to push outside.
                 Vector addVec = new Vector(0f, 0f);
                 if (closest.equals(top)) 
@@ -250,7 +247,6 @@ public class GameState implements GameConstants {
                         addVec.x = closest.x - overlaps.x + 0.1f; 
                 else if (closest.equals(bottom))
                         addVec.y = closest.y - overlaps.y + 0.1f; 
-		System.out.println(addVec);
                 
                 return chaBC.getLocation().add(addVec);
         }
