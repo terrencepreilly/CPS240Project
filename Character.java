@@ -10,10 +10,6 @@ class Character extends Actor implements GameConstants {
 	
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
-<<<<<<< HEAD
-	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
-	private int direction; //direction the character is facing to allow manipulation via degrees
-=======
 	private Integer uniqueID;
 
 	// variables related to attacking and position
@@ -22,7 +18,6 @@ class Character extends Actor implements GameConstants {
 	private boolean isAttacking;
 	private boolean isPlayer;
 	private double attackCounter;
->>>>>>> fiddleTCP
 	
 	/**
 	 * Create a new Character.
@@ -34,12 +29,6 @@ class Character extends Actor implements GameConstants {
 		//character is an image, location, and a boxCollider, health set to 10 until changed
 		super(image, location);
 		lastGoodLocation = location;
-<<<<<<< HEAD
-		setBoxCollider(image);
-		boxCollider.setLocation(location);
-		health = 10;
-		direction = 90; //default, facing north
-=======
 		health = 100;
 		direction = UP; // default, facing North
 		uniqueID = -1;
@@ -118,7 +107,6 @@ class Character extends Actor implements GameConstants {
 	 */
 	public void addWeapon(Weapon w) {
 		weapons.add(w);
->>>>>>> fiddleTCP
 	}
 
 	/**
@@ -173,50 +161,6 @@ class Character extends Actor implements GameConstants {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Set the location of this Character.
-	 * @param location The location of this Character.
-	 */
-	public void setLocation(Vector location) {
-		super.setLocation(location);
-		boxCollider.setLocation(location);
-	}
-	
-	/**
-	 * Set direction faced by character as a degree "based on unit circle" e.g. right = 0 degrees, left = 180 degrees, etc
-	 * @param dValue The value of the direction to be set, passed as a degree value.
-	 */
-	public void setDirection(int dValue){
-		direction = dValue % 360; //if user sets as 90, will be 90, if set as 360, will be 0,
-	}
-
-	/**
-	 * @return the direction faced by this character.
-	 */
-	public int getDirection(){
-		return direction;
-	}
-	
-	/**
-	 * Get the BoxCollider of this Character.
-	 * @return The BoxCollider for this Character.
-	 */ 
-	public BoxCollider getBoxCollider(){
-		return boxCollider;
-	}
-
-	/**
-	 * Set the BoxCollider for this Character.
-	 * @param image The image which determines the dimensions of this 
-	 * 	Character's BoxCollider.
-	 */
-	protected void setBoxCollider(BufferedImage image){
-		boxCollider = new BoxCollider(image);
-	}
-
-	/**
-=======
->>>>>>> fiddleTCP
 	 * Return a String representation of this Character.
 	 * @return A String representation of this Character.
 	 */
