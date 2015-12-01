@@ -2,6 +2,7 @@
 Zomble is a 2D zombie hack-and-slash created for the CPS240 class at Central Michigan University.  Zomble is multiplayer and supports enemy path-finding.
 
 INSTALLING AND RUNNING
+
 	1. Download and extract the files into a chosen directory.  For our 
 	purposes, let's call this directory "ZombleGame".
 
