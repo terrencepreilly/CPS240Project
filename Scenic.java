@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
  */
 class Scenic extends Actor {
 
-	private BoxCollider boxCollider; //boxCollider for this Scenic object. Should have 2 vectors
+	private BoxCollider boxCollider;
 	
 	/**
 	 * Create a new Scenic instance.
@@ -20,6 +20,14 @@ class Scenic extends Actor {
 		super(image, location);
 		setBoxCollider(image); //create a boxCollider when created
 		boxCollider.setLocation(location); //set initial location for boxcollider
+	}
+
+	public Scenic(Vector location, Vector dimensions) {
+		super();
+		this.image = null;
+		this.location = location;
+		this.boxCollider = new BoxCollider(location.x, location.y, dimensions.x, dimensions.y);
+		this.type = BORDER_OBSTACLE;
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /*
  * The actor is an abstract class meant to be extended by
@@ -9,14 +10,26 @@ import java.util.ArrayList;
  * very least. They have assessor/mutators methods for the 
  * location and image
  */
-public abstract class Actor {
+public abstract class Actor implements GameConstants {
+	protected BoxCollider boxCollider;
 	protected BufferedImage image;
 	protected Vector location;
+	protected Integer type;
 	private LinkedList<Vector> path;		// The path of this actor to take
 	private boolean simpleStep;		// Whether to use simpleStep algorithm
-					// or AStar
-	private float stepSize;
-	
+
+	/**
+	 * Create a new, blank Actor instance.
+	 * @return A blank Actor instance.
+	 */
+	public Actor() {
+		this.boxCollider = null;
+		this.image = null;
+		this.location = null;
+		this.path = null;
+		this.type = OBSTACLE;
+	}
+
 	/**
 	 * Create a new Actor object.
 	 * @param image The image for this character.
@@ -27,8 +40,14 @@ public abstract class Actor {
 		this.image = image;
 		this.location = location;
 		this.path = null;
-		this.simpleStep = false; // TODO determine when to use simpleStep. 
-		this.stepSize = 1.5f;
+		this.simpleStep = Math.random() < ASTAR_RATE ? false : true; // 20% chance of using AStar instead of simpleStep
+		if (image != null) {
+			this.boxCollider = new BoxCollider(image);
+			this.boxCollider.setLocation(location);
+		}
+		else
+			this.boxCollider = new BoxCollider(ENEMY_WIDTH, ENEMY_HEIGHT, 0f, 0f);
+		this.type = OBSTACLE;
 	}
 
 	/**
@@ -48,6 +67,18 @@ public abstract class Actor {
 		return location;
 	}
 
+        /**
+         * Get the type of Actor.
+         * @return The type of Actor (by default, OBSTACLE).
+         */
+        public Integer getType() { return type; }
+
+	/**
+         * Set the type of Actor.
+         * @param type From GameConstants.
+         */
+        public void setType(int type) { this.type = type; }
+
 	/**
 	 * Set the image for this Actor.
 	 * @param image The image for this Actor.
@@ -63,20 +94,16 @@ public abstract class Actor {
 	 */
 	public void setLocation(Vector location){
 		this.location = location;
+		this.boxCollider.setLocation(location);
 	}
 
 	/**
-	 * Set the boxCollider for this Actor (determines the boundaries
-	 * of the Actor.
-	 * @param image The image whose dimensions describe the boundaries.
+	 * Return the BoxCollider of this Actor.
+	 * @return The BoxCollider of this Actor.
 	 */
-	protected abstract void setBoxCollider(BufferedImage image);
-
-	/**
-	 * Get the boxCollider for this Actor.
-	 * @return The boxCollider for this Actor.
-	 */
-	public abstract BoxCollider getBoxCollider();
+	public BoxCollider getBoxCollider() {
+		return this.boxCollider;
+	}
 
 	/**
 	 * Build a path from current location to goal, using either the
@@ -86,24 +113,33 @@ public abstract class Actor {
 	 * 	nodes.)
 	 * @param dmH The hight dimension of Actor (for splitting the screen into
 	 * 	nodes.)
-	 * @param allActors An ArrayList of all the Actors on the board.
+	 * @param allActors A Collection of all the Actors on the board.
 	 * @param allObjects An ArrayList of all the Objects on the board.
 	 * @param mcBc The boxCollider for the main character.
 	 */
-	public void buildPath(Vector goal, int dmW, int dmH, ArrayList<Character> allActors, ArrayList<Scenic> allObjects, BoxCollider mcBC) {
+	public void buildPath(Vector goal, int dmW, int dmH, Collection<Character> allActors, Collection<Scenic> allObjects, BoxCollider mcBC) {
 		if (simpleStep) {
 			path = new LinkedList<Vector>();
 			path.add( goal.subtract(location) );
 		}
 		else if (path == null) {
-			ArrayList<Point> spaces = AStarUtility.getSpaces(
-				dmW,
-				dmH,
-				this.getBoxCollider(),
-				allActors,
-				allObjects
-			);
-
+			ArrayList<Point> spaces;
+			if (USE_CORNER_ASTAR)
+				spaces = AStarUtility.getCornerSpaces(
+					dmW, 
+					dmH, 
+					this.getBoxCollider(), 
+					allActors, 
+					allObjects 
+				);
+			else
+				spaces = AStarUtility.getSpaces(
+					dmW,
+					dmH,
+					this.getBoxCollider(),
+					allActors,
+					allObjects
+				);
 			LinkedList<Point> pointPath = AStarUtility.getPath(
 				spaces,
 				this.getBoxCollider(),
@@ -123,26 +159,26 @@ public abstract class Actor {
 	public void step() {
 		if (simpleStep && path != null) {
 			Vector p = path.peek();
-			if (location.distance(p) < stepSize) {
+			if (location.distance(p) < ACTOR_SPEED) {
 				setLocation(location.add(p));
 				path = null;
 			}
 			else {
-				float divisor = p.magnetude() / stepSize;
+				float divisor = p.magnetude() / ACTOR_SPEED;
 				Vector step = p.divide(divisor);
-				setLocation(location.add(step));
+				setLocation(this.location.add(step));
 			}
 		}
 		else if (path != null && path.size() > 0) {
 			Vector p = path.peek();
-			if (location.distance(location.add(p)) < stepSize) { 
+			if (location.distance(location.add(p)) < ACTOR_SPEED) { 
 				setLocation(location.add(p));
 				path.pop();
 				if (path.size() == 0)
 					path = null;
 			}
 			else {
-				float divisor = p.magnetude() / stepSize;
+				float divisor = p.magnetude() / ACTOR_SPEED;
 				Vector step = p.divide(divisor);
 				setLocation(location.add(step));
 				Vector newp = path.pop().subtract(step);

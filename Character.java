@@ -1,20 +1,28 @@
 
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 
 /**
- * The character is an image, and a location, it will create it's own boxcollider
- * All you must do is pass it the image, and its location of starting. You may set health later
- * and there are methods for getting it's box collider and last good location. You should set the
- * last good location anytime a collision is NOT detected. Consequently there is a method
- * to set the location, this will in turn set the boxCollider to a new location
+ * Represents a moveable, actionable Character in the game.
  */
-class Character extends Actor{
+class Character extends Actor implements GameConstants {
 	
 	private Vector lastGoodLocation; //last good location as determined by collisiondetection
 	private int health;
+<<<<<<< HEAD
 	private BoxCollider boxCollider; //boxCollider for this Character. Should have 4 points
 	private int direction; //direction the character is facing to allow manipulation via degrees
+=======
+	private Integer uniqueID;
+
+	// variables related to attacking and position
+	private int direction;
+	private LinkedList<Weapon> weapons = new LinkedList<Weapon>();
+	private boolean isAttacking;
+	private boolean isPlayer;
+	private double attackCounter;
+>>>>>>> fiddleTCP
 	
 	/**
 	 * Create a new Character.
@@ -26,11 +34,107 @@ class Character extends Actor{
 		//character is an image, location, and a boxCollider, health set to 10 until changed
 		super(image, location);
 		lastGoodLocation = location;
+<<<<<<< HEAD
 		setBoxCollider(image);
 		boxCollider.setLocation(location);
 		health = 10;
 		direction = 90; //default, facing north
+=======
+		health = 100;
+		direction = UP; // default, facing North
+		uniqueID = -1;
+		type = ENEMY;
 	}
+
+	/**
+	 * Set direction faced by Character as a degree. (Right = 0, left = 180,
+	 * etc.)
+	 * @param direction The direction to set for this Character.
+	 */
+	public void setDirection(int direction) {
+		this.direction = direction % 360;
+	}
+
+	/**
+	 * Get the direction this Character faces.
+	 * @return The direction this Character faces.
+	 */
+	public int getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Set attack status to true.
+	 */
+	public void attack() {
+		if (isAttacking && attackCounter > ATTACK_SPEED) {
+			isAttacking = false;
+			attackCounter = 0;
+		}
+		else if (!isAttacking) {
+			isAttacking = true;
+		}
+	}
+
+	// TODO used?
+	/**
+	 *
+	 */
+	public void updateCharacterV(double delta) {
+		attackCounter += delta;
+		if (isAttacking && attackCounter > ATTACK_SPEED) {
+			isAttacking = false;
+			attackCounter = 0;
+		}
+	}
+
+	/**
+	 * Set this Character to be attacking or not attacking.
+	 * @param isAttacking Whether or not this Character is attacking.
+	 */
+	public void setAttacking(boolean isAttacking) {
+		this.isAttacking = isAttacking;
+	}
+
+	/**
+	 * Returns true if this Character is attacking, otherwise false.
+	 * @return True if this Character is attacking, otherwise false.
+	 */
+	public boolean getAttacking() {
+		return isAttacking;
+	}
+
+	/**
+	 * Gets the Weapon at the front of the Weapon list.
+ 	 * @return The Weapon at the front of the Weapon list.
+	 */
+	public Weapon getWeapon() {
+		return weapons.get(0);
+	}
+
+	/**
+	 * Add a Weapon to this Weapon list.
+	 * @param w The Weapon to add to the Weapon list.
+	 */
+	public void addWeapon(Weapon w) {
+		weapons.add(w);
+>>>>>>> fiddleTCP
+	}
+
+	/**
+	 * Set the unique id for this Character. Can only be called once.
+	 * @param i The new unique id.
+	 */
+	public void setUniqueID(int i) {
+		if (uniqueID == -1 && i >= 0)
+			uniqueID = i;
+	}
+
+	/**
+	 * Get this Character's unique id.
+	 * @return This Character's unique id.
+	 */
+	public Integer getUniqueID() { return uniqueID; }
 
 	/**
 	 * Get the health of this character.
@@ -69,6 +173,7 @@ class Character extends Actor{
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Set the location of this Character.
 	 * @param location The location of this Character.
 	 */
@@ -110,10 +215,12 @@ class Character extends Actor{
 	}
 
 	/**
+=======
+>>>>>>> fiddleTCP
 	 * Return a String representation of this Character.
 	 * @return A String representation of this Character.
 	 */
 	public String toString(){
-		return "This characters location: " + this.getLocation() + "and health: " + health + ".";
+		return this.getLocation() + " HP: " + health + " ID: " + uniqueID + " (" + (type == ENEMY ? "enemy" : "player") +  " " + type + ")";
 	}
 }

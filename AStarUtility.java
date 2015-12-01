@@ -1,13 +1,15 @@
+import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.LinkedHashSet;
 import java.util.ListIterator;
+import java.util.Collection;
 
 /**
  * A utility class for translating using the AStar algorithm.  Translates the 
  * map space into nodes, builds lists of empty spaces, etc.
  */
-class AStarUtility {
+class AStarUtility implements GameConstants {
 
 	/**
 	 * Build a list of spaces the Actor can occupy.
@@ -15,12 +17,12 @@ class AStarUtility {
 	 * @param displayHeight The height of the display.
 	 * @param moveCharBC The boxCollider for the character who will
 	 * 	be moving.
-	 * @param allActors An ArrayList of all the Actors on the board.
+	 * @param allActors A Collection of all the Actors on the board.
 	 * @param allObjects An ArrayList of all the Objects on the board.
 	 * @return An ArrayList<Point> of nodes that the moving Actor can 
 	 * 	traverse.
 	 */
-	public static ArrayList<Point> getSpaces(int displayWidth, int displayHeight, BoxCollider moveCharBC, ArrayList<Character> allActors, ArrayList<Scenic> allObjects) {
+	public static ArrayList<Point> getSpaces(int displayWidth, int displayHeight, BoxCollider moveCharBC, Collection<Character> allActors, Collection<Scenic> allObjects) {
 		ArrayList<Point> ret = new ArrayList<Point>();
 		// 1) split the screen into moveCharBC size chunks
 		float width = (float) moveCharBC.getWidth();
@@ -51,6 +53,81 @@ class AStarUtility {
 			}
 		}
 
+		return ret;
+	}
+
+	/**
+	 * Get spaces adjacent to character/scenic/display corners.
+	 * @param displayWidth The width of the display.
+	 * @param displayHeight The height of the display.
+	 * @param moveCharBC The BoxCollider for the moving Character.
+	 * @param allActors All the Actors in the game.
+	 * @param allObjects All the Scenic objects in the game.
+ 	 * @return An ArrayList holding all open spaces at the corners of the 
+	 * 	objects in the game.
+	 */
+	public static ArrayList<Point> getCornerSpaces(int displayWidth, 
+	int displayHeight, BoxCollider moveCharBC, Collection<Character> allActors,
+	Collection<Scenic> allObjects) {
+		ArrayList<Point> ret = new ArrayList<>();
+		for (Character c : allActors) {
+			ret.addAll( getFilteredPoints(c, moveCharBC, displayWidth, displayHeight) );
+		}
+		for (Scenic s : allObjects) {
+			List<Point> lp = getPoint(s, moveCharBC);
+			ret.addAll( getFilteredPoints(s, moveCharBC, displayWidth, displayHeight) );
+		}
+		return ret;
+	}
+
+	/**
+	 * Filter the points to remove extraneous/overlapping points.
+	 * @param a The given Actor around which points are being found.
+	 * @param moveCharBC The BoxCollider for the moving Character.
+	 * @param displayWidth The width of the display.
+	 * @param displayHeight The height of the display.
+	 */
+	public static List<Point> getFilteredPoints(Actor a, 
+	BoxCollider moveCharBC, int displayWidth, int displayHeight) {
+		return filterExtraneous( getPoint(a, moveCharBC), displayWidth, 
+		displayHeight, moveCharBC );
+	}
+
+	/**
+	 * Filter extraneous points (those outside of the display).
+	 * @param l The list of points to filter.
+	 * @param displayWidth The width of the display.
+	 * @param displayHeight the height of the display.
+	 * @param moveCharBC The BoxCollider of the character who is moving.
+	 */
+	public static List<Point> filterExtraneous(List<Point> l, int displayWidth,
+	int displayHeight, BoxCollider moveCharBC) {
+		List<Point> ret = new LinkedList<>();
+		for (Point p : l) {
+			if ( !(p.x < 0 || p.y > 0 || p.x+moveCharBC.getWidth() > displayWidth || p.y+moveCharBC.getHeight() > displayHeight) ) {
+				ret.add(p);
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Get the four points corresponding to this Actor's corners.
+	 * @param a The Actor around which to find points.
+	 * @param moveCharBC the Character which is moving.
+	 */
+	public static List<Point> getPoint(Actor a, BoxCollider moveCharBC) {
+		List<Point> ret = new LinkedList<>();
+		int ax = (int) a.getBoxCollider().getLocation().x;
+		int aw = (int) a.getBoxCollider().getWidth();
+		int ay = (int) a.getBoxCollider().getLocation().y;
+		int ah = (int) a.getBoxCollider().getHeight();
+		int mw = (int) moveCharBC.getWidth();
+		int mh = (int) moveCharBC.getHeight();
+		ret.add( new Point(ax-mw, ay-mh) );
+		ret.add( new Point(ax+aw, ay-mh) );
+		ret.add( new Point(ax-mw, ay+ah) );
+		ret.add( new Point(ax+aw, ay+ah) );
 		return ret;
 	}
 
