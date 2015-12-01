@@ -80,7 +80,7 @@ public class Server implements GameConstants {
 			Arrays.asList( new Vector[] {
 				new Vector(0f, 0f - SCREEN_HEIGHT),
 				new Vector(SCREEN_WIDTH, 0f),
-				new Vector(SCREEN_HEIGHT, 0f),
+				new Vector(0f, SCREEN_HEIGHT),
 				new Vector(0-SCREEN_WIDTH, 0f)
 			})
 		);
