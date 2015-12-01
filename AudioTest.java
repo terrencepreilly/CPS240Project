@@ -7,7 +7,14 @@
  * 
  * Just a heads-up: there's this weird compatibility thing with Java swing's audio capabilities; it will only work
  * with certain .wav files --or else it'll throw a LineUnavailableException-- which is incredibly irritating. I got 
- * most of it work, though. There's probably some work-around for this that I overlooked;till studying the documentation.
+ * most of it work, though. There's probably some work-around for this that I overlooked; still studying the documentation.
+ 
+ 
+ Zombie Groaning sound:
+ 	http://www.freesound.org/people/gneube/sounds/315844/
+ 	
+ Ambience sound:
+ 	http://www.freesound.org/people/Zetauri/sounds/326984/
  */
 
 import javax.swing.JFrame;
@@ -70,10 +77,10 @@ public class AudioTest extends JFrame{
 		aisItemGet = AudioSystem.getAudioInputStream(new File("AudioFiles/sndItemGet.wav"));
 		
 		clpZombieGroan1 = AudioSystem.getClip();
-		aisZombieGroan1 = AudioSystem.getAudioInputStream(new File("AudioFiles/sndZombieGroan1.wav")); //Fresound.org
+		aisZombieGroan1 = AudioSystem.getAudioInputStream(new File("AudioFiles/sndZombieGroan1.wav"));
 		
 		clpBGMAmbience = AudioSystem.getClip();
-		aisBGMAmbience = AudioSystem.getAudioInputStream(new File("AudioFiles/sndBGMAmbience.wav")); //Freesound.org
+		aisBGMAmbience = AudioSystem.getAudioInputStream(new File("AudioFiles/sndBGMAmbience.wav"));
 		
 		
 		//E-H system
