@@ -7,13 +7,15 @@ public interface GameConstants {
 	public final float ACTOR_SPEED = 2.5f;
 	public static final float ATTACK_SPEED = 0.5f;
 
+	public final int PLAYER_TURN_SPEED = 5;
+
 	// Pathfinding variables
 	public final boolean USE_CORNER_ASTAR = true;
 	public final float ASTAR_RATE = 0.2f;
 
 	// Spawn rates for enemies and obstacles.
-	public final int ZOMBIE_SPAWN = 5;
-	public final int OBSTACLE_SPAWN = 2;
+	public final int ZOMBIE_SPAWN = 2;
+	public final int OBSTACLE_SPAWN = 0;
 
 	// The random seed
 	public final int RANDSEED = 309;
@@ -37,7 +39,7 @@ public interface GameConstants {
 	// Kills the thread this uniqueID is sent to.
 	public final int THREAD_KILL = -3;
 
-	public final int SCREEN_WIDTH = 1000;
+	public final int SCREEN_WIDTH = 1500;
 	public final int SCREEN_HEIGHT = 800;
 
 	public final float ENEMY_WIDTH = 20f;

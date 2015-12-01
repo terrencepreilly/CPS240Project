@@ -42,8 +42,6 @@ class Character extends Actor implements GameConstants {
 	 */
 	public void setDirection(int direction) {
 		this.direction = direction % 360;
-		if (this.direction < 0)
-			this.direction *= -1;
 	}
 
 	/**

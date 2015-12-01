@@ -35,11 +35,11 @@ class GameKeyboard implements KeyListener, GameConstants {
 	public synchronized void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 //			updateLoc = new Vector(-1f*PLAYER_SPEED,0f);
-			updateDirection = 10;
+			updateDirection = PLAYER_TURN_SPEED;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 //			updateLoc = new Vector(PLAYER_SPEED, 0f);
-			character.setDirection(character.getDirection() - 10);
+			updateDirection = -1 * PLAYER_TURN_SPEED;
 		}
 
 /*
