@@ -14,7 +14,7 @@ import java.util.concurrent.locks.*;
 class GameKeyboard implements KeyListener, GameConstants {
 	private GameState gamestate;
 	private Character character;
-	private Vector updateLoc = new Vector(0f, 0f);
+	private int updateDirection;
 	private double delta;
 
 	/**
@@ -25,6 +25,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 		this.character = character;
 		this.gamestate = gamestate;
 		this.delta = 1d;
+		updateDirection = 0;
 	}
 	
 	/**
@@ -34,28 +35,14 @@ class GameKeyboard implements KeyListener, GameConstants {
 	public synchronized void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 //			updateLoc = new Vector(-1f*PLAYER_SPEED,0f);
-			character.setDirection(character.getDirection() + 10);
+			updateDirection = 10;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 //			updateLoc = new Vector(PLAYER_SPEED, 0f);
 			character.setDirection(character.getDirection() - 10);
 		}
 
-		float xCoord = character.getLocation().x;
-		float yCoord = character.getLocation().y;
-		float properXCoord = xCoord - ((float) SCREEN_WIDTH / 2f);
-		float properYCoord = ((float) SCREEN_HEIGHT / 2f) - yCoord;
-		float directionX;
-		float directionY;
-		directionX = ((float) Math.cos(Math.toRadians( character.getDirection())) * (float) delta * PLAYER_SPEED * 60f);
-		directionY = ((float) Math.sin(Math.toRadians( character.getDirection())) * (float) delta * PLAYER_SPEED * 60f);
-		properXCoord += directionX;
-		properYCoord += directionY;
-		float nxCoord = properXCoord + ((float) SCREEN_WIDTH / 2f);
-		float nyCoord = ((float) SCREEN_HEIGHT / 2f) - properYCoord;
-
-		updateLoc = new Vector(nxCoord - xCoord, nyCoord - yCoord);
-
+/*
 //		if (e.getKeyCode() == KeyEvent.VK_UP) {
 //			updateLoc = new Vector(0f,-1f*PLAYER_SPEED);
 //			character.setDirection(UP);
@@ -92,7 +79,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 				lock.unlock();
 			}
 		}
-
+*/
 	}
 
         /**
@@ -101,13 +88,9 @@ class GameKeyboard implements KeyListener, GameConstants {
          */
         public synchronized void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-			updateLoc = new Vector(0f, updateLoc.y);
+			updateDirection = 0;
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-			updateLoc = new Vector(0f, updateLoc.y);
-                if (e.getKeyCode() == KeyEvent.VK_UP)
-			updateLoc = new Vector(updateLoc.x, 0f);
-                if (e.getKeyCode() == KeyEvent.VK_DOWN)
-			updateLoc = new Vector(updateLoc.x, 0f);
+			updateDirection = 0;
 	}
 	
 	/**
@@ -115,10 +98,12 @@ class GameKeyboard implements KeyListener, GameConstants {
 	 */
 	public void processInput(double delta){
 		this.delta = delta;
-		Vector currLoc = character.getBoxCollider().getLocation();
-		character.setLocation( currLoc.add(updateLoc) );
-		if (updateLoc.magnetude() != 0f)
-			gamestate.flagForUpdate( character.getUniqueID() );
+
+		character.setDirection( character.getDirection() + updateDirection);
+		character.playerStep(delta);
+
+		gamestate.flagForUpdate( character.getUniqueID() );
+
 		gamestate.detectCollisions(character);
 	}
 	

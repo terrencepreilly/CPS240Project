@@ -42,6 +42,8 @@ class Character extends Actor implements GameConstants {
 	 */
 	public void setDirection(int direction) {
 		this.direction = direction % 360;
+		if (this.direction < 0)
+			this.direction *= -1;
 	}
 
 	/**
@@ -166,5 +168,23 @@ class Character extends Actor implements GameConstants {
 	 */
 	public String toString(){
 		return this.getLocation() + " HP: " + health + " ID: " + uniqueID + " (" + (type == ENEMY ? "enemy" : "player") +  " " + type + ")";
+	}
+
+	public void playerStep(double delta) {
+		float xCoord = location.x;
+                float yCoord = location.y;
+                float properXCoord = xCoord - ((float) SCREEN_WIDTH / 2f);
+                float properYCoord = ((float) SCREEN_HEIGHT / 2f) - yCoord;
+                float directionX;
+                float directionY;
+                directionX = ((float) Math.cos(Math.toRadians(direction)) * (float) delta * PLAYER_SPEED * 60f);
+                directionY = ((float) Math.sin(Math.toRadians(direction)) * (float) delta * PLAYER_SPEED * 60f);
+                properXCoord += directionX;
+                properYCoord += directionY;
+                float nxCoord = properXCoord + ((float) SCREEN_WIDTH / 2f);
+                float nyCoord = ((float) SCREEN_HEIGHT / 2f) - properYCoord;
+
+		this.location = new Vector(nxCoord, nyCoord);
+		this.boxCollider.setLocation(this.location);
 	}
 }
