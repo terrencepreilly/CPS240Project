@@ -67,6 +67,7 @@ class ServerOutputHandler extends OutputHandler {
                                 Thread.sleep(1L);
                         }
                 }
+		catch (java.net.SocketException se) { }
                 catch (IOException ioe) { ioe.printStackTrace(); }
                 catch (InterruptedException ie) { ie.printStackTrace(); }
 	}

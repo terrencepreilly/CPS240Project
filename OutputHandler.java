@@ -50,6 +50,7 @@ class OutputHandler implements Runnable {
 				Thread.sleep(10L);
 			}
 		}
+		catch (java.net.SocketException se) {}
 		catch (IOException ioe) { ioe.printStackTrace(); }
 		catch (InterruptedException ie) { ie.printStackTrace(); }
 	}

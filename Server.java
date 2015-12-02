@@ -116,7 +116,6 @@ public class Server implements GameConstants {
 			}
 		}
 		catch (IOException ioe) { ioe.printStackTrace(); }
-
 	} 
 
 // setFlagForUpdate for any updates coming from server.

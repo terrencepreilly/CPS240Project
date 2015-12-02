@@ -149,10 +149,8 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 				null
 			);
 		}
+		characters = null;
 		lock.unlock();
-		// characters should be picked up by the garbage collector,
-		// but if it's not immediately, unlocking it may be allowing
-		// for the ConcurrencyModificationException
 	}
 
 	/**

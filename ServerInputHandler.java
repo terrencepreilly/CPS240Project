@@ -30,6 +30,7 @@ public class ServerInputHandler extends InputHandler {
 				gamestate.flagForUpdate(gd.uniqueID);
 			}
 		}
+		catch (java.net.SocketException se) { System.out.println("Player Quit");}
 		catch (EOFException eofe) { eofe.printStackTrace(); }
 		catch (IOException ioe) { ioe.printStackTrace(); }
 		catch (ClassNotFoundException cnfe) { cnfe.printStackTrace(); }

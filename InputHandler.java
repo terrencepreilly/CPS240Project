@@ -38,6 +38,7 @@ class InputHandler implements Runnable {
 				gamestate.applyGameDelta(gd);
 			}
 		}
+		catch (java.net.SocketException se) {}
 		catch (EOFException eofe) { eofe.printStackTrace(); }
 		catch (IOException ioe) { ioe.printStackTrace(); }
 		catch (ClassNotFoundException cnfe) { cnfe.printStackTrace(); }
