@@ -35,14 +35,16 @@ public interface GameConstants {
 	public final Integer ENEMY = 1;
 	public final Integer OBSTACLE = 2;
 	public final Integer BORDER_OBSTACLE = 3;
+
 	public final int END_UID_REQUEST = -217;
 	// GameDelta.uniqueID for requesting update of GameState
 	public final int UPDATE_REQUEST = -2;
+
 	// Kills the thread this uniqueID is sent to.
 	public final int THREAD_KILL = -3;
 
-	public final int SCREEN_WIDTH = 1500;
-	public final int SCREEN_HEIGHT = 800;
+	public final int SCREEN_WIDTH = 1400;
+	public final int SCREEN_HEIGHT = 700;
 
 	public final float ENEMY_WIDTH = 20f;
 	public final float ENEMY_HEIGHT = 20f;

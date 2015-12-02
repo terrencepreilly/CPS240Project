@@ -69,7 +69,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		displayMode = gd.getDisplayMode();
 		
 		canvas = new Canvas();
-		canvas.setSize(displayMode.getWidth(), displayMode.getHeight());
+		canvas.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		canvas.setBackground(Color.BLACK);
 		canvas.setIgnoreRepaint(true);
 		getContentPane().add(canvas);
