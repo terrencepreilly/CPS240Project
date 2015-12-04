@@ -16,6 +16,7 @@ public class GameState implements GameConstants {
 	HashMap<Integer, Character> characters; // key is uniqueID
 	HashMap<Integer, GameDelta> updateFlags;
 	List<Scenic> obstacles;
+	List<Integer> killed; // A list of killed character uids
 	private Lock lock;
 
 	/**
@@ -27,6 +28,7 @@ public class GameState implements GameConstants {
 		obstacles = new ArrayList<>();
 		updateFlags = new HashMap<>();
 		lock = new ReentrantLock();
+		killed = new LinkedList<>();
 	}
 
 	/**
@@ -62,6 +64,13 @@ public class GameState implements GameConstants {
 				c = characters.get( gd.uniqueID );
 				c.setLocation( gd.locUpdate );
 				c.setHealth( gd.health );
+				if (c.getHealth() <= 0) {
+					characters.remove( c.getUniqueID() );
+					killed.add( c.getUniqueID() );
+				}
+			}
+			else if (killed.contains( gd.uniqueID )) {
+				// possibly respawn?
 			}
 			else {
 				addCharacter(gd);
@@ -75,14 +84,21 @@ public class GameState implements GameConstants {
 	 * @return A new GameDelta signifying the changes.
 	 */
 	public synchronized GameDelta createGameDelta(Integer uid) {
-		if (! characters.containsKey(uid))
+		if (killed.contains(uid)) {
+			return new GameDelta( uid, new Vector(-100, -100), 0, 
+				ENEMY, System.currentTimeMillis() );
+		}
+		else if (characters.containsKey(uid)) {
+			Character c = characters.get(uid);
+			int type = c.getType();
+
+			GameDelta gd = new GameDelta( uid, c.getLocation(), 
+				c.getHealth(), type, System.currentTimeMillis()); 
+			return gd;
+		}
+		else {
 			return null;
-
-		Character c = characters.get(uid);
-		int type = c.getType();
-
-		GameDelta gd = new GameDelta( uid, c.getLocation(), c.getHealth(), type, System.currentTimeMillis()); 
-		return gd;
+		}
 	}
 
 	/**
