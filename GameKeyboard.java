@@ -43,7 +43,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 			updateDirection = -1 * PLAYER_TURN_SPEED;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			upAction();
+			gamestate.makeAttack(character);
 		}
 
 /*
@@ -85,7 +85,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 		}
 */
 	}
-
+/*
 	public void upAction() {
 		Lock lock = gamestate.getLock();
 		lock.lock();
@@ -123,7 +123,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 
 		return false;
 	}
-
+*/
         /**
          * Reset whether the key was pressed.
          * @param e The key to reset.

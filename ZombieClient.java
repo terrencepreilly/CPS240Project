@@ -134,6 +134,22 @@ implements Runnable, GameConstants {
 	}
 
 	/**
+	 * Attack they player, if the player is close enough.
+	 */
+	public void attackPlayers() {
+		for (Character z : charactersCreated) {
+			Integer tuid = -1;
+			if (targetMap.containsKey(z))
+				tuid = targetMap.get(z);
+			if (tuid != null && tuid != -1 && 
+			gamestate.distance(z.getUniqueID(), targetMap.get(z)) 
+			< z.getBoxCollider().getHeight()) {
+				gamestate.makeAttack(z, tuid);
+			}
+		}
+	}
+
+	/**
 	 * Run this thread -- move all Characters, update Server, and pause.
 	 */
 	public void run() {
@@ -146,6 +162,7 @@ implements Runnable, GameConstants {
 				assignTargets();
 
 			moveCharacters();
+			attackPlayers();
 
 			try { Thread.sleep( 100L ); } // TODO refine time
 			catch (InterruptedException ex) {}

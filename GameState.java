@@ -299,6 +299,18 @@ public class GameState implements GameConstants {
 	}
 
 	/**
+	 * Get the distance from one character to another (by 
+	 * unique ID).
+	 * @param u1 The first character's uid.
+	 * @param u2 The second characters uid.
+	 * @return The distance between the two.
+	 */
+	public synchronized float distance(Integer u1, Integer u2) {
+		return characters.get(u1).getLocation().distance(
+			characters.get(u2).getLocation());
+	}
+
+	/**
 	 * Get the map of all Characters.
 	 * @return A HashMap of all Characters.
 	 */
@@ -320,4 +332,48 @@ public class GameState implements GameConstants {
 
 		return ret;
 	}
+
+        private boolean isClose(Character c1, Character c2, float dist) {
+                List<Point2D.Float> l1 = c1.getBoxCollider().getVertices();
+                List<Point2D.Float> l2 = c2.getBoxCollider().getVertices();
+
+                for (Point2D p1 : l1) {
+                        Vector v1 = new Vector(p1);
+                        for (Point2D p2 : l2) {
+                                Vector v2 = new Vector(p2);
+                                if (v1.distance(v2) < dist)
+                                        return true;
+                        }
+                }
+
+                return false;
+        }
+
+        public synchronized void makeAttack(Character c) {
+                lock.lock();
+
+                for (Integer uid : characters.keySet()) {
+                        boolean isNotSame = c.getUniqueID() != uid;
+
+                        if (isNotSame)
+				makeAttack(c, uid);
+                }
+
+                lock.unlock();
+        }
+
+	public synchronized void makeAttack(Character c, Integer c2uid) {
+		Character c2 = characters.get(c2uid);
+		float dist = (float) c.getBoxCollider().getWidth() / 2f;
+		if (isClose(c, c2, dist)) {
+			System.out.println("b: " + c2.getHealth());
+			if (c.getType() == PLAYER)
+				c2.setHealth( c2.getHealth() - HITTING_POWER );
+			else
+				c2.setHealth(c2.getHealth() - ENEMY_HITTING_POWER);
+			flagForUpdate(c2);
+			System.out.println("a: " + c2.getHealth());
+		}
+	}
+
 }

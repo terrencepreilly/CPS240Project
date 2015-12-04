@@ -10,6 +10,7 @@ public interface GameConstants {
 	public final int PLAYER_TURN_SPEED = 5;
 
 	public final int HITTING_POWER = 2;
+	public final int ENEMY_HITTING_POWER = 1;
 
 	// Pathfinding variables
 	public final boolean USE_CORNER_ASTAR = true;
