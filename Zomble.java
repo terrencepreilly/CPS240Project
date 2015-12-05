@@ -154,6 +154,11 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		lock.unlock();
 	}
 
+	/**
+	 * Draws a health bar above each Character.
+	 * @param g The graphic's context.
+	 * @param c The Character whose health bar is being drawn.
+	 */
 	private void drawHealthBar(Graphics g, Character c) {
 		int xcoord = (int) c.getLocation().x;
 		int ycoord = (int) c.getLocation().y - 8;
@@ -161,9 +166,9 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		int greenWidth = (int) ((float) c.getHealth() / 
 			(float) DEFAULT_HEALTH * totalWidth);
 		int redWidth = totalWidth - greenWidth;
-		g.setColor(java.awt.Color.GREEN);
+		g.setColor(new java.awt.Color(0, 255, 0, 200));
 		g.fillRect(xcoord, ycoord, greenWidth, 4);
-		g.setColor(java.awt.Color.RED);
+		g.setColor(new java.awt.Color(255, 0, 0, 200));
 		g.fillRect(xcoord + greenWidth, ycoord, redWidth, 4);
 	}
 

@@ -47,7 +47,7 @@ class OutputHandler implements Runnable {
 				}
 				prevSent = System.currentTimeMillis();
 				// make room for other processes
-				Thread.sleep(10L);
+				Thread.sleep(100L);
 			}
 		}
 		catch (java.net.SocketException se) {}
