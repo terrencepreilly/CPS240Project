@@ -333,22 +333,22 @@ public class GameState implements GameConstants {
 		return ret;
 	}
 
+	/**
+	 * Return true if c1 is within dist of c2.
+	 * @param c1 The first Character.
+	 * @param c2 The second Character.
+	 * @param dist The bounding distance to check.
+	 * @return True if c1 is within dist of c2, false otherwise.
+	 */
         private boolean isClose(Character c1, Character c2, float dist) {
-                List<Point2D.Float> l1 = c1.getBoxCollider().getVertices();
-                List<Point2D.Float> l2 = c2.getBoxCollider().getVertices();
-
-                for (Point2D p1 : l1) {
-                        Vector v1 = new Vector(p1);
-                        for (Point2D p2 : l2) {
-                                Vector v2 = new Vector(p2);
-                                if (v1.distance(v2) < dist)
-                                        return true;
-                        }
-                }
-
-                return false;
+		BoxCollider b = c1.getBoxCollider().getBoundingBox(dist);
+		return b.intersects(c2.getBoxCollider());
         }
 
+	/**
+	 * Cause a Character c to attack any valid Characters around it.
+	 * @param c The Character who attacks.
+	 */
         public synchronized void makeAttack(Character c) {
                 lock.lock();
 
@@ -362,6 +362,11 @@ public class GameState implements GameConstants {
                 lock.unlock();
         }
 
+	/**
+	 * Cause Character c to attack the Character with unique ID c2uid.
+	 * @param c The Character who attacks.
+	 * @param c2uid The unique ID of the Character being attacked.
+	 */
 	public synchronized void makeAttack(Character c, Integer c2uid) {
 		Character c2 = characters.get(c2uid);
 		float dist = (float) c.getBoxCollider().getWidth() / 2f;

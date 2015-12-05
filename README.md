@@ -7,8 +7,8 @@ INSTALLING AND RUNNING
 	purposes, let's call this directory "ZombleGame".
 
 	2. Compile the .class files using the makefile:
-		$ make zomble
-	Alternatively, you could run javac on the files:
+		$ make 
+	   Alternatively, you could run javac on the files:
 		$ javac Zomble.java ZombieClient.java Server.java
 
 	3. To play, you will first need to start the Server and Zombie Client

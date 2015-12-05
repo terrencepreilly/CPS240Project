@@ -92,4 +92,18 @@ class BoxCollider extends Rectangle2D.Float {
 		);
 		return chaVert;
 	}
+
+	/**
+	 * Return a BoxCollider which surrounds this BoxCollider by a distance of 
+	 * dist.
+	 * @param dist The distance between b and the surrounding BoxCollider.
+	 * @return A BoxCollider which surrounds this one by dist.
+	 */ 
+	public BoxCollider getBoundingBox(float dist) {
+		float nxcoord = (float) this.getX() - dist;
+		float nycoord = (float) this.getY() - dist;
+		return new BoxCollider(nxcoord, nycoord, 
+			(float) this.getWidth() + 2*dist, 
+			(float) this.getHeight() + 2*dist);
+	}
 }
