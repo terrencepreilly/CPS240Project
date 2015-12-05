@@ -140,6 +140,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 					null
 				);
 			}
+			drawHealthBar(g, c);
 		}
 		for (Scenic s : gamestate.getObstacles()) {
 			g.drawImage(
@@ -151,6 +152,19 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		}
 		characters = null;
 		lock.unlock();
+	}
+
+	private void drawHealthBar(Graphics g, Character c) {
+		int xcoord = (int) c.getLocation().x;
+		int ycoord = (int) c.getLocation().y - 8;
+		int totalWidth = (int) c.getBoxCollider().getWidth();
+		int greenWidth = (int) ((float) c.getHealth() / 
+			(float) DEFAULT_HEALTH * totalWidth);
+		int redWidth = totalWidth - greenWidth;
+		g.setColor(java.awt.Color.GREEN);
+		g.fillRect(xcoord, ycoord, greenWidth, 4);
+		g.setColor(java.awt.Color.RED);
+		g.fillRect(xcoord + greenWidth, ycoord, redWidth, 4);
 	}
 
 	/**

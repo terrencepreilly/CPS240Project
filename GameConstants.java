@@ -20,6 +20,8 @@ public interface GameConstants {
 	public final int ZOMBIE_SPAWN = 7;
 	public final int OBSTACLE_SPAWN = 3;
 
+	public final int DEFAULT_HEALTH = 10;
+
 	// The random seed
 	public final int RANDSEED = 309;
 

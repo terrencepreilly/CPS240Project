@@ -29,7 +29,7 @@ class Character extends Actor implements GameConstants {
 		//character is an image, location, and a boxCollider, health set to 10 until changed
 		super(image, location);
 		lastGoodLocation = location;
-		health = 100;
+		health = DEFAULT_HEALTH;
 		direction = UP; // default, facing North
 		uniqueID = -1;
 		type = ENEMY;
