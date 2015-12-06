@@ -38,11 +38,11 @@ class GameKeyboard implements KeyListener, GameConstants {
 	public synchronized void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			updateDirection = PLAYER_TURN_SPEED;
-			gamestate.flagForUpdate( character.getUniqueID() );	
+//			gamestate.flagForUpdate( character.getUniqueID() );	
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			updateDirection = -1 * PLAYER_TURN_SPEED;
-			gamestate.flagForUpdate( character.getUniqueID() );
+//			gamestate.flagForUpdate( character.getUniqueID() );
 		}
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			gamestate.makeAttack(character);
@@ -56,11 +56,11 @@ class GameKeyboard implements KeyListener, GameConstants {
         public synchronized void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			updateDirection = 0;
-			gamestate.flagForUpdate( character.getUniqueID() );
+//			gamestate.flagForUpdate( character.getUniqueID() );
 		}
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			updateDirection = 0;
-			gamestate.flagForUpdate( character.getUniqueID() );
+//			gamestate.flagForUpdate( character.getUniqueID() );
 		}
 	}
 	
@@ -73,7 +73,7 @@ class GameKeyboard implements KeyListener, GameConstants {
 		character.setDirection( character.getDirection() + updateDirection);
 		character.playerStep(delta);
 
-//		gamestate.flagForUpdate( character.getUniqueID() );
+		gamestate.flagForUpdate( character.getUniqueID() );
 
 		gamestate.detectCollisions(character);
 	}

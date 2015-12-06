@@ -18,6 +18,7 @@ class Character extends Actor implements GameConstants {
 	private boolean isAttacking;
 	private boolean isPlayer;
 	private double attackCounter;
+	private long lastAttack;
 	
 	/**
 	 * Create a new Character.
@@ -34,6 +35,7 @@ class Character extends Actor implements GameConstants {
 		uniqueID = -1;
 		type = ENEMY;
 		isAttacking = false;
+		lastAttack = System.currentTimeMillis();
 	}
 
 	/**
@@ -51,6 +53,31 @@ class Character extends Actor implements GameConstants {
 	 */
 	public int getDirection() {
 		return direction;
+	}
+
+	/**
+	 * Set the lastAttack timestamp.
+	 */
+	public void setLastAttack() {
+		lastAttack = System.currentTimeMillis();
+	}
+
+	/**
+	 * Get the lastAttack timestamp.
+	 */
+	public long getLastAttack() {
+		return lastAttack;
+	}
+
+	/**
+	 * Sees if the time since the last attack is greater than 
+	 * ENEMY_ATTACK_REFRESH.
+	 * @return True if this Character can attack.
+	 */
+	public boolean canAttack() {
+		if (type == PLAYER)
+			return true;
+		return System.currentTimeMillis() - lastAttack > ENEMY_ATTACK_REFRESH;
 	}
 
 	/**

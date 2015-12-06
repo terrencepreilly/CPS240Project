@@ -6,6 +6,7 @@ public interface GameConstants {
 	public final float PLAYER_SPEED = 2.5f;
 	public final float ACTOR_SPEED = 2.5f;
 	public static final float ATTACK_SPEED = 0.5f;
+	public static final long ENEMY_ATTACK_REFRESH = 1000l;
 
 	public final int PLAYER_TURN_SPEED = 5;
 
@@ -18,12 +19,12 @@ public interface GameConstants {
 
 	// Spawn rates for enemies and obstacles.
 	public final int ZOMBIE_SPAWN = 7;
-	public final int OBSTACLE_SPAWN = 3;
+	public final int OBSTACLE_SPAWN = 1;
 
 	public final int DEFAULT_HEALTH = 10;
 
 	// The random seed
-	public final int RANDSEED = 309;
+	public final int RANDSEED = 209;
 
 	// Images for characters and obstacles
 	public final String IMGFLD = "Images/";

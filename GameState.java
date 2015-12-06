@@ -399,10 +399,14 @@ public class GameState implements GameConstants {
 		Character c2 = characters.get(c2uid);
 		float dist = (float) c.getBoxCollider().getWidth() / 2f;
 		if (isClose(c, c2, dist)) {
+			if (! c.canAttack()) 
+				return;
 			if (c.getType() == PLAYER)
 				c2.setHealth( c2.getHealth() - HITTING_POWER );
-			else
+			else {
 				c2.setHealth(c2.getHealth() - ENEMY_HITTING_POWER);
+			}
+			c.setLastAttack();
 			flagForUpdate(c2);
 		}
 		if (c2.getHealth() <= 0) {
