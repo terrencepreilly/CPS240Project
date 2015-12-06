@@ -100,7 +100,7 @@ implements Runnable, GameConstants {
 	private void moveCharacter(Character z) {
 		if (targetMap.get(z) == null || targetMap.get(z) == -1)
 			return;
-		BoxCollider targetBC = gamestate.characters.get( targetMap.get(z) ).getBoxCollider();
+		BoxCollider targetBC = gamestate.characters.get( targetMap.get(z) ).getBoxCollider(); // wasn't reset to null... why?
 		z.buildPath(
 			targetBC.getLocation(),
 			screenWidth,
@@ -142,19 +142,22 @@ implements Runnable, GameConstants {
 			if (targetMap.containsKey(z))
 				tuid = targetMap.get(z);
 			if (tuid != null && tuid != -1) { 
-				float atdist = gamestate.distance(z.getUniqueID(), tuid);
-				boolean close = atdist < z.getBoxCollider().getHeight();
-				if (close && ! z.getAttacking()) {
-					z.setAttacking(true);
-					gamestate.flagForUpdate(z);
-				}
-				else if (! close && z.getAttacking()) {
-					z.setAttacking(false);
-					gamestate.flagForUpdate(z);
+				gamestate.makeAttack(z, tuid);
+				if (gamestate.isKilled(tuid)) {
+					resetSpecifiedTarget(tuid);
+					return;
 				}
 			}
 		}
 	}
+
+	private void resetSpecifiedTarget(Integer uid) {
+		for (Character z : targetMap.keySet()) {
+			if (targetMap.get(z) == uid)
+				targetMap.put(z, null);
+		}
+	}
+
 
 	/**
 	 * Run this thread -- move all Characters, update Server, and pause.

@@ -63,7 +63,8 @@ public class GameState implements GameConstants {
 			if (characters.containsKey( gd.uniqueID )) {
 				c = characters.get( gd.uniqueID );
 				c.setLocation( gd.locUpdate );
-				c.setHealth( gd.health );
+				if (gd.health < c.getHealth())
+					c.setHealth( gd.health );
 				if (c.getHealth() <= 0) {
 					characters.remove( c.getUniqueID() );
 					killed.add( c.getUniqueID() );
@@ -346,6 +347,17 @@ public class GameState implements GameConstants {
         }
 
 	/**
+	 * Return true if c1 is within dist of character with ID cuid2.
+	 * @param c1 The first character.
+	 * @param c2 The second Character.
+	 * @param dist The bounding distance to check.
+	 * @return True if c1 is within dist of character with ID cuid2.
+	 */
+	private boolean isClose(Character c1, Integer cuid2, float dist) {
+		return isClose(c1, characters.get(cuid2), dist);
+	}
+
+	/**
 	 * Cause a Character c to attack any valid Characters around it.
 	 * @param c The Character who attacks.
 	 */
@@ -379,6 +391,19 @@ public class GameState implements GameConstants {
 			flagForUpdate(c2);
 			System.out.println("a: " + c2.getHealth());
 		}
+		if (c2.getHealth() <= 0) {
+			characters.remove(c2.getUniqueID());
+			killed.add(c2.getUniqueID());
+		}
+	}
+
+	/**
+	 * Return true if the character with this unique ID is killed.
+	 * @param uid The unique of ID of a Character.
+	 * @return True if the Character in question has been killed.
+	 */
+	public boolean isKilled(Integer uid) {
+		return killed.contains(uid);
 	}
 
 }
