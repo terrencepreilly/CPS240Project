@@ -8,23 +8,14 @@ import java.util.List;
  * A task for handling all output from a Server.
  */
 class ServerOutputHandler extends OutputHandler {
-	// UIDs not to update for this client. (The client's own characters.)
-	HashSet<Integer> uids;
-
 	/**
 	 * Create a new ServerOutputHandler task.
  	 * @param socket The connection from this Server to a Client.
 	 * @param gamestate The Server's GameState.
 	 * @return A new instance of ServerOutputHandler.
 	 */
-	public ServerOutputHandler(Socket socket, GameState gamestate, 
-	LinkedList uids) {
+	public ServerOutputHandler(Socket socket, GameState gamestate) {
 		super(socket, gamestate);
-		this.uids = new HashSet<>();
-		for (Object o : uids) {
-			if (o instanceof Integer)
-				this.uids.add( (Integer) o );
-		}
 		prevSent = System.currentTimeMillis();
 	}
 
@@ -57,7 +48,7 @@ class ServerOutputHandler extends OutputHandler {
                         while (true) {
                                 List<GameDelta> l = gamestate.getUpdate(prevSent);
 				for (GameDelta gd : l) {
-					if (gd != null && !uids.contains(gd.uniqueID)) { 
+					if (gd != null) { 
 						out.writeObject(gd);
 						out.flush();
 					}

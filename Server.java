@@ -111,7 +111,7 @@ public class Server implements GameConstants {
 				// updates from a uid aren't 
 				LinkedList uids = serveUniqueIDs(socket);
 
-				executor.execute(new ServerOutputHandler(socket, gamestate, uids));
+				executor.execute(new ServerOutputHandler(socket, gamestate));
 				executor.execute(new ServerInputHandler(socket, gamestate));
 			}
 		}

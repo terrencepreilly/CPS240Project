@@ -71,6 +71,7 @@ public abstract class AbstractClient implements GameConstants {
 				uid, new Vector(0f, 0f), 10, i, System.currentTimeMillis()));
 			gamestate.add(c);
 			gamestate.flagForUpdate(c);
+			gamestate.addToNoUpdate(c.getUniqueID());
 			charactersCreated.add(c);
 		}
 	}

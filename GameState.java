@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 import java.util.Queue;
@@ -18,6 +19,8 @@ public class GameState implements GameConstants {
 	List<Scenic> obstacles;
 	List<Integer> killed; // A list of killed character uids
 	private Lock lock;
+	HashSet<Integer> noUpdate; // a set of uids not to update unless
+				   // there is change in health
 
 	/**
 	 * Create a new GameState with empty internal values.
@@ -29,6 +32,7 @@ public class GameState implements GameConstants {
 		updateFlags = new HashMap<>();
 		lock = new ReentrantLock();
 		killed = new LinkedList<>();
+		noUpdate = new HashSet<>();
 	}
 
 	/**
@@ -37,6 +41,15 @@ public class GameState implements GameConstants {
 	 */
 	public Lock getLock() {
 		return lock;
+	}
+
+	/**
+	 * Add an ID to noUpdate (so that this character isn't updated unless
+	 * there is a change in health.)
+	 * @param uid The ID of the Character.
+	 */
+	public void addToNoUpdate(Integer uid) {
+		noUpdate.add(uid);
 	}
 
 	/**
@@ -61,6 +74,8 @@ public class GameState implements GameConstants {
 		else {
 			Character c = null;
 			if (characters.containsKey( gd.uniqueID )) {
+				if (noUpdate.contains(gd.uniqueID) && gd.health == characters.get(gd.uniqueID).getHealth())
+					return;
 				c = characters.get( gd.uniqueID );
 				c.setLocation( gd.locUpdate );
 				if (gd.health < c.getHealth())
@@ -146,7 +161,8 @@ public class GameState implements GameConstants {
 	 * Flag a character for updates.
 	 */
 	public synchronized void flagForUpdate(Integer uid) {
-		updateFlags.put( uid, createGameDelta(uid) );
+		GameDelta gd = createGameDelta(uid);
+		updateFlags.put( uid, gd );
 	}
 
 	/**
@@ -383,13 +399,11 @@ public class GameState implements GameConstants {
 		Character c2 = characters.get(c2uid);
 		float dist = (float) c.getBoxCollider().getWidth() / 2f;
 		if (isClose(c, c2, dist)) {
-			System.out.println("b: " + c2.getHealth());
 			if (c.getType() == PLAYER)
 				c2.setHealth( c2.getHealth() - HITTING_POWER );
 			else
 				c2.setHealth(c2.getHealth() - ENEMY_HITTING_POWER);
 			flagForUpdate(c2);
-			System.out.println("a: " + c2.getHealth());
 		}
 		if (c2.getHealth() <= 0) {
 			characters.remove(c2.getUniqueID());

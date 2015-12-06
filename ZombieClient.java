@@ -100,7 +100,7 @@ implements Runnable, GameConstants {
 	private void moveCharacter(Character z) {
 		if (targetMap.get(z) == null || targetMap.get(z) == -1)
 			return;
-		BoxCollider targetBC = gamestate.characters.get( targetMap.get(z) ).getBoxCollider(); // wasn't reset to null... why?
+		BoxCollider targetBC = gamestate.characters.get( targetMap.get(z) ).getBoxCollider(); 
 		z.buildPath(
 			targetBC.getLocation(),
 			screenWidth,
@@ -157,7 +157,6 @@ implements Runnable, GameConstants {
 				targetMap.put(z, null);
 		}
 	}
-
 
 	/**
 	 * Run this thread -- move all Characters, update Server, and pause.
