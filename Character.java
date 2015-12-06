@@ -33,6 +33,7 @@ class Character extends Actor implements GameConstants {
 		direction = UP; // default, facing North
 		uniqueID = -1;
 		type = ENEMY;
+		isAttacking = false;
 	}
 
 	/**

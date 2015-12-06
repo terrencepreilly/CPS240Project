@@ -133,12 +133,14 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 				null
 			);
 			if (c.getAttacking()) {
+				System.out.println("ATTACK!");
 				g.drawImage(
 					c.getWeapon().getImage(),
 					(int) c.getLocation().x,
 					(int) c.getLocation().y,
 					null
 				);
+				drawAngryDot(g, c);
 			}
 			drawHealthBar(g, c);
 		}
@@ -152,6 +154,14 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		}
 		characters = null;
 		lock.unlock();
+	}
+
+	//TODO erase testing method
+	private void drawAngryDot(Graphics g, Character c) {
+		int xcoord = (int) c.getLocation().x - 10;
+		int ycoord = (int) c.getLocation().y;
+		g.setColor(new java.awt.Color(255, 0, 100, 200));
+		g.fillRect(xcoord, ycoord, 4, 4);
 	}
 
 	/**

@@ -141,10 +141,17 @@ implements Runnable, GameConstants {
 			Integer tuid = -1;
 			if (targetMap.containsKey(z))
 				tuid = targetMap.get(z);
-			if (tuid != null && tuid != -1 && 
-			gamestate.distance(z.getUniqueID(), targetMap.get(z)) 
-			< z.getBoxCollider().getHeight()) {
-				gamestate.makeAttack(z, tuid);
+			if (tuid != null && tuid != -1) { 
+				float atdist = gamestate.distance(z.getUniqueID(), tuid);
+				boolean close = atdist < z.getBoxCollider().getHeight();
+				if (close && ! z.getAttacking()) {
+					z.setAttacking(true);
+					gamestate.flagForUpdate(z);
+				}
+				else if (! close && z.getAttacking()) {
+					z.setAttacking(false);
+					gamestate.flagForUpdate(z);
+				}
 			}
 		}
 	}
@@ -162,7 +169,7 @@ implements Runnable, GameConstants {
 				assignTargets();
 
 			moveCharacters();
-//			attackPlayers();
+			attackPlayers();
 
 			try { Thread.sleep( 100L ); } // TODO refine time
 			catch (InterruptedException ex) {}
