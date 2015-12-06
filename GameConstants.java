@@ -1,3 +1,4 @@
+import File.separator;
 /**
  * A container interface for game constants.
  */
@@ -27,7 +28,7 @@ public interface GameConstants {
 	public final int RANDSEED = 209;
 
 	// Images for characters and obstacles
-	public final String IMGFLD = "Images/";
+	public final String IMGFLD = "Images" + File.separator; //correctly utilize systems file separator, / on linux, \ on windows
 	public final String OBS_IMAGE_FILENAME = IMGFLD + "redCar.png";
 	public final String PLR_IMAGE_FILENAME = IMGFLD + "characterForward1.png";
 	public final String ENE_IMAGE_FILENAME = IMGFLD + "zombieForward1.png";
