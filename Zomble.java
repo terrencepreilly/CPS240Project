@@ -206,7 +206,6 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 * Also, pauses the thread for 10 milliseconds.
 	 */
 	private void gameLoop(double delta) {
-		player.updateCharacterV(delta);
 		processInput(delta);
 		renderFrame();
 		try { Thread.sleep(10L); } catch (InterruptedException ex) {}

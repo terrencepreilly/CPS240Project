@@ -162,7 +162,7 @@ implements Runnable, GameConstants {
 				assignTargets();
 
 			moveCharacters();
-			attackPlayers();
+//			attackPlayers();
 
 			try { Thread.sleep( 100L ); } // TODO refine time
 			catch (InterruptedException ex) {}

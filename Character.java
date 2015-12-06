@@ -53,31 +53,6 @@ class Character extends Actor implements GameConstants {
 	}
 
 	/**
-	 * Set attack status to true.
-	 */
-	public void attack() {
-		if (isAttacking && attackCounter > ATTACK_SPEED) {
-			isAttacking = false;
-			attackCounter = 0;
-		}
-		else if (!isAttacking) {
-			isAttacking = true;
-		}
-	}
-
-	// TODO used?
-	/**
-	 *
-	 */
-	public void updateCharacterV(double delta) {
-		attackCounter += delta;
-		if (isAttacking && attackCounter > ATTACK_SPEED) {
-			isAttacking = false;
-			attackCounter = 0;
-		}
-	}
-
-	/**
 	 * Set this Character to be attacking or not attacking.
 	 * @param isAttacking Whether or not this Character is attacking.
 	 */
