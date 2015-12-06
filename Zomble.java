@@ -173,8 +173,9 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		int xcoord = (int) c.getLocation().x;
 		int ycoord = (int) c.getLocation().y - 8;
 		int totalWidth = (int) c.getBoxCollider().getWidth();
-		int greenWidth = (int) ((float) c.getHealth() / 
-			(float) DEFAULT_HEALTH * totalWidth);
+		int h = c.getHealth();
+		if (h < 0) h = 0;
+		int greenWidth = (int) ((float) h / (float) DEFAULT_HEALTH * totalWidth);
 		int redWidth = totalWidth - greenWidth;
 		g.setColor(new java.awt.Color(0, 255, 0, 200));
 		g.fillRect(xcoord, ycoord, greenWidth, 4);

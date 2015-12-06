@@ -396,6 +396,8 @@ public class GameState implements GameConstants {
 	 * @param c2uid The unique ID of the Character being attacked.
 	 */
 	public synchronized void makeAttack(Character c, Integer c2uid) {
+		if (c.getHealth() <= 0)
+			return;
 		Character c2 = characters.get(c2uid);
 		float dist = (float) c.getBoxCollider().getWidth() / 2f;
 		if (isClose(c, c2, dist)) {
