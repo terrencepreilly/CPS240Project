@@ -410,7 +410,7 @@ public class GameState implements GameConstants {
 			flagForUpdate(c2);
 		}
 		if (c2.getHealth() <= 0) {
-			characters.remove(c2.getUniqueID());
+			//characters.remove(c2.getUniqueID());
 			killed.add(c2.getUniqueID());
 		}
 	}
