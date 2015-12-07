@@ -13,7 +13,6 @@ class Character extends Actor implements GameConstants {
 	private Integer uniqueID;
 
 	// variables related to attacking and position
-	private int direction;
 	private LinkedList<Weapon> weapons = new LinkedList<Weapon>();
 	private boolean isAttacking;
 	private boolean isPlayer;

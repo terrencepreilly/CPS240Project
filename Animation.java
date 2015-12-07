@@ -27,8 +27,8 @@ class Animation implements GameConstants {
 			playerImages.put("F2z", ImageIO.read(new File(IMGFLD + "zombieFrwd2.png")));
 			playerImages.put("S1z", ImageIO.read(new File(IMGFLD + "zombieSide.png")));
 			playerImages.put("S2z", ImageIO.read(new File(IMGFLD + "zombieSide2.png")));
-			playerImages.put("B1z", ImageIO.read(new File(IMGFLD + "zombieBack.png")));
-			playerImages.put("B2z", ImageIO.read(new File(IMGFLD + "zombieBack2.png")));
+			playerImages.put("D1z", ImageIO.read(new File(IMGFLD + "zombieBack.png")));
+			playerImages.put("D2z", ImageIO.read(new File(IMGFLD + "zombieBack2.png")));
 //			playerImages.put("ATz", ImageIO.read(new File(IMGFLD + "zombAtk.png")));
 //			playerImages.put("DDz", ImageIO.read(new File(IMGFLD + "zombDead.png")));
 		} catch (IOException ioe) { ioe.printStackTrace(); }
@@ -77,9 +77,13 @@ class Animation implements GameConstants {
 		imgname += c.getType() == ENEMY ? "z" : "";
 
 
-		if (System.currentTimeMillis() - c.getBlit() > ANIMATION_UPDATE_SPEED) {
+		if (c.type == PLAYER && System.currentTimeMillis() - c.getBlit() > ANIMATION_UPDATE_SPEED) {
 			firstImage.put(c.getUniqueID(), ! firstImage.get(c.getUniqueID()));
 			c.setBlit();
+		}
+		else if (c.type == ENEMY && System.currentTimeMillis() - c.getBlit() > ENEMY_ANIMATION_UPDATE_SPEED) {
+			firstImage.put(c.getUniqueID(), ! firstImage.get(c.getUniqueID()));
+                        c.setBlit();
 		}
 
 		if (dir == LEFT) 

@@ -18,8 +18,8 @@ public interface GameConstants {
 	public final float ASTAR_RATE = 0.2f;
 
 	// Spawn rates for enemies and obstacles.
-	public final int ZOMBIE_SPAWN = 0;
-	public final int OBSTACLE_SPAWN = 0;
+	public final int ZOMBIE_SPAWN = 6;
+	public final int OBSTACLE_SPAWN = 2;
 
 	public final int DEFAULT_HEALTH = 10;
 
@@ -59,4 +59,5 @@ public interface GameConstants {
 	public final int DOWN = 270;
 
 	public final long ANIMATION_UPDATE_SPEED = 150;
+	public final long ENEMY_ANIMATION_UPDATE_SPEED = 300;
 }

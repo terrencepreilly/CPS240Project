@@ -17,6 +17,7 @@ public abstract class Actor implements GameConstants {
 	protected Integer type;
 	private LinkedList<Vector> path;		// The path of this actor to take
 	private boolean simpleStep;		// Whether to use simpleStep algorithm
+	int direction;
 
 	/**
 	 * Create a new, blank Actor instance.
@@ -93,6 +94,23 @@ public abstract class Actor implements GameConstants {
 	 * 	of this Actor.
 	 */
 	public void setLocation(Vector location){
+		if (type == ENEMY) {
+			// update the direction
+			float dy = location.y - this.location.y;
+			float dx = location.x - this.location.x;
+			if (Math.abs(dy) > Math.abs(dx)) {
+				if (dy > 0)
+					this.direction = DOWN;
+				else
+					this.direction = UP;
+			}
+			else {
+				if (dx < 0)
+					this.direction = LEFT;
+				else
+					this.direction = RIGHT;
+			}
+		}
 		this.location = location;
 		this.boxCollider.setLocation(location);
 	}
