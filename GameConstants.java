@@ -31,7 +31,7 @@ public interface GameConstants {
 	public final String OBS_IMAGE_FILENAME = IMGFLD + "redCar.png";
 	public final String PLR_IMAGE_FILENAME = IMGFLD + "characterForward1.png";
 	public final String ENE_IMAGE_FILENAME = IMGFLD + "zombieForward1.png";
-	public final String BAC_IMAGE_FILENAME = IMGFLD + "bg.png";
+	public final String BAC_IMAGE_FILENAME = IMGFLD + "backgroundImage.png";
 	public final String WEA_IMAGE_FILENAME = IMGFLD + "swordImage.png";
 
 	//---------------INTERNAL CONSTANTS, DO NOT CHANGE---------------//
