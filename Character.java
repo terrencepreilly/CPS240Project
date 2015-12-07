@@ -19,6 +19,7 @@ class Character extends Actor implements GameConstants {
 	private boolean isPlayer;
 	private double attackCounter;
 	private long lastAttack;
+	private long firstBlit; // for changing animation image
 	
 	/**
 	 * Create a new Character.
@@ -36,6 +37,7 @@ class Character extends Actor implements GameConstants {
 		type = ENEMY;
 		isAttacking = false;
 		lastAttack = System.currentTimeMillis();
+		firstBlit = System.currentTimeMillis();
 	}
 
 	/**
@@ -188,4 +190,13 @@ class Character extends Actor implements GameConstants {
 		this.location = new Vector(nxCoord, nyCoord);
 		this.boxCollider.setLocation(this.location);
 	}
+
+	public void setBlit() {
+		firstBlit = System.currentTimeMillis();
+	}
+
+	public long getBlit() {
+		return firstBlit;
+	}
+
 }

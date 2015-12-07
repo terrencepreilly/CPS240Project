@@ -21,6 +21,7 @@ public class GameState implements GameConstants {
 	private Lock lock;
 	HashSet<Integer> noUpdate; // a set of uids not to update unless
 				   // there is change in health
+	Animation animation;
 
 	/**
 	 * Create a new GameState with empty internal values.
@@ -33,15 +34,12 @@ public class GameState implements GameConstants {
 		lock = new ReentrantLock();
 		killed = new LinkedList<>();
 		noUpdate = new HashSet<>();
+		animation = new Animation(); // Get images for animation
 	}
 
-	/**
-	 * Return a Lock for this instance.
- 	 * @return A Lock for this instance.
-	 */
-	public Lock getLock() {
-		return lock;
-	}
+	public BufferedImage getImage(Character c) {
+		return animation.getImage(c);
+	}	
 
 	/**
 	 * Add an ID to noUpdate (so that this character isn't updated unless
@@ -154,6 +152,7 @@ public class GameState implements GameConstants {
 	 * @param c The Character to be addded.
 	 */
 	public synchronized void add(Character c) { 
+		animation.addCharacter(c);
 		characters.put(c.getUniqueID(), c); 
 	}
 
@@ -193,11 +192,11 @@ public class GameState implements GameConstants {
 	public synchronized Character createCharacter(GameDelta gd) {
 		Character c = null;
                 BufferedImage playerImage = null;
-                try {
+//                try {
                         //TODO differentiate image by gd.type
-                        playerImage = ImageIO.read( new File(PLR_IMAGE_FILENAME) );
-                }
-                catch (IOException ioe) { System.out.println(ioe); }
+                      //  playerImage = ImageIO.read( new File(PLR_IMAGE_FILENAME) );
+  //              }
+   //             catch (IOException ioe) { System.out.println(ioe); }
 
 		if (gd != null) {
                 	c = new Character(playerImage, gd.locUpdate);

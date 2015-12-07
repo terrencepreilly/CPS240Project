@@ -29,7 +29,7 @@ public interface GameConstants {
 	// Images for characters and obstacles
 	public final String IMGFLD = "Images" + java.io.File.separator; //correctly utilize systems file separator, / on linux, \ on windows
 	public final String OBS_IMAGE_FILENAME = IMGFLD + "redCar.png";
-	public final String PLR_IMAGE_FILENAME = IMGFLD + "characterForward1.png";
+	//public final String PLR_IMAGE_FILENAME = IMGFLD + "characterForward1.png";
 	public final String ENE_IMAGE_FILENAME = IMGFLD + "zombieForward1.png";
 	public final String BAC_IMAGE_FILENAME = IMGFLD + "smallBackgroundImage.png";
 	public final String WEA_IMAGE_FILENAME = IMGFLD + "swordImage.png";
