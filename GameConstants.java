@@ -15,16 +15,16 @@ public interface GameConstants {
 
 	// Pathfinding variables
 	public final boolean USE_CORNER_ASTAR = true;
-	public final float ASTAR_RATE = 0.2f;
+	public final float ASTAR_RATE = 1.2f;
 
 	// Spawn rates for enemies and obstacles.
-	public final int ZOMBIE_SPAWN = 7;
-	public final int OBSTACLE_SPAWN = 1;
+	public final int ZOMBIE_SPAWN = 5;
+	public final int OBSTACLE_SPAWN = 2;
 
 	public final int DEFAULT_HEALTH = 10;
 
 	// The random seed
-	public final int RANDSEED = 209;
+	public final int RANDSEED = 207;
 
 	// Images for characters and obstacles
 	public final String IMGFLD = "Images" + java.io.File.separator; //correctly utilize systems file separator, / on linux, \ on windows

@@ -23,8 +23,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import java.util.concurrent.locks.*;
-
 
 /**
  * The main game class.  Used for debugging and testing items until networking 
@@ -122,8 +120,6 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	 * @param g The graphics context.
 	 */
 	private void render(Graphics g) {
-		Lock lock = gamestate.getLock();
-		lock.lock();
 		HashMap<Integer, Character> characters = gamestate.getCharacters();
 		g.drawImage(backgroundImage, 0, 0, this);
 		for (Integer uid : characters.keySet()) {
@@ -155,7 +151,6 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 			);
 		}
 		characters = null;
-		lock.unlock();
 	}
 
 	//TODO erase testing method
