@@ -125,6 +125,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		Lock lock = gamestate.getLock();
 		lock.lock();
 		HashMap<Integer, Character> characters = gamestate.getCharacters();
+		g.drawImage(backgroundImage, 0, 0, this);
 		for (Integer uid : characters.keySet()) {
 			Character c = characters.get(uid);
 			g.drawImage(
