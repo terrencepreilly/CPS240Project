@@ -18,8 +18,8 @@ class Animation implements GameConstants {
 			playerImages.put("F2", ImageIO.read(new File(IMGFLD + "playerFrwd2.png")));
 			playerImages.put("S1", ImageIO.read(new File(IMGFLD + "playerSide.png")));
 			playerImages.put("S2", ImageIO.read(new File(IMGFLD + "playerSide2.png")));
-			playerImages.put("B1", ImageIO.read(new File(IMGFLD + "playerBack.png")));
-			playerImages.put("B2", ImageIO.read(new File(IMGFLD + "playerBack2.png")));
+			playerImages.put("D1", ImageIO.read(new File(IMGFLD + "playerBack.png")));
+			playerImages.put("D2", ImageIO.read(new File(IMGFLD + "playerBack2.png")));
 			//playerImages.put("AT", ImageIO.read(new File(IMGFLD + "plFrAtk.png")));
 //			playerImages.put("DD", ImageIO.read(new File(IMGFLD + "playDead.png")));
 
@@ -38,11 +38,11 @@ class Animation implements GameConstants {
 
 	public int getDirection(Character c) {
 		int cdir = c.getDirection();
-		if (cdir >= 270)
+		if (cdir >= 315 || cdir < 45)
+			return RIGHT; 
+		else if (cdir >= 45 && cdir < 135)
 			return DOWN;
-		else if (cdir >= 0 && cdir < 90)
-			return RIGHT;
-		else if (cdir >= 180 && cdir < 270)
+		else if (cdir >= 135 && cdir < 225)
 			return LEFT;
 		else
 			return UP;
@@ -76,7 +76,8 @@ class Animation implements GameConstants {
 		imgname += firstImage.get(c.getUniqueID()) ? "1" : "2";
 		imgname += c.getType() == ENEMY ? "z" : "";
 
-		if (System.currentTimeMillis() - c.getBlit() > 500L) {
+
+		if (System.currentTimeMillis() - c.getBlit() > ANIMATION_UPDATE_SPEED) {
 			firstImage.put(c.getUniqueID(), ! firstImage.get(c.getUniqueID()));
 			c.setBlit();
 		}

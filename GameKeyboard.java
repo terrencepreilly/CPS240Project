@@ -70,7 +70,12 @@ class GameKeyboard implements KeyListener, GameConstants {
 	public void processInput(double delta){
 		this.delta = delta;
 
-		character.setDirection( character.getDirection() + updateDirection);
+		int dir = character.getDirection() + updateDirection;
+
+		if (dir < 0)
+			dir += 360;
+
+		character.setDirection(dir);
 		character.playerStep(delta);
 
 		gamestate.flagForUpdate( character.getUniqueID() );

@@ -192,11 +192,10 @@ public class GameState implements GameConstants {
 	public synchronized Character createCharacter(GameDelta gd) {
 		Character c = null;
                 BufferedImage playerImage = null;
-//                try {
-                        //TODO differentiate image by gd.type
-                      //  playerImage = ImageIO.read( new File(PLR_IMAGE_FILENAME) );
-  //              }
-   //             catch (IOException ioe) { System.out.println(ioe); }
+                try {
+                        playerImage = ImageIO.read( new File(PLR_IMAGE_FILENAME) );
+                }
+                catch (IOException ioe) { System.out.println(ioe); }
 
 		if (gd != null) {
                 	c = new Character(playerImage, gd.locUpdate);

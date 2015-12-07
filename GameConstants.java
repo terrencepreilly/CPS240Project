@@ -15,11 +15,11 @@ public interface GameConstants {
 
 	// Pathfinding variables
 	public final boolean USE_CORNER_ASTAR = true;
-	public final float ASTAR_RATE = 1.2f;
+	public final float ASTAR_RATE = 0.2f;
 
 	// Spawn rates for enemies and obstacles.
-	public final int ZOMBIE_SPAWN = 5;
-	public final int OBSTACLE_SPAWN = 2;
+	public final int ZOMBIE_SPAWN = 0;
+	public final int OBSTACLE_SPAWN = 0;
 
 	public final int DEFAULT_HEALTH = 10;
 
@@ -29,7 +29,7 @@ public interface GameConstants {
 	// Images for characters and obstacles
 	public final String IMGFLD = "Images" + java.io.File.separator; //correctly utilize systems file separator, / on linux, \ on windows
 	public final String OBS_IMAGE_FILENAME = IMGFLD + "redCar.png";
-	//public final String PLR_IMAGE_FILENAME = IMGFLD + "characterForward1.png";
+	public final String PLR_IMAGE_FILENAME = IMGFLD + "playerFrwd.png";
 	public final String ENE_IMAGE_FILENAME = IMGFLD + "zombieForward1.png";
 	public final String BAC_IMAGE_FILENAME = IMGFLD + "smallBackgroundImage.png";
 	public final String WEA_IMAGE_FILENAME = IMGFLD + "swordImage.png";
@@ -57,4 +57,6 @@ public interface GameConstants {
 	public final int LEFT = 180;
 	public final int UP = 90;
 	public final int DOWN = 270;
+
+	public final long ANIMATION_UPDATE_SPEED = 150;
 }
