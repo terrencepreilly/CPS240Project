@@ -124,6 +124,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		Lock lock = gamestate.getLock();
 		lock.lock();
 		HashMap<Integer, Character> characters = gamestate.getCharacters();
+		g.drawImage(backgroundImage, 0, 0, this);
 		for (Integer uid : characters.keySet()) {
 			Character c = characters.get(uid);
 			g.drawImage(
@@ -197,7 +198,7 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 			playerImage = ImageIO.read(new File(PLR_IMAGE_FILENAME));
 			obstacleImage = ImageIO.read(new File(OBS_IMAGE_FILENAME));
 			enemyImage = ImageIO.read(new File(ENE_IMAGE_FILENAME));
-			//backgroundImage = ImageIO.read(new File(BAC_IMAGE_FILENAME));
+			backgroundImage = ImageIO.read(new File(BAC_IMAGE_FILENAME));
 			weaponImage = ImageIO.read(new File(WEA_IMAGE_FILENAME));
 
 		} catch (IOException e) {
