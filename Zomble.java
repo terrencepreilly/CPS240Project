@@ -35,7 +35,19 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 	private Character player;
 
 	private Client client;			// Networking
-
+	private int frames = 0;
+	private BufferedImage mobImage;//south facing
+	private BufferedImage mobImage1;//south facing2
+	private BufferedImage mobImage2;//east facing
+	private BufferedImage mobImage3;//west facing
+	private BufferedImage mobImage4;//north facing
+	private BufferedImage mobImage5;//north facing2
+	private BufferedImage charImage;//south facing
+	private BufferedImage charImage1;//south facing2
+	private BufferedImage charImage2;//east facing
+	private BufferedImage charImage3;//west facing
+	private BufferedImage charImage4;//north facing
+	private BufferedImage charImage5;//north facing2
 	private BufferStrategy bs;		// Graphics
 	private DisplayMode displayMode;
 	private Canvas canvas;
@@ -115,7 +127,166 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 			bs.show();
 		} while(bs.contentsLost());
 	}
+	//TODO make so each character has own actions 
+	public BufferedImage action(BufferedImage move, Character c){
+		try {
+			this.player = c;
+			//player images
+			charImage = ImageIO.read(new File("Images//playerFrwd.png"));
+			charImage1 = ImageIO.read(new File("Images//playerFrwd2.png"));
+			charImage2 = ImageIO.read(new File("Images//playerSide.png"));
+			charImage3 = ImageIO.read(new File("Images//playerSide2.png"));
+			charImage4 = ImageIO.read(new File("Images//playerBack.png"));
+			charImage5 = ImageIO.read(new File("Images//playerBack2.png"));
+			charImage6 = ImageIO.read(new File("Images//plFrAtk.png"));
+			charImage7 = ImageIO.read(new File("Images//playDead.png"));
 
+			//zombie images
+			mobImage = ImageIO.read(new File("Images//zombieFrwd.png"));
+			mobImage1 = ImageIO.read(new File("Images//zombieFrwd2.png"));
+			mobImage2 = ImageIO.read(new File("Images//zombieSide.png"));
+			mobImage3 = ImageIO.read(new File("Images//zombieSide2.png"));
+			mobImage4 = ImageIO.read(new File("Images//zombieBack.png"));
+			mobImage5 = ImageIO.read(new File("Images//zombieBack2.png"));
+			mobImage6 = ImageIO.read(new File("Images//zombAtk.png"));
+			mobImage7 = ImageIO.read(new File("Images//zombDead.png"));
+
+			frames++;
+			if(frames >= 80){
+				frames = 0;
+			}
+			
+			
+			/*if(character.getDirection() == UP ||character.getDirection() == DOWN || character.getDirection() == LEFT ||character.getDirection() == RIGHT && character.getHealth() == 0){
+				zomble.playerImage = charImage7;
+				zomble.enemyImage = mobImage7;
+			}*/
+			//&& !character.isAttacking && character.getHealth() > 0
+			
+			if(c.getDirection() >= 270){
+				if(frames > 0 && frames <40){
+					playerImage = charImage;
+					enemyImage = mobImage;
+				}
+				else if(frames >=40 && frames < 80){
+					playerImage = charImage1;
+					enemyImage = mobImage1;
+				}
+			}
+			/*else if(c.getDirection() == DOWN && c.isAttacking == true && c.getHealth() > 0){
+					if(frames > 0 && frames <15){
+						//playerImage = charImage6;
+						//enemyImage = mobImage6;
+					}
+					else if(frames >=15 && frames <30){
+						//playerImage = charImage7;
+						//enemyImage = mobImage7;
+				}
+			}
+			/*else{
+					zomble.playerImage = charImage1;
+					zomble.enemyImage = mobImage;
+				}*/
+			// && !character.isAttacking && character.getHealth() > 0
+			if(c.getDirection() >= 0 && c.getDirection()< 90){
+				if(frames > 0 && frames <40){
+					playerImage = charImage2;
+					enemyImage = mobImage2;
+				}
+				else if(frames >=40 && frames < 80){
+					playerImage = charImage3;
+					enemyImage = mobImage3;
+				}
+			}
+		/*	else if(c.getDirection() == RIGHT && c.isAttacking == true && c.getHealth() > 0){
+					if(frames > 0 && frames <15){
+						//playerImage = charImage6;
+						//enemyImage = mobImage6;
+					}
+					else if(frames >=15 && frames <30){
+						//playerImage = charImage7;
+						//enemyImage = mobImage7;
+					}
+
+				}
+			/*	else{
+					zomble.playerImage = charImage2;
+					zomble.enemyImage = mobImage3;
+				}*/
+			// && !character.isAttacking && character.getHealth() > 0
+			if(c.getDirection()>= 180 && c.getDirection() < 270){
+				if(frames >0 && frames <40){
+					playerImage = horizontalFlip(charImage2);
+					enemyImage = horizontalFlip(mobImage2);
+				}
+				else if(frames >=40 && frames < 80){
+					playerImage = horizontalFlip(charImage3);
+					enemyImage = horizontalFlip(mobImage3);
+				}
+			}
+			/*	else if(c.getDirection() == LEFT && c.isAttacking == true && c.getHealth() > 0){
+					if(frames > 0 && frames <15){
+						//playerImage = charImage6;
+						//enemyImage = mobImage6;
+					}
+					else if(frames >=15 && frames <30){
+						//playerImage = charImage7;
+						//enemyImage = mobImage7;
+					}
+
+				}
+				/*else{
+					zomble.playerImage = horizontalFlip(charImage2);
+					zomble.enemyImage = horizontalFlip(mobImage3);
+				}*/
+			
+			// && !character.isAttacking && character.getHealth() > 0
+			if(c.getDirection() >= 90 && c.getDirection()< 180){
+				if(frames > 0 && frames <40){
+					playerImage = charImage4;
+					enemyImage = mobImage4;
+				}
+				else if(frames >=40 && frames < 80){
+					playerImage = charImage5;
+					enemyImage = mobImage5;
+				}
+			}
+			/*	else if(c.getDirection() == UP && c.isAttacking == true){
+					if(frames > 0 && frames <15){
+						//playerImage = charImage6;
+						//enemyImage = mobImage6;
+					}
+					else if(frames >=15 && frames <30){
+						//playerImage = charImage7;
+						//enemyImage = mobImage7;
+					}
+
+				}*/
+		}catch (IOException e) {
+					e.printStackTrace();
+				}
+				/*	else{
+					zomble.playerImage = charImage4;
+					zomble.enemyImage = mobImage4;
+
+				}*/
+		
+
+		
+		return move;
+	}
+	/*
+	 * flips character image so they are facing correct way when going west
+	 */
+	public static BufferedImage horizontalFlip(BufferedImage img) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+        BufferedImage flippedImage = new BufferedImage(width, height, img.getType());
+        Graphics g = flippedImage.createGraphics();
+        g.drawImage(img, 0, 0, width, height, width, 0, 0, height, null);
+        g.dispose();
+        return flippedImage;
+    }
 	/**
 	 * Draw all Characters to the screen.
 	 * @param g The graphics context.
@@ -126,6 +297,12 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		HashMap<Integer, Character> characters = gamestate.getCharacters();
 		for (Integer uid : characters.keySet()) {
 			Character c = characters.get(uid);
+			if(c.getType() == PLAYER){
+				c.setImage(action(playerImage, c));
+			}
+			if(c.getType() == ENEMY){
+				c.setImage(action(enemyImage, c));
+			}
 			g.drawImage(
 				(c.getType() == ENEMY) ? enemyImage : playerImage,
 				(int) c.getBoxCollider().getLocation().x,
