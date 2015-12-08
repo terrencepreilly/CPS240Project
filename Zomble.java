@@ -23,6 +23,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.LineUnavailableException;
+
 
 /**
  * The main game class.  Used for debugging and testing items until networking 
@@ -50,7 +56,9 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 
 	private BackGround bg;
 
-
+	private AudioInputStream audioBGMAmbience;
+	private Clip clipBGMAmbience;
+	
 	/**
 	 * Create the GUI, add elements, start the game thread.
 	 */
@@ -78,11 +86,61 @@ public class Zomble extends JFrame implements Runnable, GameConstants {
 		
 		setVisible(true);
 		
+		//Initialize audio
+		try {
+			audioBGMAmbience = AudioSystem.getAudioInputStream(new File("AudioFiles/sndBGMAmbience.wav")); //Freesound.org
+			clipBGMAmbience = AudioSystem.getClip();
+		}
+
+		catch (UnsupportedAudioFileException LUE) {
+			System.out.println("Error: Audio filetype is invalid!");
+		}
+		catch (LineUnavailableException LUE) {
+			System.out.println("Error: The line is unavailable!");
+		}
+		catch (IOException LUE) {
+			System.out.println("Error: The file is unavailable!");
+		}
+		
+		//Start the BGM loop
+		loopClip(audioBGMAmbience,clipBGMAmbience);
+		
+		
 		canvas.createBufferStrategy(2);
 		bs = canvas.getBufferStrategy();
 		canvas.requestFocus();
 		gameThread = new Thread(this);
 		gameThread.start();
+	}
+	
+	/**
+	 * Loop a specified sound.
+ 	 * @param ais The AudioInputStream of the particilar sound
+	 * @param sound The Clip that the sound belongs to
+	 */
+	private void loopClip(AudioInputStream ais,Clip sound) {
+		try {
+			
+			if (sound.isOpen() == true) {
+				if(sound.isRunning() || sound.isActive()) {
+					sound.stop();
+					sound.flush();
+				}
+			}
+			else {
+				sound.open(ais);
+			}
+			sound.setFramePosition(0);
+			sound.start();
+			sound.loop(Clip.LOOP_CONTINUOUSLY);
+			
+		}
+		catch (LineUnavailableException LUE) {
+			System.out.println("Error: The line is unavailable!");
+		}
+		catch (IOException LUE) {
+			System.out.println("Error: The file is unavailable!");
+		}
 	}
 
 	/**
